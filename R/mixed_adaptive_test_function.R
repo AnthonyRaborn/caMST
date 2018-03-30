@@ -12,6 +12,7 @@
 #' @param randomesque An integer indicating the number of items from which to select the next item to administer in the first stage. Default value is 1.
 #' @param mst_item_bank A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
+#' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
 #'
 #' @details
 #'
@@ -26,7 +27,7 @@ mixed_adaptive_test = function(response_matrix, cat_item_bank,
                                item_method = "MFI", cat_length,
                                nAvailable_cat = NULL, cbControl = NULL,
                                cbGroup = NULL, randomesque = 1,
-                               mst_item_bank, modules){
+                               mst_item_bank, modules, transition_matrix){
 
   start.time = Sys.time()
 
@@ -34,7 +35,7 @@ mixed_adaptive_test = function(response_matrix, cat_item_bank,
   total.item.bank = rbind(cat_item_bank[,1:4], mst_item_bank[,1:4])
 
   list.of.cat.results <- list()
-  for(i in 1:nrow(response_matrix)){
+  for(i in 1:nrow(internal_response_matrix)){
 
     list.of.cat.results[[i]] = routing_item_selection(i, cat_item_bank = cat_item_bank, initial_theta = initial_theta, response_matrix = internal_response_matrix, model = NULL, method = method, item_method = item_method, cat_length = cat_length, nAvailable = nAvailable_cat, cbControl = cbControl, cbGroup = cbGroup, randomesque= randomesque)
 
