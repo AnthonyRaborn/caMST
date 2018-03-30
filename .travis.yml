@@ -3,5 +3,5 @@ cache: packages
 notifications:
   email:
   false
-webook:
-  urls:
+r:
+  - devel
