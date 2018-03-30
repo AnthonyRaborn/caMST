@@ -44,7 +44,7 @@ load("data/example_module_items.rda") # the matrix specifying how the item data 
 
 # what does the data look like?
 example_thetas
-##  [1] 1 1 1 0 1
+##  [1] -0.82791686  0.61463323  0.03785365 -0.51095175 -0.08529469
 example_responses[,1:5] # first 5 items
 ##    Item3 Item4 Item5 Item6 Item7
 ##  1     0     0     1     1     0
@@ -99,7 +99,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix)
-##  Time difference of 6.115525 secs
+##  Time difference of 5.470074 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -173,8 +173,15 @@ results[[1]]
 ##  [1] 3 6
 ##  
 ##  $final.responses
-##    Item218 Item233 Item255 Item113 Item436 Item592 Item24 Item187 Item303
-##  1       0       1       0       1       1       1      1       0       1
-##    Item323 Item475 Item515 Item25 Item200 Item342 Item352 Item523 Item529
-##  1       0       1       0      0       0       0       0       1       1
+##   [1] 0 1 0 1 1 1 1 0 1 0 1 0 0 0 0 0 1 1
+
+# How good was our estimate of the individual's abilities?
+data.frame("True Theta" = example_thetas,
+           "Estimated Theta" = unlist(lapply(results, '[[', 1)))
+##     True.Theta Estimated.Theta
+##  1 -0.82791686      -0.4591914
+##  2  0.61463323       0.6266054
+##  3  0.03785365       0.2025004
+##  4 -0.51095175      -0.1281526
+##  5 -0.08529469      -0.4259613
 ```

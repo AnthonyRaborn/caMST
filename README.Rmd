@@ -70,6 +70,10 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
 # each individual is his or her own element in the list.
 # the first person's results:
 results[[1]]
+
+# How good was our estimate of the individual's abilities?
+data.frame("True Theta" = example_thetas,
+           "Estimated Theta" = unlist(lapply(results, '[[', 1)))
 ```
 
 
