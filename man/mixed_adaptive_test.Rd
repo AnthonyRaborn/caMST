@@ -7,7 +7,7 @@
 mixed_adaptive_test(response_matrix, cat_item_bank, initial_theta = 0,
   method = "BM", item_method = "MFI", cat_length, nAvailable_cat = NULL,
   cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank,
-  modules)
+  modules, transition_matrix)
 }
 \arguments{
 \item{response_matrix}{A matrix of the person responses, with individuals as rows and items as columns.}
@@ -33,13 +33,50 @@ mixed_adaptive_test(response_matrix, cat_item_bank, initial_theta = 0,
 \item{mst_item_bank}{A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.}
 
 \item{modules}{A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.}
+
+\item{transition_matrix}{A matrix describing how individuals can transition from one stage to the next.}
+}
+\value{
+A list with eight elements. The first three elements are the final
+theta estimates (the chosen estimate put into the function
+[$final.theta.estimate.mstR], the EAP estimate [$eap.theta], and the
+iterative estimate from Baker 2004 [$final.theta.iterative]). The fourth
+element is the standard error of measurement of the iterative theta estimate
+[$sem.iterative]. The fifth element is a data frame of the final item bank
+the individual saw [$final.item.bank]. The sixth element is a character
+vector of the item names the person saw [$final.items.seen]. The seventh
+element is a vector of the modules the person saw [$modules.seen]. The eighth
+and final element is a vector of the response pattern
 }
 \description{
 Mixed Computerized Adaptive Multistage Test
 }
 \details{
-
+To be filled in later.
 }
 \examples{
+# using simulated test data
+data(example_thetas) # 5 simulated abilities
+data(example_responses) # 5 simulated responses
+# the transition matrix for an 18 item 1-3-3 balanced design
+data(example_transition_matrix)
+# the items designated for use in the routing module with item-level
+# adaptation
+data(cat_items)
+# the items designated for use in the second and third modules with
+# module-level adaptation
+data(mst_items)
+# the matrix specifying how the item data frame relates to the modules
+data(example_module_items)
+
+# run the Mca-MST model
+results <- mixed_adaptive_test(response_matrix = example_responses,
+                               cat_item_bank = cat_items, initial_theta = 0,
+                               method = "EAP", item_method = "MFI",
+                               cat_length = 6, cbControl = NULL, cbGroup = NULL,
+                               randomesque = 1, mst_item_bank = mst_items,
+                               modules = example_module_items,
+                               transition_matrix = example_transition_matrix)
+
 
 }
