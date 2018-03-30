@@ -22,5 +22,5 @@ module_selection = function(i, module_item_bank, modules, transition_matrix, the
 
   final.theta.iterative = iterative.theta.estimate(initial_theta = initial_theta, item.params = module_item_bank[c(1:cat_length, next.module$items, final.module$items),], response.pattern = matrix(final.responses, nrow = 1, byrow = T))
 
-  return(list(final.theta.estimate.mstR = final.theta, eap.theta = final.theta.eap, final.theta.iterative = final.theta.iterative[,1], sem.iterative = final.theta.iterative[,2], final.item.bank = module_item_bank, final.items.seen = seen.items, modules.seen = c(next.module$module, final.module$module), final.responses = final.responses))
+  return(list(final.theta.estimate.mstR = final.theta, eap.theta = final.theta.eap, final.theta.iterative = final.theta.iterative[,1], sem.iterative = final.theta.iterative[,2], final.item.bank = module_item_bank, final.items.seen = seen.items, modules.seen = c(next.module$module, final.module$module), final.responses = as.numeric(final.responses)))
 }
