@@ -99,7 +99,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix)
-##  Time difference of 5.883896 secs
+##  Time difference of 5.920149 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -192,6 +192,5 @@ data.frame("True Theta" = example_thetas,
 
 For these five individuals, the estimated ability level appears fairly
 close at worst and almost precisely correct at best. In all cases, the
-95% confidence interval ( \(\hat{\theta} \pm 1.96*SEM\) ) includes the
-simulated ability level, indicating that the Mca-MST method works well
-for these individuals.
+95% confidence interval includes the simulated ability level, indicating
+that the Mca-MST method works well for these individuals.
