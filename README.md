@@ -99,7 +99,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix)
-##  Time difference of 5.470074 secs
+##  Time difference of 5.883896 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -177,11 +177,21 @@ results[[1]]
 
 # How good was our estimate of the individual's abilities?
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(lapply(results, '[[', 1)))
-##     True.Theta Estimated.Theta
-##  1 -0.82791686      -0.4591914
-##  2  0.61463323       0.6266054
-##  3  0.03785365       0.2025004
-##  4 -0.51095175      -0.1281526
-##  5 -0.08529469      -0.4259613
+           "Estimated Theta" = unlist(lapply(results, '[[', 1)),
+           "CI95 Lower Bound" = unlist(lapply(results, '[[', 1)) -
+             1.96*unlist(lapply(results, '[[', 4)),
+           "CI95 Upper Bound" = unlist(lapply(results, '[[', 1)) +
+             1.96*unlist(lapply(results, '[[', 4)))
+##     True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
+##  1 -0.82791686      -0.4591914     -1.002137692       0.08375492
+##  2  0.61463323       0.6266054      0.004088176       1.24912266
+##  3  0.03785365       0.2025004     -0.353582000       0.75858276
+##  4 -0.51095175      -0.1281526     -0.690744424       0.43443930
+##  5 -0.08529469      -0.4259613     -0.957088953       0.10516628
 ```
+
+For these five individuals, the estimated ability level appears fairly
+close at worst and almost precisely correct at best. In all cases, the
+95% confidence interval ( \(\hat{\theta} \pm 1.96*SEM\) ) includes the
+simulated ability level, indicating that the Mca-MST method works well
+for these individuals.
