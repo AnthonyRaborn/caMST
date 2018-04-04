@@ -46,12 +46,12 @@ load("data/example_module_items.rda") # the matrix specifying how the item data 
 example_thetas
 ##  [1] -0.82791686  0.61463323  0.03785365 -0.51095175 -0.08529469
 example_responses[,1:5] # first 5 items
-##    Item3 Item4 Item5 Item6 Item7
-##  1     0     0     1     1     0
+##    Item1 Item2 Item3 Item4 Item5
+##  1     1     1     0     0     1
 ##  2     1     1     1     1     1
-##  3     0     1     1     1     1
-##  4     0     0     1     1     1
-##  5     0     1     1     1     0
+##  3     0     1     0     1     1
+##  4     1     0     0     0     1
+##  5     0     1     0     1     1
 example_transition_matrix
 ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7]
 ##  [1,]    0    1    1    1    0    0    0
@@ -99,7 +99,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix)
-##  Time difference of 5.920149 secs
+##  Time difference of 5.460616 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
