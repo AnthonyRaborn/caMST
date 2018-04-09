@@ -53,12 +53,14 @@ results # print all of the results
 
 # how good were the estimates?
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(lapply(results, '[[', 1)),
-           "CI95 Lower Bound" = unlist(lapply(results, '[[', 1)) -
-             1.96*unlist(lapply(results, '[[', 4)),
-           "CI95 Upper Bound" = unlist(lapply(results, '[[', 1)) +
-             1.96*unlist(lapply(results, '[[', 4)))
+           "Estimated Theta" = results$final.theta.estimate.mstR,
+           "CI95 Lower Bound" = results$final.theta.estimate.mstR -
+             1.96*results$final.theta.SEM,
+           "CI95 Upper Bound" = results$final.theta.estimate.mstR +
+             1.96*results$final.theta.SEM)
 ```
+
+The theta estimates under MST are close except for person 4, whose estimate falls outisde of the 95% confidence interval.
 
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
