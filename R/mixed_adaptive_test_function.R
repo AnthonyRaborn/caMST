@@ -32,7 +32,7 @@
 #' @examples
 #' # using simulated test data
 #' data(example_thetas) # 5 simulated abilities
-#' data(example_responses) # 5 simulated responses
+#' data(example_responses) # 5 simulated response vectors
 #' # the transition matrix for an 18 item 1-3-3 balanced design
 #' data(example_transition_matrix)
 #' # the items designated for use in the routing module with item-level

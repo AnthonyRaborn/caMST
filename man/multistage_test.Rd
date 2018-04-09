@@ -15,21 +15,38 @@ multistage_test(mst_item_bank, modules, transition_matrix, method = "BM",
 
 \item{transition_matrix}{A matrix describing how individuals can transition from one stage to the next.}
 
-\item{method}{A character value indicating the method for the item-level selection in the first stage. Defaults to "MFI" (Maximum Fisher Information). See the \pkg{catR} and \pkg{mstR} packages for more details.}
+\item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.}
 
 \item{response_matrix}{A matrix of the person responses, with individuals as rows and items as columns.}
 
 \item{initial_theta}{The initial theta estimate for all individuals. Default is 0.}
 
-\item{model}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.}
+\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.}
 
 \item{n_stages}{A numeric value indicating the number of stages in the test.}
 
 \item{test_length}{A numeric value indicating the total number of items each individual answers.}
 }
 \value{
-A list for each invidual with the following elements: the final theta estimate based on "method", the final theta estimate based on EAP, the final theta estimate based on the iterative estimate from Baker 2004, a vector of the final items taken, a vector of the modules see, and a vector of the final responses.
+A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
 }
 \description{
 Computer Adaptive Multistage Test
+}
+\examples{
+# using simulated test data
+data(example_thetas) # 5 simulated abilities
+data(example_responses) # 5 simulated response vectors
+# the transition matrix for an 18 item 1-3-3 design
+data(example_transition_matrix)
+# the MST item bank
+data(mst_only_items)
+# the MST module matrix
+data()
+# run the MST model
+results <- multistage_test(mst_item_bank = mst_only_items,
+modules = example_module_items, transition_matrix = example_transition_matrix,
+method = "BM", response_matrix = example_responses, initial_theta = 0,
+model = NULL, n_stages = 3, test_length = 18)
+
 }

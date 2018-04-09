@@ -3,15 +3,17 @@
 #' @param mst_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
-#' @param method A character value indicating the method for the item-level selection in the first stage. Defaults to "MFI" (Maximum Fisher Information). See the \pkg{catR} and \pkg{mstR} packages for more details.
+#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.
 #' @param response_matrix A matrix of the person responses, with individuals as rows and items as columns.
 #' @param initial_theta The initial theta estimate for all individuals. Default is 0.
-#' @param model A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.
+#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.
 #' @param n_stages A numeric value indicating the number of stages in the test.
 #' @param test_length A numeric value indicating the total number of items each individual answers.
 #'
-#' @return A list for each invidual with the following elements: the final theta estimate based on "method", the final theta estimate based on EAP, the final theta estimate based on the iterative estimate from Baker 2004, a vector of the final items taken, a vector of the modules see, and a vector of the final responses.
+#' @return A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
 #' @export
+#'
+#' @examples
 #' # using simulated test data
 #' data(example_thetas) # 5 simulated abilities
 #' data(example_responses) # 5 simulated response vectors
@@ -19,9 +21,13 @@
 #' data(example_transition_matrix)
 #' # the MST item bank
 #' data(mst_only_items)
+#' # the MST module matrix
+#' data()
 #' # run the MST model
-#' results <- multistage_test(mst_item_bank = mst_only_items, modules, transition_matrix, method = "BM",
-#' response_matrix, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
+#' results <- multistage_test(mst_item_bank = mst_only_items,
+#' modules = example_module_items, transition_matrix = example_transition_matrix,
+#' method = "BM", response_matrix = example_responses, initial_theta = 0,
+#' model = NULL, n_stages = 3, test_length = 18)
 #'
 
 
@@ -40,7 +46,7 @@ multistage_test <-
     start.time = Sys.time()
 
     # create empty vectors and matrices for final output
-    final.theta = final.theta.eap = final.theta.personal = c()
+    final.theta = final.theta.eap = final.theta.Baker = final.theta.SEM = c()
     final.items.seen = matrix(nrow = nrow(response_matrix), ncol = test_length)
     modules.seen = matrix(nrow = nrow(response_matrix), ncol = n_stages)
     final.responses = matrix(nrow = nrow(response_matrix), ncol = test_length)
@@ -52,7 +58,7 @@ multistage_test <-
       first.module = mstR::startModule(
         itemBank = mst_item_bank,
         modules = modules,
-        transition_matrix = transition_matrix,
+        transMatrix = transition_matrix,
         model = model,
         theta = initial_theta
       )
@@ -93,13 +99,14 @@ multistage_test <-
 
       final.theta.eap[i] = mstR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
 
-      final.theta.personal[i] = iterative.theta.estimate(
+       temp.iter = iterative.theta.estimate(
         initial_theta = initial_theta,
         item.params = mst_item_bank[seen.items, ],
         response.pattern = as.data.frame(matrix(
           final.responses[i, ], nrow = 1, byrow = T
-        ))
-      )
+        )))
+        final.theta.Baker[i] = temp.iter[1]
+        final.theta.SEM[i] = temp.iter[2]
 
       # end loop for this person; repeat loop for next
     }
@@ -112,7 +119,8 @@ multistage_test <-
       list(
         final.theta.estimate.mstR = final.theta,
         eap.theta = final.theta.eap,
-        final.theta.personal = final.theta.personal,
+        final.theta.Baker = final.theta.Baker,
+        final.theta.SEM = final.theta.SEM,
         final.items.seen = final.items.seen,
         modules.seen = final.modules.seen,
         final.responses = final.responses

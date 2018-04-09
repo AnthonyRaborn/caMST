@@ -26,18 +26,45 @@ devtools::install_github("AnthonyRaborn/caMST") # the developmental version; no 
 
 Here are some examples demonstrating how to use this package for various adaptive test frameworks.
 
+```{r loading functions, echo = FALSE}
+source("R/mixed_adaptive_test_function.R")
+source("R/multistage_test_function.R")
+source("R/module_selection_function.R")
+source("R/routing_item_selection.R")
+source("R/iterative_maximum_likelihood_theta_estimation.R")
+```
+
+### Computer Adaptive Multistage Testing (MST)
+
+```{r MST example}
+# using simulated test data
+load("data/example_thetas.rda") # 5 simulated abilities
+load("data/example_responses.rda") # 5 simulated response vectors
+load("data/example_transition_matrix.rda") # the transition matrix for an 18 item 1-3-3 design
+load("data/mst_only_items.rda") # the MST item bank
+load("data/mst_only_matrix.rda") # the matrix specifying how the item data frame relates to the modules
+
+# run the MST model
+results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, 
+                           transition_matrix = example_transition_matrix,
+                           method = "BM", response_matrix = example_responses, 
+                           initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
+results # print all of the results
+
+# how good were the estimates?
+data.frame("True Theta" = example_thetas,
+           "Estimated Theta" = unlist(lapply(results, '[[', 1)),
+           "CI95 Lower Bound" = unlist(lapply(results, '[[', 1)) -
+             1.96*unlist(lapply(results, '[[', 4)),
+           "CI95 Upper Bound" = unlist(lapply(results, '[[', 1)) +
+             1.96*unlist(lapply(results, '[[', 4)))
+```
+
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
 This is a method that follows the traditional multistage testing framework with one exception: the routing stage utilizes item-level adaptation to try to better estimate individual examinees' abilities before administering the additional stages. The current implementation allows for any three-stage design with a single routing module (e.g., 1-2-3, 1-5-3, etc.), though this will be extended for any arbitrary number of stages in future updates.
 
 Here is an example with a 1-3-3 design that has 18 items, where each stage has the same number of items, maximum Fisher information is used for all item- and module-level adaptations, and the expected a posteriori estimator is used for the provisional and final ability estimates.
-
-```{r loading functions, echo = FALSE}
-source("R/mixed_adaptive_test_function.R")
-source("R/module_selection_function.R")
-source("R/routing_item_selection.R")
-source("R/iterative_maximum_likelihood_theta_estimation.R")
-```
 
 ```{r McaMST example}
 # using simulated test data 
@@ -82,3 +109,4 @@ data.frame("True Theta" = example_thetas,
 
 
 For these five individuals, the estimated ability level appears fairly close at worst and almost precisely correct at best. In all cases, the 95% confidence interval includes the simulated ability level, indicating that the Mca-MST method works well for these individuals.
+
