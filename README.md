@@ -17,6 +17,84 @@ devtools::install_github("AnthonyRaborn/caMST") # the developmental version; no 
 Here are some examples demonstrating how to use this package for various
 adaptive test frameworks.
 
+### Computer Adaptive Multistage Testing (MST)
+
+``` r
+# using simulated test data
+load("data/example_thetas.rda") # 5 simulated abilities
+load("data/example_responses.rda") # 5 simulated response vectors
+load("data/example_transition_matrix.rda") # the transition matrix for an 18 item 1-3-3 design
+load("data/mst_only_items.rda") # the MST item bank
+load("data/mst_only_matrix.rda") # the matrix specifying how the item data frame relates to the modules
+
+# run the MST model
+results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, 
+                           transition_matrix = example_transition_matrix,
+                           method = "BM", response_matrix = example_responses, 
+                           initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
+##  Time difference of 1.543752 secs
+results # print all of the results
+##  $final.theta.estimate.mstR
+##  [1] -0.9946015  0.6755088  0.1451625  0.2134472 -0.3284433
+##  
+##  $eap.theta
+##  [1] -1.1342322  0.6827702  0.1197598  0.1932383 -0.3513962
+##  
+##  $final.theta.Baker
+##  [1] -1.27265592  0.69516239  0.06618859  0.30135158 -0.40471712
+##  
+##  $final.theta.SEM
+##  [1] 0.3337659 0.3369445 0.2938756 0.3047245 0.3052817
+##  
+##  $final.items.seen
+##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
+##  [1,]    1    2    3    4    5    6   13   14   15    16    17    18    31
+##  [2,]    1    2    3    4    5    6   13   14   15    16    17    18    37
+##  [3,]    1    2    3    4    5    6   13   14   15    16    17    18    37
+##  [4,]    1    2    3    4    5    6   13   14   15    16    17    18    37
+##  [5,]    1    2    3    4    5    6   13   14   15    16    17    18    25
+##       [,14] [,15] [,16] [,17] [,18]
+##  [1,]    32    33    34    35    36
+##  [2,]    38    39    40    41    42
+##  [3,]    38    39    40    41    42
+##  [4,]    38    39    40    41    42
+##  [5,]    26    27    28    29    30
+##  
+##  $modules.seen
+##  [1] 1 3 5
+##  
+##  $final.responses
+##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
+##  [1,]    0    1    0    0    1    1    0    0    0     0     1     0     0
+##  [2,]    1    1    1    1    0    1    1    1    1     1     1     0     1
+##  [3,]    1    1    1    1    0    1    0    1    1     1     1     0     0
+##  [4,]    1    1    1    1    0    1    1    1    0     0     1     0     0
+##  [5,]    0    1    0    0    1    0    0    1    0     0     0     1     1
+##       [,14] [,15] [,16] [,17] [,18]
+##  [1,]     0     0     0     0     1
+##  [2,]     0     0     1     0     1
+##  [3,]     0     1     0     0     0
+##  [4,]     1     1     0     1     0
+##  [5,]     1     1     1     1     1
+
+# how good were the estimates?
+data.frame("True Theta" = example_thetas,
+           "Estimated Theta" = results$final.theta.estimate.mstR,
+           "CI95 Lower Bound" = results$final.theta.estimate.mstR -
+             1.96*results$final.theta.SEM,
+           "CI95 Upper Bound" = results$final.theta.estimate.mstR +
+             1.96*results$final.theta.SEM)
+##     True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
+##  1 -0.82791686      -0.9946015      -1.64878277       -0.3404202
+##  2  0.61463323       0.6755088       0.01509754        1.3359200
+##  3  0.03785365       0.1451625      -0.43083359        0.7211587
+##  4 -0.51095175       0.2134472      -0.38381274        0.8107072
+##  5 -0.08529469      -0.3284433      -0.92679548        0.2699088
+```
+
+The theta estimates under MST are close except for person 4, whose
+estimate falls outisde of the 95% confidence interval.
+
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
 This is a method that follows the traditional multistage testing
@@ -99,7 +177,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix)
-##  Time difference of 5.460616 secs
+##  Time difference of 6.004107 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
