@@ -6,7 +6,7 @@
 \usage{
 multistage_test(mst_item_bank, modules, transition_matrix, method = "BM",
   response_matrix, initial_theta = 0, model = NULL, n_stages = 3,
-  test_length = 18)
+  test_length = 18, nc_list = NULL)
 }
 \arguments{
 \item{mst_item_bank}{A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.}
@@ -26,12 +26,21 @@ multistage_test(mst_item_bank, modules, transition_matrix, method = "BM",
 \item{n_stages}{A numeric value indicating the number of stages in the test.}
 
 \item{test_length}{A numeric value indicating the total number of items each individual answers.}
+
+\item{nc_list}{This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. See 'details' for more information.}
 }
 \value{
 A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
 }
 \description{
 Computer Adaptive Multistage Test
+}
+\details{
+When using (cumulative) number correct module selection, the input list should contain one element for each module that needs to route to other modules. For example, in a 1-3-3 design the first module can route to any module in the second stage, so the first element of `nc_list` would be a numeric vector with three values indicating the *maximum* number of correct items needed in order to be routed to the second, third, or fourth module respectively. When the design is not crossed (e.g., a person routed to the easy module in the second stage **cannot** be routed to the hard module in the third stage), `-Inf` and `Inf` need to be used within `nc_list` to indicate this. Continuing the example, let's assume the 1-3-3 design is not crossed and will be balanced so that each stage has the same number of items (10 each) for a total of 30 items administered. The `nc_list` object could be specified like so:
+nc_list = list(module1 = c(4, 5, 7),
+module2 = c(8, 14, Inf),
+module3 = c(8, 14, 20),
+module4 = c(-Inf, 14, 20)).
 }
 \examples{
 # using simulated test data
@@ -42,7 +51,7 @@ data(example_transition_matrix)
 # the MST item bank
 data(mst_only_items)
 # the MST module matrix
-data()
+data(example_module_items)
 # run the MST model
 results <- multistage_test(mst_item_bank = mst_only_items,
 modules = example_module_items, transition_matrix = example_transition_matrix,
