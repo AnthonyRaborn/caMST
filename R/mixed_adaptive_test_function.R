@@ -46,7 +46,7 @@
 #' data(example_module_items)
 #'
 #' # run the Mca-MST model
-#' results <- mixed_adaptive_test(response_matrix = example_responses[1:3,],
+#' results <- mixed_adaptive_test(response_matrix = example_responses[1:2,],
 #'                                cat_item_bank = cat_items, initial_theta = 0,
 #'                                method = "EAP", item_method = "MFI",
 #'                                cat_length = 6, cbControl = NULL, cbGroup = NULL,
