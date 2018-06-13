@@ -1,8 +1,8 @@
 Package: caMST
 Type: Package
 Title: Mixed Computerized Adaptive Multistage Testing
-Version: 0.0.0.9999
-Date: 2018-03-30
+Version: 0.1.0
+Date: 2018-06-12
 Authors@R: person("Anthony", "Raborn", email = "anthony.w.raborn@gmail.com", role = c("aut","cre"))
 Description: Provides functions to more easily analyze computerized adaptive tests. Currently, only mixed multistage computerized adaptive testing with a 1-X-Y design has been incorporated, but the goal is to include functions for full CAT, full MST, and a variation of Hybrid caMST for various designs.
 License: LGPL (>= 2.0, < 3) | Mozilla Public License
