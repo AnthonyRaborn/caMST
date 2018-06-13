@@ -4,6 +4,10 @@
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/caMST)](http://cran.r-project.org/package=caMST)
 [![Travis-CI Build
 Status](http://travis-ci.org/AnthonyRaborn/caMST.svg?branch=master)](http://travis-ci.org/AnthonyRaborn/caMST)
+[![CRAN Downloads Per
+Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
+[![CRAN Downloads
+Total](https://cranlogs.r-pkg.org/badges/grand-total/caMST?color=orange)](https://cran.r-project.org/package=caMST)
 
 ## Installation
 
@@ -32,7 +36,7 @@ results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_ma
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
                            initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-##  Time difference of 1.543752 secs
+##  Time difference of 3.853469 secs
 results # print all of the results
 ##  $final.theta.estimate.mstR
 ##  [1] -0.9946015  0.6755088  0.1451625  0.2134472 -0.3284433
@@ -177,7 +181,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix)
-##  Time difference of 6.004107 secs
+##  Time difference of 6.976037 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -272,3 +276,60 @@ For these five individuals, the estimated ability level appears fairly
 close at worst and almost precisely correct at best. In all cases, the
 95% confidence interval includes the simulated ability level, indicating
 that the Mca-MST method works well for these individuals.
+
+### Number-Correct (NC) Scoring with MST
+
+In some cases, applied testing demand the use of NC scoring (even if
+it’s not psychometrically valid). To facilitate NC tests, the
+`multistage_test()` function accepts a list with the cutoff score for
+each route specified. Otherwise, the rest of the inputs are the same.
+
+``` r
+data(mst_only_items)
+data(example_thetas)
+data(example_module_items)
+data(example_transition_matrix)
+data(example_responses)
+# these are the same as in the previous example
+# however, for NC scoring, the lsit of cutoff values needs to be specified
+# create nc_list as explained in 'details'
+nc_list = list(
+  module1 = c(4, 5, 7),
+  module2 = c(8, 14, Inf),
+  module3 = c(8, 14, 20),
+  module4 = c(-Inf, 14, 20)
+  )
+# this is the ONLY difference currently! Everything else remains the same
+# run the example
+nc.results <- multistage_test(
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  method = "BM",
+  response_matrix = example_responses,
+  initial_theta = 0,
+  model = NULL,
+  n_stages = 3,
+  test_length = 18,
+  nc_list = nc_list
+  )
+##  Time difference of 0.159425 secs
+
+# How well does NC scoring estimate the individual's abilities?
+# Using the estimation procedure from Baker for theta
+data.frame("True Theta" = example_thetas,
+           "Estimated Theta" = unlist(nc.results$final.theta.Baker),
+           "CI95 Lower Bound" = unlist(nc.results$final.theta.Baker) -
+             1.96*unlist(nc.results$final.theta.SEM),
+           "CI95 Upper Bound" = unlist(nc.results$final.theta.Baker) +
+             1.96*unlist(nc.results$final.theta.SEM))
+##     True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
+##  1 -0.82791686      -0.6075641      -1.26995559       0.05482749
+##  2  0.61463323       0.6081678      -0.01975875       1.23609438
+##  3  0.03785365       0.3048221      -0.34968635       0.95933052
+##  4 -0.51095175      -0.2506558      -0.87854504       0.37723348
+##  5 -0.08529469      -0.1072661      -0.83050963       0.61597753
+```
+
+With this example data, the NC scoring does about as well as the other
+methods in recovering the ability levels of the individuals.
