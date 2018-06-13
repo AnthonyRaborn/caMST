@@ -13,6 +13,7 @@
 #' @param mst_item_bank A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
+#' @param n_stages A numerical value indicating the number of stages in the test.
 #'
 #' @details To be filled in later.
 #'
@@ -45,13 +46,14 @@
 #' data(example_module_items)
 #'
 #' # run the Mca-MST model
-#' results <- mixed_adaptive_test(response_matrix = example_responses,
+#' results <- mixed_adaptive_test(response_matrix = example_responses[1:3,],
 #'                                cat_item_bank = cat_items, initial_theta = 0,
 #'                                method = "EAP", item_method = "MFI",
 #'                                cat_length = 6, cbControl = NULL, cbGroup = NULL,
 #'                                randomesque = 1, mst_item_bank = mst_items,
 #'                                modules = example_module_items,
-#'                                transition_matrix = example_transition_matrix)
+#'                                transition_matrix = example_transition_matrix,
+#'                                n_stages = 3)
 #'
 #'
 
@@ -67,7 +69,8 @@ mixed_adaptive_test = function(response_matrix,
                                randomesque = 1,
                                mst_item_bank,
                                modules,
-                               transition_matrix) {
+                               transition_matrix,
+                               n_stages) {
   start.time = Sys.time()
 
   internal_response_matrix = response_matrix
@@ -100,7 +103,7 @@ mixed_adaptive_test = function(response_matrix,
 
     seen_cat_items = list.of.cat.results[[i]]$Seen.Items
 
-    list.of.mst.results[[i]] = module_selection(
+    list.of.mst.results[[i]] = moduleSelectionCAMST(
       i,
       module_item_bank = module_item_bank,
       modules = modules,
@@ -109,7 +112,8 @@ mixed_adaptive_test = function(response_matrix,
       method = method,
       seen_cat_items = list.of.cat.results[[i]]$Seen.Items,
       cat_length,
-      response_matrix = internal_response_matrix
+      response_matrix = internal_response_matrix,
+      n_stage = n_stages
     )
 
   }

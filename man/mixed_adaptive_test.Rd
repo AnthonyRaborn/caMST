@@ -7,7 +7,7 @@
 mixed_adaptive_test(response_matrix, cat_item_bank, initial_theta = 0,
   method = "BM", item_method = "MFI", cat_length, nAvailable_cat = NULL,
   cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank,
-  modules, transition_matrix)
+  modules, transition_matrix, n_stages)
 }
 \arguments{
 \item{response_matrix}{A matrix of the person responses, with individuals as rows and items as columns.}
@@ -35,6 +35,8 @@ mixed_adaptive_test(response_matrix, cat_item_bank, initial_theta = 0,
 \item{modules}{A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.}
 
 \item{transition_matrix}{A matrix describing how individuals can transition from one stage to the next.}
+
+\item{n_stages}{A numerical value indicating the number of stages in the test.}
 }
 \value{
 A list with eight elements. The first three elements are the final
@@ -70,13 +72,14 @@ data(mst_items)
 data(example_module_items)
 
 # run the Mca-MST model
-results <- mixed_adaptive_test(response_matrix = example_responses,
+results <- mixed_adaptive_test(response_matrix = example_responses[1:3,],
                                cat_item_bank = cat_items, initial_theta = 0,
                                method = "EAP", item_method = "MFI",
                                cat_length = 6, cbControl = NULL, cbGroup = NULL,
                                randomesque = 1, mst_item_bank = mst_items,
                                modules = example_module_items,
-                               transition_matrix = example_transition_matrix)
+                               transition_matrix = example_transition_matrix,
+                               n_stages = 3)
 
 
 }
