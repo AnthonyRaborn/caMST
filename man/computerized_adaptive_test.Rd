@@ -18,7 +18,7 @@ computerized_adaptive_test(cat_item_bank, response_matrix, initial_theta = 0,
 
 \item{randomesque}{An integer value that indicates the number of items from which the selection rule should choose from randomly for administration. See the help documentation for \code{catR::nextItem} for more details.}
 
-\item{maxItems}{An integer value indicating the maximum number of items to adminster, regardless of other stopping rules.}
+\item{maxItems}{An integer value indicating the maximum number of items to administer, regardless of other stopping rules.}
 
 \item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.}
 

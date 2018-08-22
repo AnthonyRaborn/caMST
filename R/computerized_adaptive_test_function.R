@@ -5,7 +5,7 @@
 #' @param initial_theta The initial theta estimate for all individuals. Default is 0.
 #' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.
 #' @param randomesque An integer value that indicates the number of items from which the selection rule should choose from randomly for administration. See the help documentation for \code{catR::nextItem} for more details.
-#' @param maxItems An integer value indicating the maximum number of items to adminster, regardless of other stopping rules.
+#' @param maxItems An integer value indicating the maximum number of items to administer, regardless of other stopping rules.
 #' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.
 #' @param ... Further arguments to be passed to \code{catR::nextItem}. Currently unimplemented.
 #'
