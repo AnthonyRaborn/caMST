@@ -15,6 +15,5 @@ after_failure:
   - ./send.sh failure $WEBHOOK_URL
 r:
   - oldrel
-  -
-  release
+  - release
   - devel
