@@ -8,6 +8,8 @@ Status](http://travis-ci.org/AnthonyRaborn/caMST.svg?branch=master)](http://trav
 Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
 [![CRAN Downloads
 Total](https://cranlogs.r-pkg.org/badges/grand-total/caMST?color=orange)](https://cran.r-project.org/package=caMST)
+[![Zenodo
+DOI](https://zenodo.org/badge/127388900.svg)](https://zenodo.org/badge/latestdoi/127388900)
 
 ## Installation
 
@@ -25,18 +27,18 @@ adaptive test frameworks.
 
 ``` r
 # using simulated test data
-load("data/example_thetas.rda") # 5 simulated abilities
-load("data/example_responses.rda") # 5 simulated response vectors
-load("data/example_transition_matrix.rda") # the transition matrix for an 18 item 1-3-3 design
-load("data/mst_only_items.rda") # the MST item bank
-load("data/mst_only_matrix.rda") # the matrix specifying how the item data frame relates to the modules
+data(example_thetas) # 5 simulated abilities
+data(example_responses) # 5 simulated responsesdata
+data(example_transition_matrix)# the transition matrix for an 18 item 1-3-3 balanced design
+data(mst_only_items) # the MST item bank
+data(mst_only_matrix) # the matrix specifying how the item data frame relates to the modules
 
 # run the MST model
 results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, 
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
                            initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-##  Time difference of 3.853469 secs
+##  Time difference of 2.953075 secs
 results # print all of the results
 ##  $final.theta.estimate.mstR
 ##  [1] -0.9946015  0.6755088  0.1451625  0.2134472 -0.3284433
@@ -117,12 +119,12 @@ estimates.
 
 ``` r
 # using simulated test data 
-load("data/example_thetas.rda") # 5 simulated abilities
-load("data/example_responses.rda") # 5 simulated responses
-load("data/example_transition_matrix.rda") # the transition matrix for an 18 item 1-3-3 balanced design
-load("data/cat_items.rda") # the items designated for use in the routing module with item-level adaptation
-load("data/mst_items.rda") # the items designated for use in the second and third modules with module-level adaptation
-load("data/example_module_items.rda") # the matrix specifying how the item data frame relates to the modules
+data(example_thetas) # 5 simulated abilities
+data(example_responses) # 5 simulated responsesdata
+data(example_transition_matrix)# the transition matrix for an 18 item 1-3-3 balanced design
+data(cat_items) # the items designated for use in the routing module with item-level adaptation
+data(mst_items) # the items designated for use in the second and third modules with module-level adaptation
+data(example_module_items) # the matrix specifying how the item data frame relates to the modules
 
 # what does the data look like?
 example_thetas
@@ -180,8 +182,9 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                cat_length = 6, cbControl = NULL, cbGroup = NULL,
                                randomesque = 1, mst_item_bank = mst_items, 
                                modules = example_module_items, 
-                               transition_matrix = example_transition_matrix)
-##  Time difference of 6.976037 secs
+                               transition_matrix = example_transition_matrix,
+                               n_stages = 3)
+##  Time difference of 8.04568 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -252,7 +255,7 @@ results[[1]]
 ##  [15] "Item342" "Item352" "Item523" "Item529"
 ##  
 ##  $modules.seen
-##  [1] 3 6
+##  [1] 1 3 6
 ##  
 ##  $final.responses
 ##   [1] 0 1 0 1 1 1 1 0 1 0 1 0 0 0 0 0 1 1
@@ -265,11 +268,11 @@ data.frame("True Theta" = example_thetas,
            "CI95 Upper Bound" = unlist(lapply(results, '[[', 1)) +
              1.96*unlist(lapply(results, '[[', 4)))
 ##     True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-##  1 -0.82791686      -0.4591914     -1.002137692       0.08375492
-##  2  0.61463323       0.6266054      0.004088176       1.24912266
-##  3  0.03785365       0.2025004     -0.353582000       0.75858276
-##  4 -0.51095175      -0.1281526     -0.690744424       0.43443930
-##  5 -0.08529469      -0.4259613     -0.957088953       0.10516628
+##  1 -0.82791686      -0.4591914      -1.00213769       0.08375492
+##  2  0.61463323       0.9233826       0.05974935       1.78701580
+##  3  0.03785365       0.2025004      -0.35358200       0.75858276
+##  4 -0.51095175      -0.1281526      -0.69074442       0.43443930
+##  5 -0.08529469      -0.4259613      -0.95708895       0.10516628
 ```
 
 For these five individuals, the estimated ability level appears fairly
@@ -313,7 +316,7 @@ nc.results <- multistage_test(
   test_length = 18,
   nc_list = nc_list
   )
-##  Time difference of 0.159425 secs
+##  Time difference of 0.121676 secs
 
 # How well does NC scoring estimate the individual's abilities?
 # Using the estimation procedure from Baker for theta
