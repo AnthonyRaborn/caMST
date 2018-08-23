@@ -72,6 +72,12 @@ multistage_test <-
     modules.seen = matrix(nrow = nrow(response_matrix), ncol = n_stages)
     final.responses = matrix(nrow = nrow(response_matrix), ncol = test_length)
 
+    if (is.null(rownames(mst_item_bank))) {
+      rownames(mst_item_bank) = paste0("Item", 1:nrow(mst_item_bank))
+      colnames(response_matrix) = paste0("Item", 1:nrow(mst_item_bank))
+      cat(message("The mst_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix."))
+    }
+
     # one person at a time,
     for (i in 1:nrow(response_matrix)) {
       if (is.list(nc_list)) {
