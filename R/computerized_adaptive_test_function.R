@@ -31,6 +31,14 @@ computerized_adaptive_test <-
     final.items.seen = matrix(nrow = nrow(response_matrix), ncol = maxItems)
     final.responses = matrix(nrow = nrow(response_matrix), ncol = maxItems)
 
+    # check item names
+    if (is.null(rownames(cat_item_bank))) {
+      rownames(cat_item_bank) = paste0("Item", 1:nrow(cat_item_bank))
+      colnames(response_matrix) = paste0("Item", 1:nrow(cat_item_bank))
+      cat(message("The cat_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix."))
+    }
+
+
     # begin default args; these will be open to user-control
     nextItemControl = list(
       model = model,
