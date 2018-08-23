@@ -76,6 +76,15 @@ mixed_adaptive_test = function(response_matrix,
   internal_response_matrix = response_matrix
   total.item.bank = rbind(cat_item_bank[, 1:4], mst_item_bank[, 1:4])
 
+  if (is.null(rownames(total.item.bank))) {
+    rownames(total.item.bank) = paste0("Item", 1:nrow(total.item.bank))
+    rownames(cat_item_bank) = paste0("Item", 1:nrow(cat_item_bank))
+    rownames(mst_item_bank) = paste0("Item", (nrow(cat_item_bank)+1):(nrow(cat_item_bank)+nrow(mst_item_bank)))
+    colnames(response_matrix) = paste0("Item", 1:nrow(total.item.bank))
+    cat(message("The input item banks did not have row names indicating which items were which, so the item names were filled in automatically for both the item banks and the response matrix.\n\nFor this method, it assumes that by columns the response matrix has the CAT items first, followed by the MST items, and that for each set the order of responses is the same as the order in the item banks!"))
+  }
+
+
   list.of.cat.results <- list()
   for (i in 1:nrow(internal_response_matrix)) {
     list.of.cat.results[[i]] = routing_item_selection(
