@@ -69,7 +69,7 @@ multistage_test <-
     # create empty vectors and matrices for final output
     final.theta = final.theta.eap = final.theta.Baker = final.theta.SEM = c()
     final.items.seen = matrix(nrow = nrow(response_matrix), ncol = test_length)
-    modules.seen = matrix(nrow = nrow(response_matrix), ncol = n_stages)
+    final.modules.seen = matrix(nrow = nrow(response_matrix), ncol = n_stages)
     final.responses = matrix(nrow = nrow(response_matrix), ncol = test_length)
 
     if (is.null(rownames(mst_item_bank))) {
@@ -117,7 +117,7 @@ multistage_test <-
 
         final.responses[i, ] = as.numeric(mst.responses[, seen.items])
         final.items.seen[i, ] = seen.items
-        final.modules.seen = seen.modules
+        final.modules.seen[i,] = seen.modules
         final.theta[i] = mstR::thetaEst(it = mst_item_bank[seen.items, ],
                                         x = final.responses[i, ],
                                         method = method)
@@ -177,7 +177,7 @@ multistage_test <-
           # compile final information for this individual
           final.responses[i, ] = as.numeric(mst.responses[, seen.items])
           final.items.seen[i, ] = seen.items
-          final.modules.seen = seen.modules
+          final.modules.seen[i, ] = seen.modules
           final.theta[i] = mstR::thetaEst(it = mst_item_bank[seen.items, ],
                                           x = final.responses[i, ],
                                           method = method)
