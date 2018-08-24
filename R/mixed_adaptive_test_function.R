@@ -31,6 +31,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # using simulated test data
 #' data(example_thetas) # 5 simulated abilities
 #' data(example_responses) # 5 simulated response vectors
@@ -54,7 +55,7 @@
 #'                                modules = example_module_items,
 #'                                transition_matrix = example_transition_matrix,
 #'                                n_stages = 3)
-#'
+#'}
 #'
 
 mixed_adaptive_test = function(response_matrix,

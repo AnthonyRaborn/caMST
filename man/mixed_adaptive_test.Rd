@@ -57,6 +57,7 @@ Mixed Computerized Adaptive Multistage Test
 To be filled in later.
 }
 \examples{
+\dontrun{
 # using simulated test data
 data(example_thetas) # 5 simulated abilities
 data(example_responses) # 5 simulated response vectors
@@ -80,6 +81,6 @@ results <- mixed_adaptive_test(response_matrix = example_responses[1:2,],
                                modules = example_module_items,
                                transition_matrix = example_transition_matrix,
                                n_stages = 3)
-
+}
 
 }
