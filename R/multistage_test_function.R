@@ -21,6 +21,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # using simulated test data
 #' data(example_thetas) # 5 simulated abilities
 #' data(example_responses) # 5 simulated response vectors
@@ -35,7 +36,7 @@
 #' modules = example_module_items, transition_matrix = example_transition_matrix,
 #' method = "BM", response_matrix = example_responses, initial_theta = 0,
 #' model = NULL, n_stages = 3, test_length = 18)
-#'
+#'}
 #'# using number correct scoring for the same data
 #'# create nc_list as explained in 'details'
 #' nc_list = list(module1 = c(4, 5, 7),
