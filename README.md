@@ -38,7 +38,7 @@ results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_ma
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
                            initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-##  Time difference of 2.953075 secs
+##  Time difference of 3.42484 secs
 results # print all of the results
 ##  $final.theta.estimate.mstR
 ##  [1] -0.9946015  0.6755088  0.1451625  0.2134472 -0.3284433
@@ -67,7 +67,12 @@ results # print all of the results
 ##  [5,]    26    27    28    29    30
 ##  
 ##  $modules.seen
-##  [1] 1 3 5
+##       [,1] [,2] [,3]
+##  [1,]    1    3    6
+##  [2,]    1    3    7
+##  [3,]    1    3    7
+##  [4,]    1    3    7
+##  [5,]    1    3    5
 ##  
 ##  $final.responses
 ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
@@ -184,7 +189,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix,
                                n_stages = 3)
-##  Time difference of 8.04568 secs
+##  Time difference of 9.524523 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -316,7 +321,7 @@ nc.results <- multistage_test(
   test_length = 18,
   nc_list = nc_list
   )
-##  Time difference of 0.121676 secs
+##  Time difference of 0.1416199 secs
 
 # How well does NC scoring estimate the individual's abilities?
 # Using the estimation procedure from Baker for theta

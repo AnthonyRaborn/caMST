@@ -38,17 +38,17 @@ source("R/routing_item_selection.R")
 source("R/iterative_maximum_likelihood_theta_estimation.R")
 ```
 
-### Computer Adaptive Multistage Testing (MST)
+### Computer Adaptive Multistage Testing (CMT)
 
-```{r MST example}
+```{r CMT example}
 # using simulated test data
 data(example_thetas) # 5 simulated abilities
 data(example_responses) # 5 simulated responsesdata
 data(example_transition_matrix)# the transition matrix for an 18 item 1-3-3 balanced design
-data(mst_only_items) # the MST item bank
+data(mst_only_items) # the CMT item bank
 data(mst_only_matrix) # the matrix specifying how the item data frame relates to the modules
 
-# run the MST model
+# run the CMT model
 results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, 
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
@@ -64,7 +64,7 @@ data.frame("True Theta" = example_thetas,
              1.96*results$final.theta.SEM)
 ```
 
-The theta estimates under MST are close except for person 4, whose estimate falls outisde of the 95% confidence interval.
+The theta estimates under CMT are close except for person 4, whose estimate falls outisde of the 95% confidence interval.
 
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
@@ -117,7 +117,7 @@ data.frame("True Theta" = example_thetas,
 
 For these five individuals, the estimated ability level appears fairly close at worst and almost precisely correct at best. In all cases, the 95% confidence interval includes the simulated ability level, indicating that the Mca-MST method works well for these individuals.
 
-### Number-Correct (NC) Scoring with MST
+### Number-Correct (NC) Scoring with CMT
 
 In some cases, applied testing demand the use of NC scoring (even if it's not psychometrically valid). To facilitate NC tests, the `multistage_test()` function accepts a list with the cutoff score for each route specified. Otherwise, the rest of the inputs are the same.
 
