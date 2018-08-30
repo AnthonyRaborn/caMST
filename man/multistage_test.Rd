@@ -43,7 +43,7 @@ module3 = c(8, 14, 20),
 module4 = c(-Inf, 14, 20)).
 }
 \examples{
-\dontrun{
+\donttest{
 # using simulated test data
 data(example_thetas) # 5 simulated abilities
 data(example_responses) # 5 simulated response vectors

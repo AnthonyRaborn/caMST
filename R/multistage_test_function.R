@@ -21,7 +21,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # using simulated test data
 #' data(example_thetas) # 5 simulated abilities
 #' data(example_responses) # 5 simulated response vectors
