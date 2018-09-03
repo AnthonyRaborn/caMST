@@ -3,16 +3,34 @@
 #' @param cat_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.
 #' @param response_matrix A matrix of the person responses, with individuals as rows and items as columns.
 #' @param initial_theta The initial theta estimate for all individuals. Default is 0.
-#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.
+#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{mstR} package for more details.
 #' @param randomesque An integer value that indicates the number of items from which the selection rule should choose from randomly for administration. See the help documentation for \code{catR::nextItem} for more details.
 #' @param maxItems An integer value indicating the maximum number of items to administer, regardless of other stopping rules.
 #' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.
-#' @param ... Further arguments to be passed to \code{catR::nextItem}. Currently unimplemented.
+#' @param nextItemControl A list of control values passed to \code{catR::nextItem}. See that function for more details.
+#' @param ... Further arguments to be passed to internal functions. Currently unimplemented.
 #'
 #' @return List of results.
+#' \item{final.theta.estimate.catR}{The final theta estimate as specified in the `method` argument}
+#' \item{eap.theta}{The expected a posteriori (EAP) theta estimate.}
+#' \item{final.theta.Baker}{The maximum likelihood estimate as described in chapter 5 of Baker (2001)[http://echo.edres.org:8080/irt/baker/final.pdf].}
+#' \item{final.theta.SEM}{The standard error of measurement of the `final.theta.estimate.catR`.}
+#' \item{final.items.seen}{The final items seen by each individual. A matrix of n rows and maxItems columns. NA indicates an individual wasn't administered any additional items after the last one specified in their row.}
+#' \item{final.responses}{The responses to the items in `final.items.seen`. A matrix of n rows and maxItems columns. NA indicates an individual wasn't administered any additional items after the last one specified in their row.}
 #' @export
 #'
-#' @examples #fill in later
+#' @examples
+#' data(example_thetas) # 5 simulated abilities
+#' data(example_responses) # 5 simulated responses
+#' data(cat_items) # using just the CAT routing stage items
+#' catResults <- computerized_adaptive_test(cat_item_bank = cat_items,
+#' response_matrix = example_responses, randomesque = 1, maxItems = 3,
+#' nextItemControl = list(criterion = "MFI",
+#' priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4),
+#' parInt = c(-4, 4, 33), infoType = "Fisher", randomesque = 1, random.seed = NULL,
+#' rule = "precision", thr = .3, nAvailable = NULL,
+#' cbControl = NULL, cbGroup = NULL))
+
 computerized_adaptive_test <-
   function(cat_item_bank,
            response_matrix,
@@ -21,6 +39,23 @@ computerized_adaptive_test <-
            randomesque = 1,
            maxItems = 50,
            method = "BM",
+           nextItemControl = list(
+             criterion = "MFI",
+             method = method,
+             priorDist = "norm",
+             priorPar = c(0, 1),
+             D = 1,
+             range = c(-4, 4),
+             parInt = c(-4, 4, 33),
+             infoType = "Fisher",
+             random.seed = NULL,
+             rule = "precision",
+             thr = .3,
+             SETH = NULL,
+             AP = 1,
+             nAvailable = NULL,
+             cbControl = NULL,
+             cbGroup = NULL),
            ...) {
     # initialize start time to keep track of replication length
     start.time = Sys.time()
@@ -40,31 +75,9 @@ computerized_adaptive_test <-
 
 
     # begin default args; these will be open to user-control
-    nextItemControl = list(
-      model = model,
-      criterion = "MFI",
-      method = method,
-      priorDist = "norm",
-      priorPar = c(0, 1),
-      D = 1,
-      range = c(-4, 4),
-      parInt = c(-4, 4, 33),
-      infoType = "Fisher",
-      randomesque = 1,
-      random.seed = NULL,
-      rule = "precision",
-      thr = .3,
-      SETH = NULL,
-      AP = 1,
-      nAvailable = NULL,
-      maxItems = maxItems,
-      cbControl = NULL,
-      cbGroup = NULL
-    )
+    nextItemControl = nextItemControl
+    nextItemControl$randomesque = randomesque
     nextItemControl$itemBank = cat_item_bank
-    rule = "precision"
-    thr = .5
-    alpha = .05
 
     # one person at a time,
     for (i in 1:nrow(response_matrix)) {
@@ -89,12 +102,13 @@ computerized_adaptive_test <-
         catR::checkStopRule(
           th = theta.est,
           se = theta.sem,
-          it = cat_item_bank[seen.items],
+          N = nrow(cat_item_bank[seen.items,]),
+          it = cat_item_bank[seen.items,],
           model = model,
           stop = list(
-            rule = rule,
-            thr = thr,
-            alpha = alpha
+            rule = nextItemControl$rule,
+            thr = nextItemControl$thr,
+            alpha = nextItemControl$alpha
           )
         )$decision,
         length(current.responses) == maxItems
