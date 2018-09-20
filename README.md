@@ -14,8 +14,9 @@ DOI](https://zenodo.org/badge/127388900.svg)](https://zenodo.org/badge/latestdoi
 ## Installation
 
 ``` r
+install.packages('caMST') # CRAN-tastic
 # install.packages("devtools")
-devtools::install_github("AnthonyRaborn/caMST") # the developmental version; no CRAN version yet
+devtools::install_github("AnthonyRaborn/caMST") # the stable developmental version; add the argument `ref = 'devel'` for the developmental version with no stability guarantee
 ```
 
 ## Usage
@@ -41,7 +42,7 @@ results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_ma
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
                            initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-##  Time difference of 3.142009 secs
+##  Time difference of 3.381374 secs
 results # print all of the results
 ##  $final.theta.estimate.mstR
 ##  [1] -0.9946015  0.6755088  0.1451625  0.2134472 -0.3284433
@@ -192,7 +193,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                modules = example_module_items, 
                                transition_matrix = example_transition_matrix,
                                n_stages = 3)
-##  Time difference of 8.766592 secs
+##  Time difference of 8.861124 secs
 
 # The function outputs a list with named elements; 
 # each individual is his or her own element in the list.
@@ -324,7 +325,7 @@ nc.results <- multistage_test(
   test_length = 18,
   nc_list = nc_list
   )
-##  Time difference of 0.1256659 secs
+##  Time difference of 0.1184068 secs
 
 # How well does NC scoring estimate the individual's abilities?
 # Using the estimation procedure from Baker for theta
@@ -357,7 +358,7 @@ data(cat_items) # using just the CAT-only routing items for the entire CAT test
 
 catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, 
                                          nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = .3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-##  Time difference of 4.885913 secs
+##  Time difference of 5.078009 secs
 
 data.frame("True Theta" = example_thetas,
            "Estimated Theta" = unlist(catResults$final.theta.Baker),
@@ -366,11 +367,11 @@ data.frame("True Theta" = example_thetas,
            "CI95 Upper Bound" = unlist(catResults$final.theta.Baker) +
              1.96*unlist(catResults$final.theta.SEM))
 ##     True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-##  1 -0.82791686     -1.02280638       -1.7585027       -0.2871100
-##  2  0.61463323      1.28973104        0.4751417        2.1043204
-##  3  0.03785365      0.46487099       -0.1450744        1.0748164
-##  4 -0.51095175     -1.10796064       -1.8160138       -0.3999075
-##  5 -0.08529469      0.09435123       -0.4925188        0.6812212
+##  1 -0.82791686      -0.9910231       -1.7196636       -0.2623827
+##  2  0.61463323       1.3865574        0.5686868        2.2044279
+##  3  0.03785365       0.2760076       -0.3128944        0.8649097
+##  4 -0.51095175      -1.3154147       -2.0916871       -0.5391424
+##  5 -0.08529469       0.2855030       -0.3113083        0.8823144
 ```
 
 The CAT method, using the precision rule with a value of .3 (i.e.,

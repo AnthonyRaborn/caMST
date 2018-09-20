@@ -22,8 +22,9 @@ knitr::opts_chunk$set(
 
 ## Installation
 ```{r gh-installation, eval = FALSE}
+install.packages('caMST') # CRAN-tastic
 # install.packages("devtools")
-devtools::install_github("AnthonyRaborn/caMST") # the developmental version; no CRAN version yet
+devtools::install_github("AnthonyRaborn/caMST") # the stable developmental version; add the argument `ref = 'devel'` for the developmental version with no stability guarantee
 ```
 
 ## Usage
