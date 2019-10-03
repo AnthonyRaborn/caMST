@@ -3,3 +3,4 @@
 export(computerized_adaptive_test)
 export(mixed_adaptive_test)
 export(multistage_test)
+export(transition_matrix_plot)
