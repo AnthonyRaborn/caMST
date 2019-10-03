@@ -5,9 +5,9 @@
 \title{Mixed Computerized Adaptive Multistage Test}
 \usage{
 mixed_adaptive_test(response_matrix, cat_item_bank, initial_theta = 0,
-  method = "BM", item_method = "MFI", cat_length, nAvailable_cat = NULL,
-  cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank,
-  modules, transition_matrix, n_stages)
+  method = "BM", item_method = "MFI", cat_length,
+  nAvailable_cat = NULL, cbControl = NULL, cbGroup = NULL,
+  randomesque = 1, mst_item_bank, modules, transition_matrix, n_stages)
 }
 \arguments{
 \item{response_matrix}{A matrix of the person responses, with individuals as rows and items as columns.}

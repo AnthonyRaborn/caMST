@@ -27,7 +27,7 @@ multistage_test(mst_item_bank, modules, transition_matrix, method = "BM",
 
 \item{test_length}{A numeric value indicating the total number of items each individual answers.}
 
-\item{nc_list}{This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. See 'details' for more information.}
+\item{nc_list}{This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. If no `method` argument is provided in this list, or if an invalid entry is given, the method will default to `'cumulative_sum'`, meaning the values provided are a running tally of the number of items correctly answered on the test. If `method` is set to `module_sum`, then the sum of the number correct within the current module will be used to select the next module. See 'details' for more information.}
 }
 \value{
 A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
@@ -40,7 +40,10 @@ When using (cumulative) number correct module selection, the input list should c
 nc_list = list(module1 = c(4, 5, 7),
 module2 = c(8, 14, Inf),
 module3 = c(8, 14, 20),
-module4 = c(-Inf, 14, 20)).
+module4 = c(-Inf, 14, 20),
+method = "cumulative_sum").
+
+As it is the most common method of number correct scoring, "cumulative_sum" is the default. Any value included in the `method` argument of `nc_list` that does _not_ equal "module_sum" will cause the default "cumulative_sum" to be used. _This is intentional and will not be changed unless I am given a good argument to change it_.
 }
 \examples{
 \donttest{
@@ -63,8 +66,9 @@ model = NULL, n_stages = 3, test_length = 18)
 # create nc_list as explained in 'details'
 nc_list = list(module1 = c(4, 5, 7),
 module2 = c(8, 14, Inf),
-module3 = c(8, 14, 20),
-module4 = c(-Inf, 14, 20))
+module3 = c(8, 14, 18),
+module4 = c(-Inf, 14, 18),
+method = 3) # the method here will default to "cumulative_sum" as described in 'details'
 # this is the ONLY difference currently! Everything else remains the same
 # run the example
 nc.results <- multistage_test(mst_item_bank = mst_only_items,

@@ -4,12 +4,13 @@
 \alias{computerized_adaptive_test}
 \title{Computerized Adaptive Test}
 \usage{
-computerized_adaptive_test(cat_item_bank, response_matrix, initial_theta = 0,
-  model = NULL, randomesque = 1, maxItems = 50, method = "BM",
-  nextItemControl = list(criterion = "MFI", method = method, priorDist =
-  "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33),
-  infoType = "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, SETH =
-  NULL, AP = 1, nAvailable = NULL, cbControl = NULL, cbGroup = NULL), ...)
+computerized_adaptive_test(cat_item_bank, response_matrix,
+  initial_theta = 0, model = NULL, randomesque = 1, maxItems = 50,
+  method = "BM", nextItemControl = list(criterion = "MFI", method =
+  method, priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4),
+  parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule =
+  "precision", thr = 0.3, SETH = NULL, AP = 1, nAvailable = NULL, cbControl
+  = NULL, cbGroup = NULL), ...)
 }
 \arguments{
 \item{cat_item_bank}{A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.}
