@@ -40,11 +40,11 @@ results1 <- multistage_test(
 referenceMSTResults = readRDS(file = file.path("multistage_test_expected_results1.rds"))
 expect_equal(
   c(referenceMSTResults@function.call,
-    referenceMSTResults@final.theta.estimate.catR,
+    referenceMSTResults@final.theta.estimate,
     referenceMSTResults@final.items.seen,
     referenceMSTResults@final.theta.SEM),
   c(results1@function.call,
-    results1@final.theta.estimate.catR,
+    results1@final.theta.estimate,
     results1@final.items.seen,
     results1@final.theta.SEM)
 )
@@ -66,11 +66,11 @@ results2 <- multistage_test(
 referenceNCResults = readRDS(file = file.path("multistage_test_expected_results2.rds"))
 expect_equal(
   c(referenceNCResults@function.call,
-    referenceNCResults@final.theta.estimate.catR,
+    referenceNCResults@final.theta.estimate,
     referenceNCResults@final.items.seen,
     referenceNCResults@final.theta.SEM),
   c(results2@function.call,
-    results2@final.theta.estimate.catR,
+    results2@final.theta.estimate,
     results2@final.items.seen,
     results2@final.theta.SEM)
 )
@@ -97,11 +97,11 @@ results3 <-
 referenceMixedResults = readRDS(file = file.path("mixed_adaptive_test_expected_results1.rds"))
 expect_equal(
   c(referenceMixedResults@function.call,
-    referenceMixedResults@final.theta.estimate.catR,
+    referenceMixedResults@final.theta.estimate,
     referenceMixedResults@final.items.seen,
     referenceMixedResults@final.theta.SEM),
   c(results3@function.call,
-    results3@final.theta.estimate.catR,
+    results3@final.theta.estimate,
     results3@final.items.seen,
     results3@final.theta.SEM)
 )
@@ -132,11 +132,11 @@ catResults <- computerized_adaptive_test(
 referenceCatResults = readRDS(file = file.path("computerized_adaptive_test_expected_results1.rds"))
 expect_equal(
   c(referenceCatResults@function.call,
-    referenceCatResults@final.theta.estimate.catR,
+    referenceCatResults@final.theta.estimate,
     referenceCatResults@final.items.seen,
     referenceCatResults@final.theta.SEM),
   c(catResults@function.call,
-    catResults@final.theta.estimate.catR,
+    catResults@final.theta.estimate,
     catResults@final.items.seen,
     catResults@final.theta.SEM)
 )
