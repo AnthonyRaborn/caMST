@@ -37,8 +37,17 @@ results1 <- multistage_test(
   test_length = 18
 )
 
-expect_equal(readRDS(file = file.path("multistage_test_expected_results1.rds")),
-          results1)
+referenceMSTResults = readRDS(file = file.path("multistage_test_expected_results1.rds"))
+expect_equal(
+  c(referenceMSTResults@function.call,
+    referenceMSTResults@final.theta.estimate.catR,
+    referenceMSTResults@final.items.seen,
+    referenceMSTResults@final.theta.SEM),
+  c(results1@function.call,
+    results1@final.theta.estimate.catR,
+    results1@final.items.seen,
+    results1@final.theta.SEM)
+)
 
 # run the NC example
 results2 <- multistage_test(
@@ -54,9 +63,17 @@ results2 <- multistage_test(
   nc_list = nc_list
 )
 
-expect_equal(readRDS(file = file.path("multistage_test_expected_results2.rds")),
-          results2)
-
+referenceNCResults = readRDS(file = file.path("multistage_test_expected_results2.rds"))
+expect_equal(
+  c(referenceNCResults@function.call,
+    referenceNCResults@final.theta.estimate.catR,
+    referenceNCResults@final.items.seen,
+    referenceNCResults@final.theta.SEM),
+  c(results2@function.call,
+    results2@final.theta.estimate.catR,
+    results2@final.items.seen,
+    results2@final.theta.SEM)
+)
 
 ## mixed_adaptive_test ####
 # run the Mca-MST model
@@ -76,9 +93,17 @@ results3 <-
     transition_matrix = example_transition_matrix,
     n_stages = 3
   )
+
+referenceMixedResults = readRDS(file = file.path("mixed_adaptive_test_expected_results1.rds"))
 expect_equal(
-  readRDS(file = file.path("mixed_adaptive_test_expected_results1.rds")),
-  results3
+  c(referenceMixedResults@function.call,
+    referenceMixedResults@final.theta.estimate.catR,
+    referenceMixedResults@final.items.seen,
+    referenceMixedResults@final.theta.SEM),
+  c(results3@function.call,
+    results3@final.theta.estimate.catR,
+    results3@final.items.seen,
+    results3@final.theta.SEM)
 )
 
 ## computerized_adaptive_test ####
@@ -104,7 +129,14 @@ catResults <- computerized_adaptive_test(
     cbGroup = NULL
   )
 )
+referenceCatResults = readRDS(file = file.path("computerized_adaptive_test_expected_results1.rds"))
 expect_equal(
-  readRDS(file = file.path("computerized_adaptive_test_expected_results1.rds")),
-  catResults
+  c(referenceCatResults@function.call,
+    referenceCatResults@final.theta.estimate.catR,
+    referenceCatResults@final.items.seen,
+    referenceCatResults@final.theta.SEM),
+  c(catResults@function.call,
+    catResults@final.theta.estimate.catR,
+    catResults@final.items.seen,
+    catResults@final.theta.SEM)
 )
