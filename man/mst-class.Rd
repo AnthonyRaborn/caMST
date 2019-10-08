@@ -15,7 +15,7 @@ An S4 method for multistage adaptive tests.
 \describe{
 \item{\code{function.call}}{The original function call.}
 
-\item{\code{final.theta.estimate.catR}}{Numeric vector of theta estimates calculated by the provided `method`.}
+\item{\code{final.theta.estimate}}{Numeric vector of theta estimates calculated by the provided `method`.}
 
 \item{\code{eap.theta}}{Numeric vector of theta estimates calculated by `catR::eapEst`.}
 

@@ -43,7 +43,7 @@ A list of all individuals with the following elements: the vector of final theta
 
 An S4 object of class 'MST' with the following slots:
 \item{function.call}{The function and arguments called to create this object.}
-\item{final.theta.estimate.catR}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
+\item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
 \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
 \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapger 5 of Baker (2001).}
 \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}

@@ -1,7 +1,7 @@
 #' An S4 class for computerized adaptive tests
 #'
 #' @slot function.call The original function call.
-#' @slot final.theta.estimate.catR Numeric vector of theta estimates calculated by the provided `method`.
+#' @slot final.theta.estimate Numeric vector of theta estimates calculated by the provided `method`.
 #' @slot eap.theta Numeric vector of theta estimates calculated by `catR::eapEst`.
 #' @slot final.theta.Baker Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.
 #' @slot final.theta.SEM Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.
@@ -16,7 +16,7 @@ setClass('CAT',
          slots =
            list(
              function.call = 'call',
-             final.theta.estimate.catR = 'numeric',
+             final.theta.estimate = 'numeric',
              eap.theta = 'numeric',
              final.theta.Baker = 'numeric',
              final.theta.SEM = 'numeric',
@@ -31,7 +31,7 @@ setMethod('show',
           definition = function(object) {
             Original.Call = object@function.call
             Total.Time = object@runtime
-            Average.Theta = mean(object@final.theta.estimate.catR)
+            Average.Theta = mean(object@final.theta.estimate)
             Average.SEM = mean(object@final.theta.SEM, na.rm = T)
             Average.Items = mean(apply(object@final.items.seen, 1, FUN = function(x) sum(!is.na(x))))
 
@@ -48,7 +48,7 @@ setMethod('show',
 #' An S4 method for multistage adaptive tests.
 #'
 #' @slot function.call The original function call.
-#' @slot final.theta.estimate.catR Numeric vector of theta estimates calculated by the provided `method`.
+#' @slot final.theta.estimate Numeric vector of theta estimates calculated by the provided `method`.
 #' @slot eap.theta Numeric vector of theta estimates calculated by `catR::eapEst`.
 #' @slot final.theta.Baker Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.
 #' @slot final.theta.SEM Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.
@@ -67,7 +67,7 @@ setClass('MST',
          slots =
            list(
              function.call = 'call',
-             final.theta.estimate.catR = 'numeric',
+             final.theta.estimate = 'numeric',
              eap.theta = 'numeric',
              final.theta.Baker = 'numeric',
              final.theta.SEM = 'numeric',
@@ -86,7 +86,7 @@ setMethod('show',
           definition = function(object) {
             Original.Call = object@function.call
             Total.Time = object@runtime
-            Average.Theta = mean(object@final.theta.estimate.catR)
+            Average.Theta = mean(object@final.theta.estimate)
             Average.SEM = mean(object@final.theta.SEM, na.rm = T)
             Path.Taken = apply(object@modules.seen, 1, FUN = function(object) paste0(object, collapse = '-'))
             Most.Path = table(Path.Taken)[which(table(Path.Taken)==max(table(Path.Taken)))]
@@ -113,7 +113,7 @@ setMethod('show',
 #' An S4 method for mixed adaptive tests.
 #'
 #' @slot function.call The original function call.
-#' @slot final.theta.estimate.catR Numeric vector of theta estimates calculated by the provided `method`.
+#' @slot final.theta.estimate Numeric vector of theta estimates calculated by the provided `method`.
 #' @slot eap.theta Numeric vector of theta estimates calculated by `catR::eapEst`.
 #' @slot final.theta.Baker Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.
 #' @slot final.theta.SEM Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.
@@ -131,7 +131,7 @@ setClass('MAT',
          slots =
            list(
              function.call = 'call',
-             final.theta.estimate.catR = 'numeric',
+             final.theta.estimate = 'numeric',
              eap.theta = 'numeric',
              final.theta.Baker = 'numeric',
              final.theta.SEM = 'numeric',
@@ -149,7 +149,7 @@ setMethod('show',
           definition = function(object) {
             Original.Call = object@function.call
             Total.Time = object@runtime
-            Average.Theta = mean(object@final.theta.estimate.catR)
+            Average.Theta = mean(object@final.theta.estimate)
             Average.SEM = mean(object@final.theta.SEM, na.rm = T)
             Path.Taken = apply(object@modules.seen, 1, FUN = function(object) paste0(object, collapse = '-'))
             Most.Path = table(Path.Taken)[which(table(Path.Taken)==max(table(Path.Taken)))]
