@@ -6,8 +6,8 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "## ",
-  fig.path = "README-"
+  fig.path = "README-",
+  tidy = TRUE
 )
 ```
 
@@ -58,15 +58,15 @@ results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_ma
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
                            initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-results # print all of the results
+results # print a summary of the results
 
 # how good were the estimates?
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = results$final.theta.estimate.mstR,
-           "CI95 Lower Bound" = results$final.theta.estimate.mstR -
-             1.96*results$final.theta.SEM,
-           "CI95 Upper Bound" = results$final.theta.estimate.mstR +
-             1.96*results$final.theta.SEM)
+           "Estimated Theta" = results@final.theta.estimate,
+           "CI95 Lower Bound" = results@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = results@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 ```
 
 The theta estimates under CMT are close except for person 4, whose estimate falls outisde of the 95% confidence interval.
@@ -105,18 +105,15 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                transition_matrix = example_transition_matrix,
                                n_stages = 3)
 
-# The function outputs a list with named elements; 
-# each individual is his or her own element in the list.
-# the first person's results:
-results[[1]]
+results # prints a summary of the results
 
 # How good was our estimate of the individual's abilities?
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(lapply(results, '[[', 1)),
-           "CI95 Lower Bound" = unlist(lapply(results, '[[', 1)) -
-             1.96*unlist(lapply(results, '[[', 4)),
-           "CI95 Upper Bound" = unlist(lapply(results, '[[', 1)) +
-             1.96*unlist(lapply(results, '[[', 4)))
+           "Estimated Theta" = results@final.theta.estimate,
+           "CI95 Lower Bound" = results@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = results@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 ```
 
 
@@ -159,11 +156,11 @@ nc.results <- multistage_test(
 # How well does NC scoring estimate the individual's abilities?
 # Using the estimation procedure from Baker for theta
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(nc.results$final.theta.Baker),
-           "CI95 Lower Bound" = unlist(nc.results$final.theta.Baker) -
-             1.96*unlist(nc.results$final.theta.SEM),
-           "CI95 Upper Bound" = unlist(nc.results$final.theta.Baker) +
-             1.96*unlist(nc.results$final.theta.SEM))
+           "Estimated Theta" = nc.results@final.theta.estimate,
+           "CI95 Lower Bound" = nc.results@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = nc.results@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 
 ```
 
@@ -183,11 +180,11 @@ catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_mat
                                          nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = .3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
 
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(catResults$final.theta.Baker),
-           "CI95 Lower Bound" = unlist(catResults$final.theta.Baker) -
-             1.96*unlist(catResults$final.theta.SEM),
-           "CI95 Upper Bound" = unlist(catResults$final.theta.Baker) +
-             1.96*unlist(catResults$final.theta.SEM))
+           "Estimated Theta" = catResults@final.theta.estimate,
+           "CI95 Lower Bound" = catResults@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = catResults@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 
 ```
 
