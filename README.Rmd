@@ -174,6 +174,7 @@ With this example data, the NC scoring does about as well as the previous method
 Using the same individuals, we can administer a computerized adaptive test with item-level adaptation. Generally, CAT performs better than the other methods at the cost of algorithm complexity and potential difficulties maintaining item security and content balance. However, it is the golden standard for computer-based test and serves as a great test for 'best-case scenarios'.
 
 ```{r CAT example}
+set.seed(12345) # to keep randomesque selecting the same items
 # using simulated test data
 data(example_thetas) # 5 simulated abilities
 data(example_responses) # 5 simulated responsesdata
