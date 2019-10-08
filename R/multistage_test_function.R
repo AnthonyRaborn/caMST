@@ -261,20 +261,24 @@ multistage_test <-
       }
     }
 
-    # print total time this replication took to perform
-    print(Sys.time() - start.time)
-
-    # compile everyones' results into a list and return
-    return(
-      list(
-        final.theta.estimate.mstR = final.theta,
+    # create results object
+    results =
+      new(
+        'mst',
+        function.call = match.call(),
+        final.theta.estimate.catR = final.theta,
         eap.theta = final.theta.eap,
         final.theta.Baker = final.theta.Baker,
         final.theta.SEM = final.theta.SEM,
         final.items.seen = final.items.seen,
         modules.seen = final.modules.seen,
-        final.responses = final.responses
+        final.responses = final.responses,
+        runtime = Sys.time() - start.time
       )
-    )
 
+    print(results@runtime)
+
+    return(
+      results
+    )
   }

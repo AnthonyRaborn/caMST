@@ -167,17 +167,23 @@ computerized_adaptive_test <-
       # end loop for this person; repeat loop for next
     }
 
-    # print total time this replication took to perform
-    print(Sys.time() - start.time)
-
-    return(
-      list(
+    # create results object
+    results =
+      new(
+        'cat',
+        function.call = match.call(),
         final.theta.estimate.catR = final.theta,
         eap.theta = final.theta.eap,
         final.theta.Baker = final.theta.Baker,
         final.theta.SEM = final.theta.SEM,
         final.items.seen = final.items.seen,
-        final.responses = final.responses
+        final.responses = final.responses,
+        runtime = Sys.time() - start.time
       )
+
+    print(results@runtime)
+
+    return(
+      results
     )
   }
