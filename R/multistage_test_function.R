@@ -264,7 +264,7 @@ multistage_test <-
     # create results object
     results =
       new(
-        'mst',
+        'MST',
         function.call = match.call(),
         final.theta.estimate.catR = final.theta,
         eap.theta = final.theta.eap,

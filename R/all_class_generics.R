@@ -9,10 +9,10 @@
 #' @slot final.responses Numeric matrix of the response patterns observed.
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
-#' @return An S4 object of class `cat`.
+#' @return An S4 object of class `CAT`.
 #' @export
 #'
-setClass('cat',
+setClass('CAT',
          slots =
            list(
              function.call = 'call',
@@ -26,17 +26,17 @@ setClass('cat',
            )
          )
 
-setMethod('print',
-          signature = 'cat',
-          definition = function(x) {
-            Original.Call = x@function.call
+setMethod('show',
+          signature = 'CAT',
+          definition = function(object) {
+            Original.Call = object@function.call
             # Original.Call = strwrap(paste0("Function call: computerized_adaptive_test",
             #                                gsub("^list", "", Original.Call)),
             #                         exdent = 4)
-            Total.Time = x@runtime
-            Average.Theta = mean(x@final.theta.estimate.catR)
-            Average.SEM = mean(x@final.theta.SEM, na.rm = T)
-            Average.Items = mean(apply(x@final.items.seen, 1, FUN = function(x) sum(!is.na(x))))
+            Total.Time = object@runtime
+            Average.Theta = mean(object@final.theta.estimate.catR)
+            Average.SEM = mean(object@final.theta.SEM, na.rm = T)
+            Average.Items = mean(apply(object@final.items.seen, 1, FUN = function(x) sum(!is.na(x))))
 
             line0 = c("Test Format: Computerized Adaptive Test")
             line1 = Original.Call
@@ -60,10 +60,10 @@ setMethod('print',
 #' @slot final.responses Numeric matrix of the response patterns observed.
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
-#' @return An S4 object of class `mst`.
+#' @return An S4 object of class `MST`.
 #' @export
 #'
-setClass('mst',
+setClass('MST',
          slots =
            list(
              function.call = 'call',
@@ -78,18 +78,18 @@ setClass('mst',
            )
 )
 
-setMethod('print',
-          signature = 'mst',
-          definition = function(x) {
-            Original.Call = x@function.call
+setMethod('show',
+          signature = 'MST',
+          definition = function(object) {
+            Original.Call = object@function.call
             # Original.Call = strwrap(paste0("Function call: ",
             #                                Original.Call, sep = ""),
             #                         exdent = 4)
-            Total.Time = x@runtime
-            Average.Theta = mean(x@final.theta.estimate.catR)
-            Average.SEM = mean(x@final.theta.SEM, na.rm = T)
+            Total.Time = object@runtime
+            Average.Theta = mean(object@final.theta.estimate.catR)
+            Average.SEM = mean(object@final.theta.SEM, na.rm = T)
             # Average.Items = mean(apply(x@final.items.seen, 1, FUN = function(x) sum(!is.na(x))))
-            Path.Taken = apply(x@modules.seen, 1, FUN = function(x) paste0(x, collapse = '-'))
+            Path.Taken = apply(object@modules.seen, 1, FUN = function(object) paste0(object, collapse = '-'))
             Most.Path = table(Path.Taken)[which(table(Path.Taken)==max(table(Path.Taken)))]
 
             line0 = c("Test Format: Multistage Adaptive Test")

@@ -170,7 +170,7 @@ computerized_adaptive_test <-
     # create results object
     results =
       new(
-        'cat',
+        'CAT',
         function.call = match.call(),
         final.theta.estimate.catR = final.theta,
         eap.theta = final.theta.eap,
