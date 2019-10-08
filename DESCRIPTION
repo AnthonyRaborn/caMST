@@ -13,7 +13,7 @@ Description: Provides functions to more easily analyze computerized adaptive tes
 License: LGPL (>= 2.0, < 3) | Mozilla Public License
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.2.3)
+Depends: R (>= 3.5.0)
 Imports: catR,
   mstR,
   diagram
