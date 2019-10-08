@@ -29,6 +29,12 @@ An S4 method for multistage adaptive tests.
 
 \item{\code{final.responses}}{Numeric matrix of the response patterns observed.}
 
+\item{\code{transition.matrix}}{Numeric matrix; the transition matrix entered into the function.}
+
+\item{\code{n.stages}}{Numeric; the number of stages specified.}
+
+\item{\code{nc.list}}{A list of the number correct scoring logic and method, if applicable. Defaults to `NULL`.}
+
 \item{\code{runtime}}{A `difftime` object of the total run time of the function.}
 }}
 

@@ -4,12 +4,12 @@
 \alias{transition_matrix_plot}
 \title{Transition Matrix Plot}
 \usage{
-transition_matrix_plot(transition_matrix = NULL, n_each_stage = NULL)
+transition_matrix_plot(object = NULL, n_stages = NULL)
 }
 \arguments{
-\item{transition_matrix}{A matrix describing how individuals can transition from one stage to the next.}
+\item{object}{Either an S4 object of class `"MST"` or class `"MAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.}
 
-\item{n_each_stage}{A numeric vector indicating how many modules exist at each stage.}
+\item{n_stages}{A numeric value indicating how many stages are used in the (mixed) multistage test. If an S4 object is provided, this value is taken from the object and the input value is ignored.}
 }
 \value{
 A plot using the current graphic device.
@@ -28,6 +28,13 @@ transition_matrix_plot(example_transition_matrix, n_each_stage = c(1,3,3))
 png("Example 1-3-3 Transition Matrix Plot.png")
 transition_matrix_plot(example_transition_matrix, n_each_stage = c(1,3,3))
 title("Transition Matrix for a 1-3-3 Design MST")
+dev.off()
+
+# Use the `results` object from the `mixed_adaptive_test()` example to create
+# a transition matrix plot and save as a .pdf file.
+pdf("MAT Transition Matrix.pdf")
+transition_matrix_plot(results)
+title("Transition Matrix from the mixed_adaptive_test Example")
 dev.off()
 }
 
