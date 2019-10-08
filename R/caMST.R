@@ -6,6 +6,7 @@
 #'
 #' @docType package
 #' @name ShortForm
+#' @importFrom stats runif
 NULL
 
 
@@ -15,6 +16,7 @@ NULL
 #'
 #' Idea taken from https://github.com/ntguardian/MCHT/blob/master/R/StartupMessage.R
 #'
+#' @import utils
 #' @examples
 #' caMST:::caMSTStartup()
 
@@ -28,8 +30,8 @@ caMSTStartup <- function() {
  \\___| \\__,_|\\_|  |_/\\____/   \\_/
      ")
   version <- paste("\tVersion", as.character(utils::packageVersion("caMST")))
-  penguin <- c("\t (^<", "\t //\\    _", "\t V_/_ ><_>")
-  message <- c(caMST, version, penguin)
+  cat_penguin <- c("\t\\   /\\ \n\t ) ( ')\t >^)\n\t( /  ) \t /\\\\ \n\t\\(__)|\t_\\_V")
+  message <- c(caMST, version, cat_penguin)
 
   cat(message, sep = "\n")
 }
