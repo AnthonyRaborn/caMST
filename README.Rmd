@@ -6,8 +6,8 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "## ",
-  fig.path = "README-"
+  fig.path = "README-",
+  tidy = TRUE
 )
 ```
 
@@ -58,18 +58,18 @@ results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_ma
                            transition_matrix = example_transition_matrix,
                            method = "BM", response_matrix = example_responses, 
                            initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-results # print all of the results
+results # print a summary of the results
 
 # how good were the estimates?
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = results$final.theta.estimate.mstR,
-           "CI95 Lower Bound" = results$final.theta.estimate.mstR -
-             1.96*results$final.theta.SEM,
-           "CI95 Upper Bound" = results$final.theta.estimate.mstR +
-             1.96*results$final.theta.SEM)
+           "Estimated Theta" = results@final.theta.estimate,
+           "CI95 Lower Bound" = results@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = results@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 ```
 
-The theta estimates under CMT are close except for person 4, whose estimate falls outisde of the 95% confidence interval.
+The theta estimates under CMT are close except for person 4, whose estimate falls outside of the 95% confidence interval.
 
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
@@ -105,18 +105,15 @@ results <- mixed_adaptive_test(response_matrix = example_responses,
                                transition_matrix = example_transition_matrix,
                                n_stages = 3)
 
-# The function outputs a list with named elements; 
-# each individual is his or her own element in the list.
-# the first person's results:
-results[[1]]
+results # prints a summary of the results
 
 # How good was our estimate of the individual's abilities?
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(lapply(results, '[[', 1)),
-           "CI95 Lower Bound" = unlist(lapply(results, '[[', 1)) -
-             1.96*unlist(lapply(results, '[[', 4)),
-           "CI95 Upper Bound" = unlist(lapply(results, '[[', 1)) +
-             1.96*unlist(lapply(results, '[[', 4)))
+           "Estimated Theta" = results@final.theta.estimate,
+           "CI95 Lower Bound" = results@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = results@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 ```
 
 
@@ -156,24 +153,28 @@ nc.results <- multistage_test(
   nc_list = nc_list
   )
 
+# printing a MST using NC scoring also shows the NC scoring method used
+nc.results
+
 # How well does NC scoring estimate the individual's abilities?
 # Using the estimation procedure from Baker for theta
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(nc.results$final.theta.Baker),
-           "CI95 Lower Bound" = unlist(nc.results$final.theta.Baker) -
-             1.96*unlist(nc.results$final.theta.SEM),
-           "CI95 Upper Bound" = unlist(nc.results$final.theta.Baker) +
-             1.96*unlist(nc.results$final.theta.SEM))
+           "Estimated Theta" = nc.results@final.theta.estimate,
+           "CI95 Lower Bound" = nc.results@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = nc.results@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 
 ```
 
-With this example data, the NC scoring does about as well as the other methods in recovering the ability levels of the individuals.
+With this example data, the NC scoring does about as well as the previous methods in recovering the ability levels of these individuals.
 
 ### Computer Adaptive Testing (CAT)
 
-Using the same individuals
+Using the same individuals, we can administer a computerized adaptive test with item-level adaptation. Generally, CAT performs better than the other methods at the cost of algorithm complexity and potential difficulties maintaining item security and content balance. However, it is the golden standard for computer-based test and serves as a great test for 'best-case scenarios'.
 
 ```{r CAT example}
+set.seed(12345) # to keep randomesque selecting the same items
 # using simulated test data
 data(example_thetas) # 5 simulated abilities
 data(example_responses) # 5 simulated responsesdata
@@ -182,13 +183,15 @@ data(cat_items) # using just the CAT-only routing items for the entire CAT test
 catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, 
                                          nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = .3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
 
+catResults
+
 data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = unlist(catResults$final.theta.Baker),
-           "CI95 Lower Bound" = unlist(catResults$final.theta.Baker) -
-             1.96*unlist(catResults$final.theta.SEM),
-           "CI95 Upper Bound" = unlist(catResults$final.theta.Baker) +
-             1.96*unlist(catResults$final.theta.SEM))
+           "Estimated Theta" = catResults@final.theta.estimate,
+           "CI95 Lower Bound" = catResults@final.theta.estimate -
+             1.96*results@final.theta.SEM,
+           "CI95 Upper Bound" = catResults@final.theta.estimate +
+             1.96*results@final.theta.SEM)
 
 ```
 
-The CAT method, using the precision rule with a value of .3 (i.e., stopping when the SEM is less than .3) and a maximum test length of 18, produces theta confidence intervals that encompass the true theta in each case. It is important to note, however, that only one individual saw less than 18 items (and he only saw 17), and this individual is the only one with an SEM of less than .3, so in reality we would probably want to increase the maxItems each individual can see in order to get a better estimate of their abilities.
+The CAT method, using the precision rule with a value of .3 (i.e., stopping when the SEM is less than .3) and a maximum test length of 18, produces theta confidence intervals that encompass the true theta in each case. It is important to note, however, that only one individual saw less than 18 items (and he only saw 17), and this individual is the only one with an SEM of less than .3, so in reality we would probably want to increase the maxItems each individual can see in order to get a better estimate of their abilities. However, the theta estimates are accurate and all fall within the 95% CIs.

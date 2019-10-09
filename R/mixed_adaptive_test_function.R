@@ -17,16 +17,22 @@
 #'
 #' @details To be filled in later.
 #'
-#' @return A list with eight elements. The first three elements are the final
-#' theta estimates (the chosen estimate put into the function
-#' [$final.theta.estimate.mstR], the EAP estimate [$eap.theta], and the
-#' iterative estimate from Baker 2004 [$final.theta.iterative]). The fourth
-#' element is the standard error of measurement of the iterative theta estimate
-#' [$sem.iterative]. The fifth element is a data frame of the final item bank
-#' the individual saw [$final.item.bank]. The sixth element is a character
-#' vector of the item names the person saw [$final.items.seen]. The seventh
-#' element is a vector of the modules the person saw [$modules.seen]. The eighth
-#' and final element is a vector of the response pattern
+#' @return A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
+#' @return An S4 object of class 'MST' with the following slots:
+#' \item{function.call}{The function and arguments called to create this object.}
+#' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
+#' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
+#' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
+#' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. `NA` values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
+#' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
+#' \item{transition.matrix}{The \code{transition_matrix} originally supplied to the function.}
+#' \item{n.stages}{The \code{n_stages} originally supplied to the function.}
+#' \item{runtime}{A \code{difftime} object recording how long the function took to complete.}
+#' @export
+#'
+#' @references Baker (2001). http://echo.edres.org:8080/irt/baker/final.pdf
+#' @seealso [multistage_test] for a standard multistage test, [computerized_adaptive_test] for a standard computerized adaptive test.
 #'
 #' @export
 #'
@@ -128,8 +134,24 @@ mixed_adaptive_test = function(response_matrix,
 
   }
 
-  print(Sys.time() - start.time)
+  # create results object
+  results =
+    new(
+      'MAT',
+      function.call = match.call(),
+      final.theta.estimate = sapply(list.of.mst.results, FUN = function(x) x$final.theta.estimate.mstR),
+      eap.theta = sapply(list.of.mst.results, FUN = function(x) x$eap.theta),
+      final.theta.Baker = sapply(list.of.mst.results, FUN = function(x) x$final.theta.iterative),
+      final.theta.SEM = sapply(list.of.mst.results, FUN = function(x) x$sem.iterative),
+      final.items.seen = sapply(list.of.mst.results, FUN = function(x) x$final.items.seen),
+      modules.seen = t(sapply(list.of.mst.results, FUN = function(x) x$modules.seen)),
+      final.responses = t(sapply(list.of.mst.results, FUN = function(x) x$final.responses)),
+      runtime = Sys.time() - start.time
+    )
 
-  return(list.of.mst.results)
+  print(results@runtime)
 
+  return(
+    results
+  )
 }
