@@ -1,7 +1,8 @@
-# Package v0.1.0
+# Package v0.1.2
 ## Major Updates
-* Package first uploaded to github and CRAN.
-* Code style changed as compared to the inital iteration of the code.
-* Mixed computerized adaptive multistage testing (Mca-MST) seems to work for designs with an arbitrary number of MST stages (i.e., any number of post-routing stages).
-* Multistage testing (MST) seems to work for any arbitrary MST design AND includes an option for number correct (NC) scoring.
-* Computerized adaptive testing (CAT) seems to work; CAT function still needs to allow individuals to fine-tune the catR item selection function and stopping rules.
+  - Each of the major functions now produce S4 objects with similar slots
+    - This results in a more standardized and predictable set of outputs for each function
+  - With the S4 classes, I've added a print method that summarizes the results of the functions
+  - The `multistage_test` function can now perform two kinds of number correct scoring, instead of the original one, and records which scoring logic was used
+  - A plot function was introduced to aid in creating publication-ready diagrams showing the multistage test design (including the mixed adaptive tests)
+    - This function also works with the two relevant S4 objects created in this release
