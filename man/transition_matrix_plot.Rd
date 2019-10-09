@@ -21,12 +21,12 @@ that demonstrates the potential paths through a (mixed) multistage test.
 \examples{
 # Create a plot for a multistage test with a 1-3-3 design
 data('example_transition_matrix')
-transition_matrix_plot(example_transition_matrix, n_each_stage = c(1,3,3))
+transition_matrix_plot(example_transition_matrix, n_stages =  3)
 
 \donttest{
 # Save the plot as a png file.
 png("Example 1-3-3 Transition Matrix Plot.png")
-transition_matrix_plot(example_transition_matrix, n_each_stage = c(1,3,3))
+transition_matrix_plot(example_transition_matrix, n_stages = 3)
 title("Transition Matrix for a 1-3-3 Design MST")
 dev.off()
 

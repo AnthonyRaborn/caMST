@@ -9,6 +9,8 @@
 #' @slot final.responses Numeric matrix of the response patterns observed.
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
+#' @importFrom methods new
+#'
 #' @return An S4 object of class `CAT`.
 #' @export
 #'
@@ -59,6 +61,8 @@ setMethod('show',
 #' @slot n.stages Numeric; the number of stages specified.
 #' @slot nc.list A list of the number correct scoring logic and method, if applicable. Defaults to `NULL`.
 #' @slot runtime A `difftime` object of the total run time of the function.
+#'
+#' @importFrom methods new
 #'
 #' @return An S4 object of class `MST`.
 #' @export
@@ -123,6 +127,8 @@ setMethod('show',
 #' @slot transition.matrix Numeric matrix; the transition matrix entered into the function.
 #' @slot n.stages Numeric; the number of stages specified.
 #' @slot runtime A `difftime` object of the total run time of the function.
+#'
+#' @importFrom methods new
 #'
 #' @return An S4 object of class `MAT`.
 #' @export
