@@ -5,7 +5,7 @@
 #' See the README on \href{https://github.com/AnthonyRaborn/caMST#readme}{GitHub} for more information.
 #'
 #' @docType package
-#' @name ShortForm
+#' @name caMST
 #' @importFrom stats runif
 NULL
 

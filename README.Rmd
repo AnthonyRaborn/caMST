@@ -69,7 +69,7 @@ data.frame("True Theta" = example_thetas,
              1.96*results@final.theta.SEM)
 ```
 
-The theta estimates under CMT are close except for person 4, whose estimate falls outisde of the 95% confidence interval.
+The theta estimates under CMT are close except for person 4, whose estimate falls outside of the 95% confidence interval.
 
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
