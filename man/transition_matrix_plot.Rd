@@ -23,7 +23,7 @@ that demonstrates the potential paths through a (mixed) multistage test.
 data('example_transition_matrix')
 transition_matrix_plot(example_transition_matrix, n_stages =  3)
 
-\donttest{
+\dontrun{
 # Save the plot as a png file.
 png("Example 1-3-3 Transition Matrix Plot.png")
 transition_matrix_plot(example_transition_matrix, n_stages = 3)
