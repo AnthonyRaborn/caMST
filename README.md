@@ -8,8 +8,7 @@ Status](http://travis-ci.org/AnthonyRaborn/caMST.svg?branch=master)](http://trav
 Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
 [![CRAN Downloads
 Total](https://cranlogs.r-pkg.org/badges/grand-total/caMST?color=orange)](https://cran.r-project.org/package=caMST)
-[![Zenodo
-DOI](https://zenodo.org/badge/127388900.svg)](https://zenodo.org/badge/latestdoi/127388900)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3532057.svg)](https://doi.org/10.5281/zenodo.3532057)
 
 ## Installation
 
@@ -55,11 +54,11 @@ data(mst_only_matrix)  # the matrix specifying how the item data frame relates t
 results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, 
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, 
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Time difference of 4.786864 secs
+## Time difference of 2.886675 secs
 results  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 4.787 secs
+## Total Run Time: 2.887 secs
 ## Average Theta Estimate: -0.058
 ## Average SEM: 0.315
 ## Most Common Path(s) Taken: 1-3-7 taken by 3 subjects
@@ -159,12 +158,12 @@ results <- mixed_adaptive_test(response_matrix = example_responses, cat_item_ban
     cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, 
     modules = example_module_items, transition_matrix = example_transition_matrix, 
     n_stages = 3)
-## Time difference of 15.29904 secs
+## Time difference of 8.371014 secs
 
 results  # prints a summary of the results
 ## Test Format: Mixed Adaptive Test
 ## mixed_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_items, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 3)
-## Total Run Time: 15.299 secs
+## Total Run Time: 8.371 secs
 ## Average Theta Estimate: 0.023
 ## Average SEM: 0.312
 ## Most Common Path(s) Taken: 1-3-6 taken by 5 subjects
@@ -209,13 +208,13 @@ nc_list = list(module1 = c(4, 5, 7), module2 = c(8, 14, Inf), module3 = c(8,
 nc.results <- multistage_test(mst_item_bank = mst_only_items, modules = example_module_items, 
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, 
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Time difference of 0.2383981 secs
+## Time difference of 0.14886 secs
 
 # printing a MST using NC scoring also shows the NC scoring method used
 nc.results
 ## Test Format: Multistage Adaptive Test with Cumulative Summation Scoring
 ## multistage_test(mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Total Run Time: 0.238 secs
+## Total Run Time: 0.149 secs
 ## Average Theta Estimate: 0.036
 ## Average SEM: 0.336
 ## Most Common Path(s) Taken: 1-2-5 taken by 2 subjects
@@ -258,25 +257,25 @@ catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_mat
         priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 
             4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", 
         thr = 0.3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Time difference of 8.878404 secs
+## Time difference of 6.617047 secs
 
 catResults
 ## Test Format: Computerized Adaptive Test
 ## computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Total Run Time: 8.878 secs
-## Average Theta Estimate: -0.027
-## Average SEM: 0.343
-## Average Number of Items Seen: 17.8
+## Total Run Time: 6.617 secs
+## Average Theta Estimate: -0.006
+## Average SEM: 0.341
+## Average Number of Items Seen: 18
 
 data.frame(`True Theta` = example_thetas, `Estimated Theta` = catResults@final.theta.estimate, 
     `CI95 Lower Bound` = catResults@final.theta.estimate - 1.96 * results@final.theta.SEM, 
     `CI95 Upper Bound` = catResults@final.theta.estimate + 1.96 * results@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-## 1 -0.82791686     -0.67591523       -1.2188615       -0.1329689
-## 2  0.61463323      1.09129386        0.2276606        1.9549271
-## 3  0.03785365      0.28056447       -0.2755179        0.8366469
-## 4 -0.51095175     -0.81998907       -1.3825809       -0.2573972
-## 5 -0.08529469     -0.01168975       -0.5428174        0.5194379
+## 1 -0.82791686      -0.6842109       -1.2271572       -0.1412646
+## 2  0.61463323       1.0734129        0.2097796        1.9370461
+## 3  0.03785365       0.2591944       -0.2968880        0.8152768
+## 4 -0.51095175      -0.8275388       -1.3901307       -0.2649470
+## 5 -0.08529469       0.1493774       -0.3817502        0.6805051
 ```
 
 The CAT method, using the precision rule with a value of .3 (i.e.,
