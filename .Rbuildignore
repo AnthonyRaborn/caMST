@@ -5,3 +5,4 @@ LICENSE
 README.md
 README.Rmd
 cran-comments.md
+^CRAN-RELEASE$
