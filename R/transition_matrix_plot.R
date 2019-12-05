@@ -29,10 +29,11 @@
 #' dev.off()
 #' }
 #'
+#' @importFrom methods is
 
 transition_matrix_plot = function(object = NULL, n_stages = NULL) {
 
-  if (!is.null(object) & (class(object)=="MST"|class(object)=="MAT")) {
+  if (!is.null(object) & (is(object, "MST")|is(object, "MAT"))) {
     transition_matrix = object@transition.matrix
     n_stages = object@n.stages
   } else {
