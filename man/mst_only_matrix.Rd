@@ -4,7 +4,9 @@
 \name{mst_only_matrix}
 \alias{mst_only_matrix}
 \title{Example "item-to-module" map matrix for the "multistage_test" example.}
-\format{An object of class \code{matrix} with 42 rows and 7 columns.}
+\format{
+An object of class \code{matrix} (inherits from \code{array}) with 42 rows and 7 columns.
+}
 \usage{
 mst_only_matrix
 }

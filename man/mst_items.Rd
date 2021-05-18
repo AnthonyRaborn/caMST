@@ -4,7 +4,8 @@
 \name{mst_items}
 \alias{mst_items}
 \title{Example items for the MST stages of an example adaptive test.}
-\format{A data frame with 564 rows (items) and 6 columns (item parameters):
+\format{
+A data frame with 564 rows (items) and 6 columns (item parameters):
 \describe{
 \item{a}{item discrimination}
 \item{b}{item difficulty}
@@ -12,7 +13,8 @@
 \item{u}{item carelessness}
 \item{content_ID}{what content area the item comes from}
 \item{stage}{which stage the item belongs to}
-}}
+}
+}
 \usage{
 mst_items
 }

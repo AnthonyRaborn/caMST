@@ -4,7 +4,9 @@
 \name{example_module_items}
 \alias{example_module_items}
 \title{Example "item-to-module" map matrix, showcasing how the items and modules are related.}
-\format{An object of class \code{matrix} with 42 rows and 7 columns.}
+\format{
+An object of class \code{matrix} (inherits from \code{array}) with 42 rows and 7 columns.
+}
 \usage{
 example_module_items
 }

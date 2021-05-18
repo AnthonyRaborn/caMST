@@ -4,9 +4,18 @@
 \alias{multistage_test}
 \title{Computer Adaptive Multistage Test}
 \usage{
-multistage_test(mst_item_bank, modules, transition_matrix, method = "BM",
-  response_matrix, initial_theta = 0, model = NULL, n_stages = 3,
-  test_length = 18, nc_list = NULL)
+multistage_test(
+  mst_item_bank,
+  modules,
+  transition_matrix,
+  method = "BM",
+  response_matrix,
+  initial_theta = 0,
+  model = NULL,
+  n_stages = 3,
+  test_length = 18,
+  nc_list = NULL
+)
 }
 \arguments{
 \item{mst_item_bank}{A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.}

@@ -4,7 +4,9 @@
 \name{example_thetas}
 \alias{example_thetas}
 \title{Theta values used in the examples.}
-\format{An object of class \code{numeric} of length 5.}
+\format{
+An object of class \code{numeric} of length 5.
+}
 \usage{
 example_thetas
 }

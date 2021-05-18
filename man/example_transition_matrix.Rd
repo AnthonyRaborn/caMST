@@ -4,7 +4,9 @@
 \name{example_transition_matrix}
 \alias{example_transition_matrix}
 \title{Example transition matrix showing how individuals traverse the multistage test.}
-\format{An object of class \code{matrix} with 7 rows and 7 columns.}
+\format{
+An object of class \code{matrix} (inherits from \code{array}) with 7 rows and 7 columns.
+}
 \usage{
 example_transition_matrix
 }

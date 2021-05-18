@@ -3,7 +3,6 @@
 \docType{package}
 \name{caMST}
 \alias{caMST}
-\alias{caMST-package}
 \title{\code{caMST} package}
 \description{
 Computer Adaptive Mutistage Test Analysis

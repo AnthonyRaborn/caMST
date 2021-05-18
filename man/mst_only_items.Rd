@@ -4,14 +4,16 @@
 \name{mst_only_items}
 \alias{mst_only_items}
 \title{The matrix of items used in the "multistage_test" example.}
-\format{A data frame with 564 rows (items) and 6 columns (item parameters):
+\format{
+A data frame with 564 rows (items) and 6 columns (item parameters):
 \describe{
 \item{a}{item discrimination}
 \item{b}{item difficulty}
 \item{c}{item guessing}
 \item{u}{item carelessness}
 \item{content_ID}{what content area the item comes from}
-}}
+}
+}
 \usage{
 mst_only_items
 }

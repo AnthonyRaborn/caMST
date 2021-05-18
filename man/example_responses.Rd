@@ -5,7 +5,9 @@
 \alias{example_responses}
 \title{Responses to all of the example items by the five individuals represented in
 the "example_thetas" data.}
-\format{An object of class \code{data.frame} with 5 rows and 600 columns.}
+\format{
+An object of class \code{data.frame} with 5 rows and 600 columns.
+}
 \usage{
 example_responses
 }
