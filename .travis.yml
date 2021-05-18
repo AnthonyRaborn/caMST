@@ -1,5 +1,7 @@
 language: r
 cache: packages
+r_packages:
+  - covr
 notifications:
   email:
     false
@@ -9,6 +11,7 @@ after_success:
   - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
   - ./send.sh success $WEBHOOK_URL
+  - Rscript -e 'library(covr); codecov()'
 after_failure:
   - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
