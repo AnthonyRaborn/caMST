@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 # caMST
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/caMST)](http://cran.r-project.org/package=caMST)
 [![Travis-CI Build Status](http://travis-ci.org/AnthonyRaborn/caMST.svg?branch=master)](http://travis-ci.org/AnthonyRaborn/caMST)
+[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/master/graph/badge.svg?token=CCASTIW3TF)](https://codecov.io/gh/AnthonyRaborn/caMST)
 [![CRAN Downloads Per Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
 [![CRAN Downloads Total](https://cranlogs.r-pkg.org/badges/grand-total/caMST?color=orange)](https://cran.r-project.org/package=caMST)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3532057.svg)](https://doi.org/10.5281/zenodo.3532057)
