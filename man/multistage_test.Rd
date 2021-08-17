@@ -14,6 +14,7 @@ multistage_test(
   model = NULL,
   n_stages = 3,
   test_length = 18,
+  module_select = "MFI",
   nc_list = NULL
 )
 }
@@ -35,6 +36,8 @@ multistage_test(
 \item{n_stages}{A numeric value indicating the number of stages in the test.}
 
 \item{test_length}{A numeric value indicating the total number of items each individual answers.}
+
+\item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.}
 
 \item{nc_list}{This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. If no `method` argument is provided in this list, or if an invalid entry is given, the method will default to `'cumulative_sum'`, meaning the values provided are a running tally of the number of items correctly answered on the test. If `method` is set to `module_sum`, then the sum of the number correct within the current module will be used to select the next module. See 'details' for more information.}
 }
