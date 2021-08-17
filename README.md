@@ -14,9 +14,9 @@ Total](https://cranlogs.r-pkg.org/badges/grand-total/caMST?color=orange)](https:
 ## Installation
 
 ``` r
-install.packages('caMST') # CRAN-tastic
-# install.packages("devtools")
-devtools::install_github("AnthonyRaborn/caMST") # the stable developmental version; add the argument `ref = 'devel'` for the developmental version with no stability guarantee
+install.packages("caMST")  # CRAN-tastic
+# install.packages('devtools')
+devtools::install_github("AnthonyRaborn/caMST")  # the stable developmental version; add the argument `ref = 'devel'` for the developmental version with no stability guarantee
 ```
 
 ## Usage
@@ -45,39 +45,57 @@ library(caMST)
 ## Package 'caMST' version 0.1.4
 
 # using simulated test data
-data(example_thetas) # 5 simulated abilities
-data(example_responses) # 5 simulated responsesdata
-data(example_transition_matrix)# the transition matrix for an 18 item 1-3-3 balanced design
-data(mst_only_items) # the CMT item bank
-data(mst_only_matrix) # the matrix specifying how the item data frame relates to the modules
+data(example_thetas)  # 5 simulated abilities
+data(example_responses)  # 5 simulated responses data
+data(example_transition_matrix)  # the transition matrix for an 18 item 1-3-3 balanced design
+data(mst_only_items)  # the CMT item bank
+data(mst_only_matrix)  # the matrix specifying how the item data frame relates to the modules
 
-# run the CMT model
-results <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, 
-                           transition_matrix = example_transition_matrix,
-                           method = "BM", response_matrix = example_responses, 
-                           initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Time difference of 3.630299 secs
-results # print a summary of the results
+# run the CMT model using MFI for module selection
+resultsMFI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
+    transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
+    initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
+## Time difference of 13.6645 secs
+resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 3.63 secs
+## Total Run Time: 13.664 secs
+## Average Theta Estimate: -0.058
+## Average SEM: 0.315
+## Most Common Path(s) Taken: 1-3-7 taken by 3 subjects
+# run the CMT model using MLWMI for module selection
+resultsMLWMI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
+    transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
+    initial_theta = 0, model = NULL, n_stages = 3, module_select = "MLWMI", test_length = 18)
+## Time difference of 13.60163 secs
+resultsMFI  # print a summary of the results
+## Test Format: Multistage Adaptive Test
+## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
+## Total Run Time: 13.664 secs
 ## Average Theta Estimate: -0.058
 ## Average SEM: 0.315
 ## Most Common Path(s) Taken: 1-3-7 taken by 3 subjects
 
-# how good were the estimates?
-data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = results@final.theta.estimate,
-           "CI95 Lower Bound" = results@final.theta.estimate -
-             1.96*results@final.theta.SEM,
-           "CI95 Upper Bound" = results@final.theta.estimate +
-             1.96*results@final.theta.SEM)
+# how good were the MFI estimates?
+data.frame(`True Theta` = example_thetas, `Estimated Theta` = resultsMFI@final.theta.estimate,
+    `CI95 Lower Bound` = resultsMFI@final.theta.estimate - 1.96 * resultsMFI@final.theta.SEM,
+    `CI95 Upper Bound` = resultsMFI@final.theta.estimate + 1.96 * resultsMFI@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
 ## 1 -0.82791686      -0.9946015      -1.64878277       -0.3404202
 ## 2  0.61463323       0.6755088       0.01509754        1.3359200
 ## 3  0.03785365       0.1451625      -0.43083359        0.7211587
 ## 4 -0.51095175       0.2134472      -0.38381274        0.8107072
 ## 5 -0.08529469      -0.3284433      -0.92679548        0.2699088
+# how good were the MLWMI estimates?
+data.frame(`True Theta` = example_thetas, `Estimated Theta` = resultsMLWMI@final.theta.estimate,
+    `CI95 Lower Bound` = resultsMLWMI@final.theta.estimate - 1.96 * resultsMLWMI@final.theta.SEM,
+    `CI95 Upper Bound` = resultsMLWMI@final.theta.estimate + 1.96 * resultsMLWMI@final.theta.SEM)
+##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
+## 1 -0.82791686              -4        -4.653126        -3.346874
+## 2  0.61463323              -4        -5.403095        -2.596905
+## 3  0.03785365              -4        -4.834905        -3.165095
+## 4 -0.51095175              -4        -4.664810        -3.335190
+## 5 -0.08529469              -4        -4.645759        -3.354241
 ```
 
 The theta estimates under CMT are close except for person 4, whose
@@ -100,18 +118,18 @@ posteriori estimator is used for the provisional and final ability
 estimates.
 
 ``` r
-# using simulated test data 
-data(example_thetas) # 5 simulated abilities
-data(example_responses) # 5 simulated responsesdata
-data(example_transition_matrix)# the transition matrix for an 18 item 1-3-3 balanced design
-data(cat_items) # the items designated for use in the routing module with item-level adaptation
-data(mst_items) # the items designated for use in the second and third modules with module-level adaptation
-data(example_module_items) # the matrix specifying how the item data frame relates to the modules
+# using simulated test data
+data(example_thetas)  # 5 simulated abilities
+data(example_responses)  # 5 simulated responsesdata
+data(example_transition_matrix)  # the transition matrix for an 18 item 1-3-3 balanced design
+data(cat_items)  # the items designated for use in the routing module with item-level adaptation
+data(mst_items)  # the items designated for use in the second and third modules with module-level adaptation
+data(example_module_items)  # the matrix specifying how the item data frame relates to the modules
 
 # what does the data look like?
 example_thetas
 ## [1] -0.82791686  0.61463323  0.03785365 -0.51095175 -0.08529469
-example_responses[,1:5] # first 5 items
+example_responses[, 1:5]  # first 5 items
 ##   Item1 Item2 Item3 Item4 Item5
 ## 1     1     1     0     0     1
 ## 2     1     1     1     1     1
@@ -127,7 +145,7 @@ example_transition_matrix
 ## [5,]    0    0    0    0    0    0    0
 ## [6,]    0    0    0    0    0    0    0
 ## [7,]    0    0    0    0    0    0    0
-head(cat_items) # 564 items to choose from for the first module
+head(cat_items)  # 564 items to choose from for the first module
 ##               a          b         c u content_ID stage
 ## Item1 0.9690068 -0.8095104 0.2058130 1          1     1
 ## Item2 0.9977061  0.4988206 0.2478967 1          1     1
@@ -135,7 +153,7 @@ head(cat_items) # 564 items to choose from for the first module
 ## Item5 0.8100657 -0.1651131 0.1880910 1          1     1
 ## Item6 1.8063305 -2.5886409 0.2050464 1          1     1
 ## Item7 1.5339729  0.2158261 0.1627754 1          1     1
-head(mst_items) # 18 items in the three 2nd stage modules and another 18 in the three 3rd stage modules
+head(mst_items)  # 18 items in the three 2nd stage modules and another 18 in the three 3rd stage modules
 ##                a          b           c u content_ID stage
 ## Item16  1.942336 -1.1636251  0.16242780 1          1     2
 ## Item163 1.291475 -0.8679133  0.08023656 1          2     2
@@ -143,7 +161,7 @@ head(mst_items) # 18 items in the three 2nd stage modules and another 18 in the 
 ## Item338 1.596254 -1.7547242 -0.03506398 1          3     2
 ## Item455 1.200316 -0.9559227  0.05452028 1          4     2
 ## Item463 1.198535 -0.9626176  0.06583896 1          4     2
-head(example_module_items, 10) # notice that there are only 6 items in the first module!
+head(example_module_items, 10)  # notice that there are only 6 items in the first module!
 ##       [,1] [,2] [,3] [,4] [,5] [,6] [,7]
 ##  [1,]    1    0    0    0    0    0    0
 ##  [2,]    1    0    0    0    0    0    0
@@ -158,31 +176,24 @@ head(example_module_items, 10) # notice that there are only 6 items in the first
 
 
 # run the Mca-MST model
-results <- mixed_adaptive_test(response_matrix = example_responses, 
-                               cat_item_bank = cat_items, initial_theta = 0,
-                               method = "EAP", item_method = "MFI", 
-                               cat_length = 6, cbControl = NULL, cbGroup = NULL,
-                               randomesque = 1, mst_item_bank = mst_items, 
-                               modules = example_module_items, 
-                               transition_matrix = example_transition_matrix,
-                               n_stages = 3)
-## Time difference of 9.479699 secs
+results <- mixed_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_items,
+    initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL,
+    cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items,
+    transition_matrix = example_transition_matrix, n_stages = 3)
+## Time difference of 39.22013 secs
 
-results # prints a summary of the results
+results  # prints a summary of the results
 ## Test Format: Mixed Adaptive Test
 ## mixed_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_items, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 3)
-## Total Run Time: 9.48 secs
+## Total Run Time: 39.22 secs
 ## Average Theta Estimate: 0.023
 ## Average SEM: 0.312
 ## Most Common Path(s) Taken: 1-3-6 taken by 5 subjects
 
 # How good was our estimate of the individual's abilities?
-data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = results@final.theta.estimate,
-           "CI95 Lower Bound" = results@final.theta.estimate -
-             1.96*results@final.theta.SEM,
-           "CI95 Upper Bound" = results@final.theta.estimate +
-             1.96*results@final.theta.SEM)
+data.frame(`True Theta` = example_thetas, `Estimated Theta` = results@final.theta.estimate,
+    `CI95 Lower Bound` = results@final.theta.estimate - 1.96 * results@final.theta.SEM,
+    `CI95 Upper Bound` = results@final.theta.estimate + 1.96 * results@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
 ## 1 -0.82791686      -0.4591914      -1.00213769       0.08375492
 ## 2  0.61463323       0.9233826       0.05974935       1.78701580
@@ -209,49 +220,33 @@ data(example_thetas)
 data(example_module_items)
 data(example_transition_matrix)
 data(example_responses)
-# these are the same as in the previous example
-# however, for NC scoring, the lsit of cutoff values needs to be specified
-# create nc_list as explained in 'details'
-nc_list = list(
-  module1 = c(4, 5, 7),
-  module2 = c(8, 14, Inf),
-  module3 = c(8, 14, 20),
-  module4 = c(-Inf, 14, 20)
-  )
-# this is the ONLY difference currently! Everything else remains the same
-# run the example
-nc.results <- multistage_test(
-  mst_item_bank = mst_only_items,
-  modules = example_module_items,
-  transition_matrix = example_transition_matrix,
-  method = "BM",
-  response_matrix = example_responses,
-  initial_theta = 0,
-  model = NULL,
-  n_stages = 3,
-  test_length = 18,
-  nc_list = nc_list
-  )
-## Time difference of 0.209393 secs
+# these are the same as in the previous example however, for NC scoring, the
+# lsit of cutoff values needs to be specified create nc_list as explained in
+# 'details'
+nc_list = list(module1 = c(4, 5, 7), module2 = c(8, 14, Inf), module3 = c(8, 14,
+    20), module4 = c(-Inf, 14, 20))
+# this is the ONLY difference currently! Everything else remains the same run
+# the example
+nc.results <- multistage_test(mst_item_bank = mst_only_items, modules = example_module_items,
+    transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
+    initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
+## Time difference of 0.820811 secs
 
 # printing a MST using NC scoring also shows the NC scoring method used
 nc.results
 ## Test Format: Multistage Adaptive Test with Cumulative Summation Scoring
 ## multistage_test(mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Total Run Time: 0.209 secs
+## Total Run Time: 0.821 secs
 ## Average Theta Estimate: 0.036
 ## Average SEM: 0.336
 ## Most Common Path(s) Taken: 1-2-5 taken by 2 subjects
 ## Most Common Path(s) Taken: 1-4-6 taken by 2 subjects
 
-# How well does NC scoring estimate the individual's abilities?
-# Using the estimation procedure from Baker for theta
-data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = nc.results@final.theta.estimate,
-           "CI95 Lower Bound" = nc.results@final.theta.estimate -
-             1.96*results@final.theta.SEM,
-           "CI95 Upper Bound" = nc.results@final.theta.estimate +
-             1.96*results@final.theta.SEM)
+# How well does NC scoring estimate the individual's abilities?  Using the
+# estimation procedure from Baker for theta
+data.frame(`True Theta` = example_thetas, `Estimated Theta` = nc.results@final.theta.estimate,
+    `CI95 Lower Bound` = nc.results@final.theta.estimate - 1.96 * results@final.theta.SEM,
+    `CI95 Upper Bound` = nc.results@final.theta.estimate + 1.96 * results@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
 ## 1 -0.82791686     -0.51226623       -1.0552125       0.03068008
 ## 2  0.61463323      0.61424430       -0.2493889       1.47787753
@@ -273,36 +268,36 @@ is the golden standard for computer-based test and serves as a great
 test for ‘best-case scenarios’.
 
 ``` r
-set.seed(12345) # to keep randomesque selecting the same items
+set.seed(12345)  # to keep randomesque selecting the same items
 # using simulated test data
-data(example_thetas) # 5 simulated abilities
-data(example_responses) # 5 simulated responsesdata
-data(cat_items) # using just the CAT-only routing items for the entire CAT test
+data(example_thetas)  # 5 simulated abilities
+data(example_responses)  # 5 simulated responsesdata
+data(cat_items)  # using just the CAT-only routing items for the entire CAT test
 
-catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, 
-                                         nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = .3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Time difference of 5.666859 secs
+catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses,
+    randomesque = 5, maxItems = 18, nextItemControl = list(criterion = "MFI", priorDist = "norm",
+        priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher",
+        random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL,
+        cbGroup = NULL))
+## Time difference of 22.71854 secs
 
 catResults
 ## Test Format: Computerized Adaptive Test
 ## computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Total Run Time: 5.667 secs
-## Average Theta Estimate: 0.001
-## Average SEM: 0.355
+## Total Run Time: 22.719 secs
+## Average Theta Estimate: 0.018
+## Average SEM: 0.347
 ## Average Number of Items Seen: 18
 
-data.frame("True Theta" = example_thetas,
-           "Estimated Theta" = catResults@final.theta.estimate,
-           "CI95 Lower Bound" = catResults@final.theta.estimate -
-             1.96*results@final.theta.SEM,
-           "CI95 Upper Bound" = catResults@final.theta.estimate +
-             1.96*results@final.theta.SEM)
+data.frame(`True Theta` = example_thetas, `Estimated Theta` = catResults@final.theta.estimate,
+    `CI95 Lower Bound` = catResults@final.theta.estimate - 1.96 * results@final.theta.SEM,
+    `CI95 Upper Bound` = catResults@final.theta.estimate + 1.96 * results@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-## 1 -0.82791686      -0.9074387       -1.4503850       -0.3644924
-## 2  0.61463323       1.0978179        0.2341847        1.9614511
-## 3  0.03785365       0.3516853       -0.2043971        0.9077677
-## 4 -0.51095175      -0.8127959       -1.3753877       -0.2502040
-## 5 -0.08529469       0.2762595       -0.2548681        0.8073871
+## 1 -0.82791686      -0.8814422       -1.4243885       -0.3384959
+## 2  0.61463323       1.1024584        0.2388251        1.9660916
+## 3  0.03785365       0.2790024       -0.2770800        0.8350848
+## 4 -0.51095175      -0.7045712       -1.2671630       -0.1419793
+## 5 -0.08529469       0.2938441       -0.2372835        0.8249717
 ```
 
 The CAT method, using the precision rule with a value of .3 (i.e.,
