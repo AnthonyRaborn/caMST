@@ -83,7 +83,12 @@ moduleSelectionCAMST = function(i,
                                 seen_cat_items,
                                 cat_length,
                                 initial_theta = 0,
-                                n_stage) {
+                                n_stage,
+                                module_select = NULL) {
+  if (is.null(module_select)|
+      !(module_select %in% c("MFI", "MLWMI", "MPWMI", "MKL", "MKLP", "random"))) {
+    module_select <- "MFI"
+  }
   seen.modules = 1
   seen.items = seen_cat_items
   for (m in 2:n_stage) {
