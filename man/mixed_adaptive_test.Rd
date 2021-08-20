@@ -18,7 +18,8 @@ mixed_adaptive_test(
   mst_item_bank,
   modules,
   transition_matrix,
-  n_stages
+  n_stages,
+  module_select = "MFI"
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ mixed_adaptive_test(
 \item{transition_matrix}{A matrix describing how individuals can transition from one stage to the next.}
 
 \item{n_stages}{A numerical value indicating the number of stages in the test.}
+
+\item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.}
 }
 \value{
 A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
