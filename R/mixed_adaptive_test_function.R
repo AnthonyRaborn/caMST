@@ -14,6 +14,7 @@
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
 #' @param n_stages A numerical value indicating the number of stages in the test.
+#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.
 #'
 #' @details To be filled in later.
 #'
@@ -77,7 +78,8 @@ mixed_adaptive_test = function(response_matrix,
                                mst_item_bank,
                                modules,
                                transition_matrix,
-                               n_stages) {
+                               n_stages,
+                               module_select = "MFI") {
   start.time = Sys.time()
 
   internal_response_matrix = response_matrix
@@ -129,7 +131,8 @@ mixed_adaptive_test = function(response_matrix,
       seen_cat_items = list.of.cat.results[[i]]$Seen.Items,
       cat_length,
       response_matrix = internal_response_matrix,
-      n_stage = n_stages
+      n_stage = n_stages,
+      module_select = module_select
     )
 
   }

@@ -86,6 +86,7 @@ computerized_adaptive_test <-
     # one person at a time,
     for (i in 1:nrow(response_matrix)) {
       nextItemControl$out <- NULL
+      nextItemControl$theta <- initial_theta
       # administer first item
       seen.items = do.call(catR::nextItem, args = nextItemControl)$name
       current.responses = response_matrix[i, seen.items]
@@ -118,6 +119,7 @@ computerized_adaptive_test <-
         length(current.responses) == maxItems
       ) < 1) {
         nextItemControl$out = which(rownames(cat_item_bank) %in% seen.items)
+        nextItemControl$theta = theta.est
         seen.items = c(seen.items,
                        do.call(catR::nextItem,
                                args = nextItemControl)$name)

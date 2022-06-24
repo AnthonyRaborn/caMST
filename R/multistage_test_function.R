@@ -9,7 +9,9 @@
 #' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.
 #' @param n_stages A numeric value indicating the number of stages in the test.
 #' @param test_length A numeric value indicating the total number of items each individual answers.
+#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.
 #' @param nc_list This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. If no `method` argument is provided in this list, or if an invalid entry is given, the method will default to `'cumulative_sum'`, meaning the values provided are a running tally of the number of items correctly answered on the test. If `method` is set to `module_sum`, then the sum of the number correct within the current module will be used to select the next module. See 'details' for more information.
+#' @param verbose A `TRUE` or `FALSE` (default) switch for printing the current subject being tested in the console.
 #'
 #' @details When using (cumulative) number correct module selection, the input list should contain one element for each module that needs to route to other modules. For example, in a 1-3-3 design the first module can route to any module in the second stage, so the first element of `nc_list` would be a numeric vector with three values indicating the *maximum* number of correct items needed in order to be routed to the second, third, or fourth module respectively. When the design is not crossed (e.g., a person routed to the easy module in the second stage **cannot** be routed to the hard module in the third stage), `-Inf` and `Inf` need to be used within `nc_list` to indicate this. Continuing the example, let's assume the 1-3-3 design is not crossed and will be balanced so that each stage has the same number of items (10 each) for a total of 30 items administered. The `nc_list` object could be specified like so:
 #' nc_list = list(module1 = c(4, 5, 7),
@@ -26,7 +28,7 @@
 #' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
 #' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
 #' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using the \code{mstR::semTheta} function.}
 #' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. `NA` values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 #' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 #' \item{transition.matrix}{The \code{transition_matrix} originally supplied to the function.}
@@ -81,7 +83,9 @@ multistage_test <-
            model = NULL,
            n_stages = 3,
            test_length = 18,
-           nc_list = NULL) {
+           module_select = "MFI",
+           nc_list = NULL,
+           verbose = FALSE) {
 
     # initialize start time to keep track of replication length
     start.time = Sys.time()
@@ -100,6 +104,7 @@ multistage_test <-
 
     # one person at a time,
     for (i in 1:nrow(response_matrix)) {
+      if (verbose) cat(paste0("\rSubject ", i, " of ", nrow(response_matrix), ".      "))
       if (is.list(nc_list)) {
         if (is.null(nc_list$method)) {
           nc_list$method = "cumulative_sum"
@@ -155,7 +160,10 @@ multistage_test <-
               final.responses[i, ], nrow = 1, byrow = T
             )))
           final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] = temp.iter[2]
+          final.theta.SEM[i] =
+            mstR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+                           x = final.responses[i, ], model = model,
+                           method = method)
 
           # end loop for this person; repeat loop for next
 
@@ -210,12 +218,13 @@ multistage_test <-
               final.responses[i, ], nrow = 1, byrow = T
             )))
           final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] = temp.iter[2]
-
+          final.theta.SEM[i] =
+            mstR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+                           x = final.responses[i, ], model = model,
+                           method = method)
           # end loop for this person; repeat loop for next
         }
       } else {
-        for (i in 1:nrow(response_matrix)) {
           # pull the responses specific to the items chosen for the test and administer first module
           mst.responses = response_matrix[i, rownames(mst_item_bank)]
           first.module = mstR::startModule(
@@ -242,7 +251,8 @@ multistage_test <-
               current.module = seen.modules[m -
                                               1],
               out = seen.modules,
-              theta = first.theta.est
+              theta = first.theta.est,
+              criterion = module_select
             )
             seen.items = c(seen.items, next.module$items)
             current.responses = response_matrix[, seen.items]
@@ -269,12 +279,14 @@ multistage_test <-
               final.responses[i, ], nrow = 1, byrow = T
             )))
           final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] = temp.iter[2]
-
+          final.theta.SEM[i] =
+            mstR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+                           x = final.responses[i, ], model = model,
+                           method = method)
           # end loop for this person; repeat loop for next
         }
       }
-    }
+
 
     # create results object
     results =
