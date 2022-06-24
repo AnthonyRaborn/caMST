@@ -1,8 +1,8 @@
 Package: caMST
 Type: Package
 Title: Mixed Computerized Adaptive Multistage Testing
-Version: 0.1.5
-Date: 2021-08-17
+Version: 0.1.6
+Date: 2022-06-24
 Authors@R: person("Anthony", "Raborn", email = "anthony.w.raborn@gmail.com", role = c("aut","cre"))
 Description: Provides functions to more easily analyze computerized adaptive tests. Currently, functions for computerized 
   adaptive tests (CAT), computer adaptive multistage tests (CMT), and mixed computer adaptive multistage tests (McaMST) 
@@ -21,4 +21,4 @@ Imports: catR,
 Suggests: testthat,
   knitr,
   rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
