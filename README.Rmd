@@ -86,7 +86,7 @@ data.frame("True Theta" = example_thetas,
              1.96*resultsMLWMI@final.theta.SEM)
 ```
 
-The theta estimates under CMT using the default module selection are close except for person 4, whose estimate falls outside of the 95% confidence interval. Using the "MLWMI" module selection does not work very well at all for this data, though.
+The theta estimates under CMT using the default module selection are close as all the estimates fall within the 95% confidence interval. Using the "MLWMI" module selection produces different, but similarly accurate estimates.
 
 ### Mixed Computerized Adaptive Multistage Testing (Mca-MST)
 
@@ -205,9 +205,9 @@ catResults
 data.frame("True Theta" = example_thetas,
            "Estimated Theta" = catResults@final.theta.estimate,
            "CI95 Lower Bound" = catResults@final.theta.estimate -
-             1.96*results@final.theta.SEM,
+             1.96*catResults@final.theta.SEM,
            "CI95 Upper Bound" = catResults@final.theta.estimate +
-             1.96*results@final.theta.SEM)
+             1.96*catResults@final.theta.SEM)
 
 ```
 
