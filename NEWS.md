@@ -1,3 +1,7 @@
+# Package v0.1.6
+## Bug Fixes
+  - Fixed multiple bugs related to theta estimation issues
+
 # Package v0.1.4
 ## Bug Fixes
   - Fixed the creation of one of the transition matrices to prevent a WARNING
