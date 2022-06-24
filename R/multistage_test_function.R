@@ -28,7 +28,7 @@
 #' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
 #' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
 #' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using the \code{mstR::semTheta} function.}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using the \code{catR::semTheta} function.}
 #' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. `NA` values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 #' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 #' \item{transition.matrix}{The \code{transition_matrix} originally supplied to the function.}
@@ -138,7 +138,7 @@ multistage_test <-
             seen.items = c(seen.items, which(next.module==1))
             current.responses = mst.responses[, seen.items]
             num.correct = sum(current.responses)
-            current.theta = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                            x = as.numeric(current.responses),
                                            method = method)
             seen.modules = c(seen.modules, selected.module)
@@ -147,11 +147,11 @@ multistage_test <-
           final.responses[i, ] = as.numeric(mst.responses[, seen.items])
           final.items.seen[i, ] = seen.items
           final.modules.seen[i,] = seen.modules
-          final.theta[i] = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                           x = final.responses[i, ],
                                           method = method)
 
-          final.theta.eap[i] = mstR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
+          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
 
           temp.iter = iterative.theta.estimate(
             initial_theta = initial_theta,
@@ -161,7 +161,7 @@ multistage_test <-
             )))
           final.theta.Baker[i] = temp.iter[1]
           final.theta.SEM[i] =
-            mstR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
                            x = final.responses[i, ], model = model,
                            method = method)
 
@@ -196,7 +196,7 @@ multistage_test <-
             seen.items = c(seen.items, which(next.module==1))
             current.responses = mst.responses[, seen.items]
             num.correct = sum(current.responses[length(current.responses):(sum(next.module)+1)])
-            current.theta = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                            x = as.numeric(current.responses),
                                            method = method)
             seen.modules = c(seen.modules, selected.module)
@@ -205,11 +205,11 @@ multistage_test <-
           final.responses[i, ] = as.numeric(mst.responses[, seen.items])
           final.items.seen[i, ] = seen.items
           final.modules.seen[i,] = seen.modules
-          final.theta[i] = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                           x = final.responses[i, ],
                                           method = method)
 
-          final.theta.eap[i] = mstR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
+          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
 
           temp.iter = iterative.theta.estimate(
             initial_theta = initial_theta,
@@ -219,7 +219,7 @@ multistage_test <-
             )))
           final.theta.Baker[i] = temp.iter[1]
           final.theta.SEM[i] =
-            mstR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
                            x = final.responses[i, ], model = model,
                            method = method)
           # end loop for this person; repeat loop for next
@@ -234,10 +234,10 @@ multistage_test <-
             model = model,
             theta = initial_theta
           )
-          current.responses = mst.responses[, first.module$items]
+          current.responses = mst.responses[i, first.module$items]
           seen.modules = first.module$module
           seen.items = first.module$items
-          first.theta.est = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+          first.theta.est = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                            x = current.responses,
                                            method = method)
 
@@ -255,8 +255,8 @@ multistage_test <-
               criterion = module_select
             )
             seen.items = c(seen.items, next.module$items)
-            current.responses = response_matrix[, seen.items]
-            current.theta = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+            current.responses = response_matrix[i, seen.items]
+            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                            x = current.responses,
                                            method = method)
             seen.modules = c(seen.modules, next.module$module)
@@ -266,11 +266,11 @@ multistage_test <-
           final.responses[i, ] = as.numeric(mst.responses[, seen.items])
           final.items.seen[i, ] = seen.items
           final.modules.seen[i, ] = seen.modules
-          final.theta[i] = mstR::thetaEst(it = mst_item_bank[seen.items, ],
+          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                           x = final.responses[i, ],
                                           method = method)
 
-          final.theta.eap[i] = mstR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
+          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
 
           temp.iter = iterative.theta.estimate(
             initial_theta = initial_theta,
@@ -280,7 +280,7 @@ multistage_test <-
             )))
           final.theta.Baker[i] = temp.iter[1]
           final.theta.SEM[i] =
-            mstR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
                            x = final.responses[i, ], model = model,
                            method = method)
           # end loop for this person; repeat loop for next
