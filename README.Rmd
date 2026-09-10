@@ -37,7 +37,6 @@ source("R/mixed_adaptive_test_function.R")
 source("R/multistage_test_function.R")
 source("R/module_selection_function.R")
 source("R/routing_item_selection.R")
-source("R/iterative_maximum_likelihood_theta_estimation.R")
 source("R/computerized_adaptive_test_function.R")
 ```
 
