@@ -49,6 +49,21 @@ test_that("generate_transition_matrix errors when modules is not greater than 1"
   )
 })
 
+test_that("generate_transition_matrix messages only when modules is truncated", {
+  expect_message(
+    generated <- generate_transition_matrix(modules = 3.7, paths = list("1" = 2, "2" = 3, "3" = 0)),
+    "truncated"
+  )
+  expect_equal(dim(generated), c(3, 3))
+
+  expect_no_message(
+    generate_transition_matrix(modules = 7.0, paths = list(
+      "1" = c(2, 3, 4), "2" = c(5, 6), "3" = c(5, 6, 7),
+      "4" = c(6, 7), "5" = 0, "6" = 0, "7" = 0
+    ))
+  )
+})
+
 test_that("generate_transition_matrix errors when paths length doesn't match modules", {
   expect_error(
     generate_transition_matrix(modules = 3, paths = list("1" = 2, "2" = 3)),

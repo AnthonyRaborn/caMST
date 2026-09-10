@@ -45,6 +45,11 @@ generate_transition_matrix <-
     if (modules <= 1) {
       stop("Modules needs to be an integer value greater than 1!")
     }
+    truncated_modules = as.integer(modules)
+    if (truncated_modules != modules) {
+      message("modules = ", modules, " was truncated to ", truncated_modules, ".")
+    }
+    modules = truncated_modules
 
     if (length(paths) != modules) {
       stop("Each module needs a valid path to another module.")
