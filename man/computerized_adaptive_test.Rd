@@ -12,10 +12,10 @@ computerized_adaptive_test(
   randomesque = 1,
   maxItems = 50,
   method = "BM",
-  nextItemControl = list(criterion = "MFI", method = method, priorDist = "norm",
-    priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType =
-    "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, SETH = NULL, AP = 1,
-    nAvailable = NULL, cbControl = NULL, cbGroup = NULL),
+  nextItemControl = list(criterion = "MFI", method = method, priorDist = "norm", priorPar
+    = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher",
+    random.seed = NULL, rule = "precision", thr = 0.3, SETH = NULL, AP = 1, nAvailable =
+    NULL, cbControl = NULL, cbGroup = NULL),
   ...
 )
 }

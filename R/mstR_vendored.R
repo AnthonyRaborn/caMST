@@ -9,6 +9,9 @@
 # and cannot be listed as a dependency for CRAN submission. Only the subset
 # of functions required by caMST is included here. The catR equivalents of
 # thetaEst, eapEst, and semTheta are used directly from catR instead.
+#
+# caMST is licensed GPL (>= 3); mstR's GPL (>= 2) permits redistribution
+# under any later GPL version, so this inclusion is license-compatible.
 
 #' @importFrom stats dnorm dunif rmultinom
 
