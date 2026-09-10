@@ -359,6 +359,8 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
       probs[ind] <- randomesque
       if (!is.null(random.seed)) set.seed(random.seed)
       ind.pr <- which(c(rmultinom(1, 1, probs)) == 1)
+    } else {
+      ind.pr <- ind
     }
     final.module <- sel.stage[ind.pr]
     select <- which(modules[, final.module] == 1)
@@ -382,6 +384,8 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
         probs[maxinfo] <- randomesque
         if (!is.null(random.seed)) set.seed(random.seed)
         maxinfo.pr <- which(c(rmultinom(1, 1, probs)) == 1)
+      } else {
+        maxinfo.pr <- maxinfo
       }
       final.module <- sel.stage[maxinfo.pr]
       select <- which(modules[, final.module] == 1)
@@ -406,6 +410,8 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
         probs[maxinfo] <- randomesque
         if (!is.null(random.seed)) set.seed(random.seed)
         maxinfo.pr <- which(c(rmultinom(1, 1, probs)) == 1)
+      } else {
+        maxinfo.pr <- maxinfo
       }
       final.module <- sel.stage[maxinfo.pr]
       select <- which(modules[, final.module] == 1)
@@ -430,6 +436,8 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
         probs[maxinfo] <- randomesque
         if (!is.null(random.seed)) set.seed(random.seed)
         maxinfo.pr <- which(c(rmultinom(1, 1, probs)) == 1)
+      } else {
+        maxinfo.pr <- maxinfo
       }
       final.module <- sel.stage[maxinfo.pr]
       select <- which(modules[, final.module] == 1)
