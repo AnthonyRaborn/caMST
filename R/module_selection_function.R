@@ -15,7 +15,7 @@ module_selection = function(i,
         module_select <- "MFI"
       }
 
-  next.module = mstR::nextModule(
+  next.module = nextModule(
     itemBank = module_item_bank,
     modules = modules,
     transMatrix = transition_matrix,
@@ -29,12 +29,12 @@ module_selection = function(i,
 
   seen.items = c(seen_cat_items, rownames(next.module$par))
 
-  current.theta = mstR::thetaEst(it = module_item_bank[c(1:cat_length, next.module$items), ], x = current.responses, method = method)
+  current.theta = catR::thetaEst(it = module_item_bank[c(1:cat_length, next.module$items), ], x = current.responses, method = method)
 
   current.module = next.module$module
 
 
-  final.module = mstR::nextModule(
+  final.module = nextModule(
     itemBank = module_item_bank,
     modules = modules,
     transMatrix = transition_matrix,
@@ -48,9 +48,9 @@ module_selection = function(i,
                  rownames(final.module$par))
   final.responses = response_matrix[i, c(seen.items)]
 
-  final.theta = mstR::thetaEst(it = module_item_bank[c(1:cat_length, next.module$items, final.module$items), ], x = final.responses, method = method)
+  final.theta = catR::thetaEst(it = module_item_bank[c(1:cat_length, next.module$items, final.module$items), ], x = final.responses, method = method)
 
-  final.theta.eap = mstR::eapEst(it = module_item_bank[c(1:cat_length, next.module$items, final.module$items), ], x = final.responses)
+  final.theta.eap = catR::eapEst(it = module_item_bank[c(1:cat_length, next.module$items, final.module$items), ], x = final.responses)
 
   final.theta.iterative = iterative.theta.estimate(
     initial_theta = initial_theta,
@@ -92,7 +92,7 @@ moduleSelectionCAMST = function(i,
   seen.modules = 1
   seen.items = seen_cat_items
   for (m in 2:n_stage) {
-    next.module = mstR::nextModule(
+    next.module = nextModule(
       itemBank = module_item_bank,
       modules = modules,
       transMatrix = transition_matrix,
@@ -103,7 +103,7 @@ moduleSelectionCAMST = function(i,
     )
     seen.items = c(seen.items, rownames(next.module$par))
     current.responses = response_matrix[i, seen.items]
-    current.theta = mstR::thetaEst(it = module_item_bank[seen.items,],
+    current.theta = catR::thetaEst(it = module_item_bank[seen.items,],
                                    x = current.responses,
                                    method = method)
     seen.modules = c(seen.modules, next.module$module)
@@ -111,9 +111,9 @@ moduleSelectionCAMST = function(i,
 
   final.responses = response_matrix[i, c(seen.items)]
 
-  final.theta = mstR::thetaEst(it = module_item_bank[seen.items,], x = final.responses, method = method)
+  final.theta = catR::thetaEst(it = module_item_bank[seen.items,], x = final.responses, method = method)
 
-  final.theta.eap = mstR::eapEst(it = module_item_bank[seen.items,], x = final.responses)
+  final.theta.eap = catR::eapEst(it = module_item_bank[seen.items,], x = final.responses)
 
   final.theta.iterative = iterative.theta.estimate(
     initial_theta = initial_theta,

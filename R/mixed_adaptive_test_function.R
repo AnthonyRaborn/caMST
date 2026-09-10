@@ -1,20 +1,20 @@
 #' Mixed Computerized Adaptive Multistage Test
 #'
 #' @param response_matrix A matrix of the person responses, with individuals as rows and items as columns.
-#' @param cat_item_bank A data frame with the first stage items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
+#' @param cat_item_bank A data frame with the first stage items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.
 #' @param initial_theta The initial theta estimate for all individuals.
-#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} and \pkg{mstR} packages for more details.
-#' @param item_method A character value indicating the method for the item-level selection in the first stage. Defaults to "MFI" (Maximum Fisher Information). See the \pkg{catR} and \pkg{mstR} packages for more details.
+#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.
+#' @param item_method A character value indicating the method for the item-level selection in the first stage. Defaults to "MFI" (Maximum Fisher Information). See the \pkg{catR} package for more details.
 #' @param cat_length A numeric value indicating the number of items in the first stage.
 #' @param nAvailable_cat Defaults to `NULL`. See the \pkg{catR} package for more information on how to use this option.
 #' @param cbControl A list of the appropriate format used to control for content balancing in the first stage. See the Details in the nextItem function in \pkg{catR}.
 #' @param cbGroup A factor vector of the appropriate format used to control for content balancing in the first stage. See the Details in the nextItem function in \pkg{catR}.
 #' @param randomesque An integer indicating the number of items from which to select the next item to administer in the first stage. Default value is 1.
-#' @param mst_item_bank A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
+#' @param mst_item_bank A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
 #' @param n_stages A numerical value indicating the number of stages in the test.
-#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.
+#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".
 #'
 #' @details To be filled in later.
 #'

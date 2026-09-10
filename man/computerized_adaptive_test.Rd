@@ -26,7 +26,7 @@ computerized_adaptive_test(
 
 \item{initial_theta}{The initial theta estimate for all individuals. Default is 0.}
 
-\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{mstR} package for more details.}
+\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{catR} package for more details.}
 
 \item{randomesque}{An integer value that indicates the number of items from which the selection rule should choose from randomly for administration. See the help documentation for \code{catR::nextItem} for more details.}
 

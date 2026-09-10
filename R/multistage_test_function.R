@@ -1,15 +1,15 @@
 #' Computer Adaptive Multistage Test
 #'
-#' @param mst_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
+#' @param mst_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
-#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.
+#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.
 #' @param response_matrix A matrix of the person responses, with individuals as rows and items as columns.
 #' @param initial_theta The initial theta estimate for all individuals. Default is 0.
-#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.
+#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{catR} package for more details.
 #' @param n_stages A numeric value indicating the number of stages in the test.
 #' @param test_length A numeric value indicating the total number of items each individual answers.
-#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.
+#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".
 #' @param nc_list This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. If no `method` argument is provided in this list, or if an invalid entry is given, the method will default to `'cumulative_sum'`, meaning the values provided are a running tally of the number of items correctly answered on the test. If `method` is set to `module_sum`, then the sum of the number correct within the current module will be used to select the next module. See 'details' for more information.
 #' @param verbose A `TRUE` or `FALSE` (default) switch for printing the current subject being tested in the console.
 #'
@@ -112,7 +112,7 @@ multistage_test <-
         if (nc_list$method!="module_sum"|nc_list$method=="cumulative_sum") {
           # pull the responses specific to the items chosen for the test and administer first module
           mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = mstR::startModule(
+          first.module = startModule(
             itemBank = mst_item_bank,
             modules = modules,
             transMatrix = transition_matrix,
@@ -170,7 +170,7 @@ multistage_test <-
         } else if (nc_list$method=="module_sum") {
           # pull the responses specific to the items chosen for the test and administer first module
           mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = mstR::startModule(
+          first.module = startModule(
             itemBank = mst_item_bank,
             modules = modules,
             transMatrix = transition_matrix,
@@ -227,7 +227,7 @@ multistage_test <-
       } else {
           # pull the responses specific to the items chosen for the test and administer first module
           mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = mstR::startModule(
+          first.module = startModule(
             itemBank = mst_item_bank,
             modules = modules,
             transMatrix = transition_matrix,
@@ -244,7 +244,7 @@ multistage_test <-
           # using current module(s) and theta estimate, select the next module until test ends
           # save the module, items, and responses chosen by updating the appropriate objects
           for (m in 2:n_stages) {
-            next.module = mstR::nextModule(
+            next.module = nextModule(
               itemBank = mst_item_bank,
               modules = modules,
               transMatrix = transition_matrix,

@@ -19,7 +19,7 @@ A data frame with 564 rows (items) and 6 columns (item parameters):
 cat_items
 }
 \description{
-A data frame formatted in the style required by \pkg{mstR} for item data.
+A data frame formatted in the style required by \pkg{catR} for item data.
 Represents items to be used in an item-level adaptation portion of a
 computerized adaptive test.
 }

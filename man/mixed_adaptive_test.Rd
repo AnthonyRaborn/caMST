@@ -25,13 +25,13 @@ mixed_adaptive_test(
 \arguments{
 \item{response_matrix}{A matrix of the person responses, with individuals as rows and items as columns.}
 
-\item{cat_item_bank}{A data frame with the first stage items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.}
+\item{cat_item_bank}{A data frame with the first stage items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.}
 
 \item{initial_theta}{The initial theta estimate for all individuals.}
 
-\item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} and \pkg{mstR} packages for more details.}
+\item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.}
 
-\item{item_method}{A character value indicating the method for the item-level selection in the first stage. Defaults to "MFI" (Maximum Fisher Information). See the \pkg{catR} and \pkg{mstR} packages for more details.}
+\item{item_method}{A character value indicating the method for the item-level selection in the first stage. Defaults to "MFI" (Maximum Fisher Information). See the \pkg{catR} package for more details.}
 
 \item{cat_length}{A numeric value indicating the number of items in the first stage.}
 
@@ -43,7 +43,7 @@ mixed_adaptive_test(
 
 \item{randomesque}{An integer indicating the number of items from which to select the next item to administer in the first stage. Default value is 1.}
 
-\item{mst_item_bank}{A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.}
+\item{mst_item_bank}{A data frame with the second stage and beyond items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.}
 
 \item{modules}{A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.}
 
@@ -51,7 +51,7 @@ mixed_adaptive_test(
 
 \item{n_stages}{A numerical value indicating the number of stages in the test.}
 
-\item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.}
+\item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".}
 }
 \value{
 A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.

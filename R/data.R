@@ -1,6 +1,6 @@
 #' Example items for the CAT stage of an example adaptive test.
 #'
-#' A data frame formatted in the style required by \pkg{mstR} for item data.
+#' A data frame formatted in the style required by \pkg{catR} for item data.
 #' Represents items to be used in an item-level adaptation portion of a
 #' computerized adaptive test.
 #'
@@ -18,7 +18,7 @@
 
 #' Example items for the MST stages of an example adaptive test.
 #'
-#' A data frame formatted in the style required by \pkg{mstR} for item data.
+#' A data frame formatted in the style required by \pkg{catR} for item data.
 #' Represents items to be used in module-level adaptation portions of a
 #' computerized adaptive test.
 #'
@@ -65,7 +65,7 @@
 
 #' The matrix of items used in the "multistage_test" example.
 #'
-#' A data frame formatted in the style required by \pkg{mstR} for item data.
+#' A data frame formatted in the style required by \pkg{catR} for item data.
 #' Represents items to be used in an item-level adaptation portion of a
 #' computerized adaptive test.
 #'

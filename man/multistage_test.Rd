@@ -20,25 +20,25 @@ multistage_test(
 )
 }
 \arguments{
-\item{mst_item_bank}{A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.}
+\item{mst_item_bank}{A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.}
 
 \item{modules}{A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.}
 
 \item{transition_matrix}{A matrix describing how individuals can transition from one stage to the next.}
 
-\item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.}
+\item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.}
 
 \item{response_matrix}{A matrix of the person responses, with individuals as rows and items as columns.}
 
 \item{initial_theta}{The initial theta estimate for all individuals. Default is 0.}
 
-\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.}
+\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{catR} package for more details.}
 
 \item{n_stages}{A numeric value indicating the number of stages in the test.}
 
 \item{test_length}{A numeric value indicating the total number of items each individual answers.}
 
-\item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.}
+\item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".}
 
 \item{nc_list}{This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. If no `method` argument is provided in this list, or if an invalid entry is given, the method will default to `'cumulative_sum'`, meaning the values provided are a running tally of the number of items correctly answered on the test. If `method` is set to `module_sum`, then the sum of the number correct within the current module will be used to select the next module. See 'details' for more information.}
 
