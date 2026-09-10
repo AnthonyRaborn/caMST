@@ -15,6 +15,7 @@
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
 #' @param n_stages A numerical value indicating the number of stages in the test.
 #' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".
+#' @param final_theta_method A character value indicating the method used for the single final theta estimate reported in the result. One of "BM", "ML", "WL", "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses \code{catR::eapEst}). Defaults to \code{NULL}, which reuses whatever \code{method} was.
 #'
 #' @details A mixed adaptive test runs two stages of adaptation back to back. First,
 #' every person takes a CAT routing stage: \code{cat_length} items are chosen
@@ -41,10 +42,9 @@
 #'
 #' @return An S4 object of class 'MAT' with the following slots:
 #' \item{function.call}{The function and arguments called to create this object.}
-#' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
-#' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
-#' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
+#' \item{final.theta.estimate}{A numeric vector of the final theta estimates, computed using \code{final_theta_method}.}
+#' \item{final.theta.method}{The \code{final_theta_method} used to compute \code{final.theta.estimate} and \code{final.theta.SEM}.}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates, from \code{catR::semTheta}.}
 #' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. `NA` values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 #' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 #' \item{transition.matrix}{The \code{transition_matrix} originally supplied to the function.}
@@ -97,8 +97,11 @@ mixed_adaptive_test = function(response_matrix,
                                modules,
                                transition_matrix,
                                n_stages,
-                               module_select = "MFI") {
+                               module_select = "MFI",
+                               final_theta_method = NULL) {
   start.time = Sys.time()
+
+  if (is.null(final_theta_method)) final_theta_method = method
 
   internal_response_matrix = response_matrix
 
@@ -161,7 +164,8 @@ mixed_adaptive_test = function(response_matrix,
       cat_length,
       response_matrix = internal_response_matrix,
       n_stage = n_stages,
-      module_select = module_select
+      module_select = module_select,
+      final_theta_method = final_theta_method
     )
 
   }
@@ -172,9 +176,8 @@ mixed_adaptive_test = function(response_matrix,
       'MAT',
       function.call = match.call(),
       final.theta.estimate = sapply(list.of.mst.results, FUN = function(x) x$final.theta.estimate.mstR),
-      eap.theta = sapply(list.of.mst.results, FUN = function(x) x$eap.theta),
-      final.theta.Baker = sapply(list.of.mst.results, FUN = function(x) x$final.theta.iterative),
-      final.theta.SEM = sapply(list.of.mst.results, FUN = function(x) x$sem.iterative),
+      final.theta.method = final_theta_method,
+      final.theta.SEM = sapply(list.of.mst.results, FUN = function(x) x$final.theta.SEM),
       final.items.seen = sapply(list.of.mst.results, FUN = function(x) x$final.items.seen),
       modules.seen = t(sapply(list.of.mst.results, FUN = function(x) x$modules.seen)),
       final.responses = t(sapply(list.of.mst.results, FUN = function(x) x$final.responses)),

@@ -32,11 +32,15 @@ A two-column numeric matrix with one row per row of
 \description{
 Estimates person ability (theta) from a response pattern and a set of item
 parameters using Newton-Raphson iteration, following the maximum
-likelihood procedure described in chapter 5 of Baker (2001). Used
-internally by \code{\link{computerized_adaptive_test}},
-\code{\link{multistage_test}}, and \code{\link{mixed_adaptive_test}} to
-compute the \code{final.theta.Baker} and \code{final.theta.SEM} slots of
-their results.
+likelihood procedure described in chapter 5 of Baker (2001).
+}
+\details{
+\strong{Note:} this "Baker" estimator is no longer called by any of the
+three public test functions (it was previously computed unconditionally
+as \code{final.theta.Baker}). It's dichotomous-3PL-only (see #21) and is
+expected to be sunset as the package moves toward full polytomous
+support, so it isn't offered as a \code{final_theta_method} option either.
+It remains here for now as it may still be useful directly.
 }
 \references{
 Baker, F. B. (2001). The Basics of Item Response Theory (2nd

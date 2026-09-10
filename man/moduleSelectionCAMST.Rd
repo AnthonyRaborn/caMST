@@ -14,9 +14,9 @@ moduleSelectionCAMST(
   response_matrix,
   seen_cat_items,
   cat_length,
-  initial_theta = 0,
   n_stage,
-  module_select = NULL
+  module_select = NULL,
+  final_theta_method = NULL
 )
 }
 \arguments{
@@ -46,21 +46,22 @@ CAT routing stage.}
 \item{cat_length}{The number of items administered in the CAT routing
 stage.}
 
-\item{initial_theta}{The initial theta value passed to
-\code{\link{iterative.theta.estimate}}.}
-
 \item{n_stage}{The total number of stages in the test, including the CAT
 routing stage (so \code{n_stage - 1} MST modules are selected).}
 
 \item{module_select}{The module-selection criterion passed to
 \code{nextModule} as \code{criterion} (e.g. \code{"MFI"}); invalid or
 \code{NULL} values fall back to \code{"MFI"}.}
+
+\item{final_theta_method}{A character value indicating the method used
+for the single final theta estimate returned. One of "BM", "ML", "WL",
+"ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses
+\code{catR::eapEst}).}
 }
 \value{
-A list with \code{final.theta.estimate.mstR}, \code{eap.theta},
-  \code{final.theta.iterative}, \code{sem.iterative}, \code{final.item.bank},
-  \code{final.items.seen}, \code{modules.seen}, and \code{final.responses}
-  for the one person tested.
+A list with \code{final.theta.estimate.mstR}, \code{final.theta.SEM},
+  \code{final.item.bank}, \code{final.items.seen}, \code{modules.seen}, and
+  \code{final.responses} for the one person tested.
 }
 \description{
 Selects the sequence of MST modules following a CAT routing stage, looping

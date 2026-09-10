@@ -1,10 +1,9 @@
 #' An S4 class for computerized adaptive tests
 #'
 #' @slot function.call The original function call.
-#' @slot final.theta.estimate Numeric vector of theta estimates calculated by the provided `method`.
-#' @slot eap.theta Numeric vector of theta estimates calculated by `catR::eapEst`.
-#' @slot final.theta.Baker Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.
-#' @slot final.theta.SEM Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.
+#' @slot final.theta.estimate Numeric vector of final theta estimates, computed using `final.theta.method`.
+#' @slot final.theta.method Character; the estimation method used to compute `final.theta.estimate` and `final.theta.SEM` (see the `final_theta_method` argument).
+#' @slot final.theta.SEM Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.
 #' @slot final.items.seen Character matrix of the final items seen by each individual.
 #' @slot final.responses Numeric matrix of the response patterns observed.
 #' @slot runtime A `difftime` object of the total run time of the function.
@@ -19,8 +18,7 @@ setClass('CAT',
            list(
              function.call = 'call',
              final.theta.estimate = 'numeric',
-             eap.theta = 'numeric',
-             final.theta.Baker = 'numeric',
+             final.theta.method = 'character',
              final.theta.SEM = 'numeric',
              final.items.seen = 'matrix',
              final.responses = 'matrix',
@@ -40,20 +38,20 @@ setMethod('show',
             line0 = c("Test Format: Computerized Adaptive Test")
             line1 = Original.Call
             line2 = paste0("Total Run Time: ", round(Total.Time[[1]], 3), " ", attr(Total.Time, "units"))
-            line3 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
-            line4 = paste0("Average SEM: ", round(Average.SEM, 3))
-            line5 = paste0("Average Number of Items Seen: ", round(Average.Items, 3))
+            line3 = paste0("Final Theta Method: ", object@final.theta.method)
+            line4 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
+            line5 = paste0("Average SEM: ", round(Average.SEM, 3))
+            line6 = paste0("Average Number of Items Seen: ", round(Average.Items, 3))
 
-            cat(paste0(c(line0, line1, line2, line3, line4, line5), collapse = "\n"))
+            cat(paste0(c(line0, line1, line2, line3, line4, line5, line6), collapse = "\n"))
             })
 
 #' An S4 method for multistage adaptive tests.
 #'
 #' @slot function.call The original function call.
-#' @slot final.theta.estimate Numeric vector of theta estimates calculated by the provided `method`.
-#' @slot eap.theta Numeric vector of theta estimates calculated by `catR::eapEst`.
-#' @slot final.theta.Baker Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.
-#' @slot final.theta.SEM Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.
+#' @slot final.theta.estimate Numeric vector of final theta estimates, computed using `final.theta.method`.
+#' @slot final.theta.method Character; the estimation method used to compute `final.theta.estimate` and `final.theta.SEM` (see the `final_theta_method` argument).
+#' @slot final.theta.SEM Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.
 #' @slot final.items.seen Character matrix of the final items seen by each individual.
 #' @slot modules.seen Numeric matrix of the modules seen by each individual.
 #' @slot final.responses Numeric matrix of the response patterns observed.
@@ -72,8 +70,7 @@ setClass('MST',
            list(
              function.call = 'call',
              final.theta.estimate = 'numeric',
-             eap.theta = 'numeric',
-             final.theta.Baker = 'numeric',
+             final.theta.method = 'character',
              final.theta.SEM = 'numeric',
              final.items.seen = 'matrix',
              modules.seen = 'matrix',
@@ -107,20 +104,20 @@ setMethod('show',
               )
             line1 = Original.Call
             line2 = paste0("Total Run Time: ", round(Total.Time[[1]], 3), " ", attr(Total.Time, "units"))
-            line3 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
-            line4 = paste0("Average SEM: ", round(Average.SEM, 3))
-            line5 = paste0("Most Common Path(s) Taken: ", attr(Most.Path, 'names'), " taken by ", Most.Path, " subjects")
+            line3 = paste0("Final Theta Method: ", object@final.theta.method)
+            line4 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
+            line5 = paste0("Average SEM: ", round(Average.SEM, 3))
+            line6 = paste0("Most Common Path(s) Taken: ", attr(Most.Path, 'names'), " taken by ", Most.Path, " subjects")
 
-            cat(paste0(c(line0, line1, line2, line3, line4, line5), collapse = "\n"))
+            cat(paste0(c(line0, line1, line2, line3, line4, line5, line6), collapse = "\n"))
           })
 
 #' An S4 method for mixed adaptive tests.
 #'
 #' @slot function.call The original function call.
-#' @slot final.theta.estimate Numeric vector of theta estimates calculated by the provided `method`.
-#' @slot eap.theta Numeric vector of theta estimates calculated by `catR::eapEst`.
-#' @slot final.theta.Baker Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.
-#' @slot final.theta.SEM Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.
+#' @slot final.theta.estimate Numeric vector of final theta estimates, computed using `final.theta.method`.
+#' @slot final.theta.method Character; the estimation method used to compute `final.theta.estimate` and `final.theta.SEM` (see the `final_theta_method` argument).
+#' @slot final.theta.SEM Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.
 #' @slot final.items.seen Character matrix of the final items seen by each individual.
 #' @slot modules.seen Numeric matrix of the modules seen by each individual.
 #' @slot final.responses Numeric matrix of the response patterns observed.
@@ -138,8 +135,7 @@ setClass('MAT',
            list(
              function.call = 'call',
              final.theta.estimate = 'numeric',
-             eap.theta = 'numeric',
-             final.theta.Baker = 'numeric',
+             final.theta.method = 'character',
              final.theta.SEM = 'numeric',
              final.items.seen = 'matrix',
              modules.seen = 'matrix',
@@ -163,10 +159,10 @@ setMethod('show',
             line0 = c("Test Format: Mixed Adaptive Test")
             line1 = Original.Call
             line2 = paste0("Total Run Time: ", round(Total.Time[[1]], 3), " ", attr(Total.Time, "units"))
-            line3 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
-            line4 = paste0("Average SEM: ", round(Average.SEM, 3))
-            line5 = paste0("Most Common Path(s) Taken: ", attr(Most.Path, 'names'), " taken by ", Most.Path, " subjects")
+            line3 = paste0("Final Theta Method: ", object@final.theta.method)
+            line4 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
+            line5 = paste0("Average SEM: ", round(Average.SEM, 3))
+            line6 = paste0("Most Common Path(s) Taken: ", attr(Most.Path, 'names'), " taken by ", Most.Path, " subjects")
 
-            cat(paste0(c(line0, line1, line2, line3, line4, line5), collapse = "\n"))
+            cat(paste0(c(line0, line1, line2, line3, line4, line5, line6), collapse = "\n"))
           })
-

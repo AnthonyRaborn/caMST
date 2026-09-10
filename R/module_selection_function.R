@@ -21,18 +21,19 @@
 #'   CAT routing stage.
 #' @param cat_length The number of items administered in the CAT routing
 #'   stage.
-#' @param initial_theta The initial theta value passed to
-#'   \code{\link{iterative.theta.estimate}}.
 #' @param n_stage The total number of stages in the test, including the CAT
 #'   routing stage (so \code{n_stage - 1} MST modules are selected).
 #' @param module_select The module-selection criterion passed to
 #'   \code{nextModule} as \code{criterion} (e.g. \code{"MFI"}); invalid or
 #'   \code{NULL} values fall back to \code{"MFI"}.
+#' @param final_theta_method A character value indicating the method used
+#'   for the single final theta estimate returned. One of "BM", "ML", "WL",
+#'   "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses
+#'   \code{catR::eapEst}).
 #'
-#' @return A list with \code{final.theta.estimate.mstR}, \code{eap.theta},
-#'   \code{final.theta.iterative}, \code{sem.iterative}, \code{final.item.bank},
-#'   \code{final.items.seen}, \code{modules.seen}, and \code{final.responses}
-#'   for the one person tested.
+#' @return A list with \code{final.theta.estimate.mstR}, \code{final.theta.SEM},
+#'   \code{final.item.bank}, \code{final.items.seen}, \code{modules.seen}, and
+#'   \code{final.responses} for the one person tested.
 #'
 #' @keywords internal
 moduleSelectionCAMST = function(i,
@@ -44,13 +45,15 @@ moduleSelectionCAMST = function(i,
                                 response_matrix,
                                 seen_cat_items,
                                 cat_length,
-                                initial_theta = 0,
                                 n_stage,
-                                module_select = NULL) {
+                                module_select = NULL,
+                                final_theta_method = NULL) {
   if (is.null(module_select)|
       !(module_select %in% c("MFI", "MLWMI", "MPWMI", "MKL", "MKLP", "random"))) {
     module_select <- "MFI"
   }
+  if (is.null(final_theta_method)) final_theta_method = method
+
   seen.modules = 1
   seen.items = seen_cat_items
   for (m in 2:n_stage) {
@@ -74,22 +77,16 @@ moduleSelectionCAMST = function(i,
 
   final.responses = response_matrix[i, c(seen.items)]
 
-  final.theta = catR::thetaEst(it = module_item_bank[seen.items,], x = final.responses, method = method)
-
-  final.theta.eap = catR::eapEst(it = module_item_bank[seen.items,], x = final.responses)
-
-  final.theta.iterative = iterative.theta.estimate(
-    initial_theta = initial_theta,
+  final.result = final_theta_estimate(
     item.params = module_item_bank[seen.items, ],
-    response.pattern = matrix(final.responses, nrow = 1, byrow = T)
+    responses = final.responses,
+    method = final_theta_method
   )
 
   return(
     list(
-      final.theta.estimate.mstR = final.theta,
-      eap.theta = final.theta.eap,
-      final.theta.iterative = final.theta.iterative[, 1],
-      sem.iterative = final.theta.iterative[, 2],
+      final.theta.estimate.mstR = final.result$theta,
+      final.theta.SEM = final.result$sem,
       final.item.bank = module_item_bank,
       final.items.seen = seen.items,
       modules.seen = seen.modules,

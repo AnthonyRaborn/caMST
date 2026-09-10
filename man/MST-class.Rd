@@ -15,13 +15,11 @@ An S4 method for multistage adaptive tests.
 \describe{
 \item{\code{function.call}}{The original function call.}
 
-\item{\code{final.theta.estimate}}{Numeric vector of theta estimates calculated by the provided `method`.}
+\item{\code{final.theta.estimate}}{Numeric vector of final theta estimates, computed using `final.theta.method`.}
 
-\item{\code{eap.theta}}{Numeric vector of theta estimates calculated by `catR::eapEst`.}
+\item{\code{final.theta.method}}{Character; the estimation method used to compute `final.theta.estimate` and `final.theta.SEM` (see the `final_theta_method` argument).}
 
-\item{\code{final.theta.Baker}}{Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.}
-
-\item{\code{final.theta.SEM}}{Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.}
+\item{\code{final.theta.SEM}}{Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.}
 
 \item{\code{final.items.seen}}{Character matrix of the final items seen by each individual.}
 
