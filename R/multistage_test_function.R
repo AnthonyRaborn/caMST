@@ -102,190 +102,97 @@ multistage_test <-
       message("The mst_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix.")
     }
 
+    use_nc = is.list(nc_list)
+    if (use_nc && is.null(nc_list$method)) {
+      nc_list$method = "cumulative_sum"
+    }
+
     # one person at a time,
     for (i in 1:nrow(response_matrix)) {
       if (verbose) cat(paste0("\rSubject ", i, " of ", nrow(response_matrix), ".      "))
-      if (is.list(nc_list)) {
-        if (is.null(nc_list$method)) {
-          nc_list$method = "cumulative_sum"
-        }
-        if (nc_list$method!="module_sum"|nc_list$method=="cumulative_sum") {
-          # pull the responses specific to the items chosen for the test and administer first module
-          mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = startModule(
-            itemBank = mst_item_bank,
-            modules = modules,
-            transMatrix = transition_matrix,
-            model = model,
-            theta = initial_theta
-          )
-          current.responses = mst.responses[, first.module$items]
-          seen.modules = first.module$module
-          seen.items = first.module$items
-          num.correct = sum(current.responses)
 
-          # using current module(s) and number correct, select the next module until test ends
-          # save the module, items, and responses chosen by updating the appropriate objects
-          for (m in 2:n_stages) {
-            current.module = seen.modules[m - 1]
-            next.module.selected = (findInterval(
-              x = num.correct,
-              vec = nc_list[[m - 1]],
-              rightmost.closed = TRUE
-            ) + 1)
-            selected.module = which(transition_matrix[current.module,]==1)[next.module.selected]
-            next.module = modules[,selected.module]
-            seen.items = c(seen.items, which(next.module==1))
-            current.responses = mst.responses[, seen.items]
-            num.correct = sum(current.responses)
-            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = as.numeric(current.responses),
-                                           method = method)
-            seen.modules = c(seen.modules, selected.module)
-          }
+      # pull the responses specific to the items chosen for the test and administer first module
+      mst.responses = response_matrix[i, rownames(mst_item_bank)]
+      first.module = startModule(
+        itemBank = mst_item_bank,
+        modules = modules,
+        transMatrix = transition_matrix,
+        model = model,
+        theta = initial_theta
+      )
+      current.responses = mst.responses[, first.module$items]
+      seen.modules = first.module$module
+      seen.items = first.module$items
 
-          final.responses[i, ] = as.numeric(mst.responses[, seen.items])
-          final.items.seen[i, ] = seen.items
-          final.modules.seen[i,] = seen.modules
-          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                          x = final.responses[i, ],
-                                          method = method)
-
-          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
-
-          temp.iter = iterative.theta.estimate(
-            initial_theta = initial_theta,
-            item.params = mst_item_bank[seen.items, ],
-            response.pattern = as.data.frame(matrix(
-              final.responses[i, ], nrow = 1, byrow = T
-            )))
-          final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] =
-            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
-                           x = final.responses[i, ], model = model,
-                           method = method)
-
-          # end loop for this person; repeat loop for next
-
-        } else if (nc_list$method=="module_sum") {
-          # pull the responses specific to the items chosen for the test and administer first module
-          mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = startModule(
-            itemBank = mst_item_bank,
-            modules = modules,
-            transMatrix = transition_matrix,
-            model = model,
-            theta = initial_theta
-          )
-          current.responses = mst.responses[, first.module$items]
-          seen.modules = first.module$module
-          seen.items = first.module$items
-          num.correct = sum(current.responses)
-
-          # using current module(s) and number correct, select the next module until test ends
-          # save the module, items, and responses chosen by updating the appropriate objects
-          for (m in 2:n_stages) {
-            current.module = seen.modules[m - 1]
-            next.module.selected = (findInterval(
-              x = num.correct,
-              vec = nc_list[[m - 1]],
-              rightmost.closed = TRUE
-            ) + 1)
-            selected.module = which(transition_matrix[current.module,]==1)[next.module.selected]
-            next.module = modules[,selected.module]
-            seen.items = c(seen.items, which(next.module==1))
-            current.responses = mst.responses[, seen.items]
-            num.correct = sum(current.responses[(length(current.responses) - sum(next.module) + 1):length(current.responses)])
-            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = as.numeric(current.responses),
-                                           method = method)
-            seen.modules = c(seen.modules, selected.module)
-          }
-
-          final.responses[i, ] = as.numeric(mst.responses[, seen.items])
-          final.items.seen[i, ] = seen.items
-          final.modules.seen[i,] = seen.modules
-          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                          x = final.responses[i, ],
-                                          method = method)
-
-          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
-
-          temp.iter = iterative.theta.estimate(
-            initial_theta = initial_theta,
-            item.params = mst_item_bank[seen.items, ],
-            response.pattern = as.data.frame(matrix(
-              final.responses[i, ], nrow = 1, byrow = T
-            )))
-          final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] =
-            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
-                           x = final.responses[i, ], model = model,
-                           method = method)
-          # end loop for this person; repeat loop for next
-        }
+      if (use_nc) {
+        nc_method = if (nc_list$method == "module_sum") "module_sum" else "cumulative_sum"
+        num.correct = sum(current.responses)
       } else {
-          # pull the responses specific to the items chosen for the test and administer first module
-          mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = startModule(
+        first.theta.est = catR::thetaEst(it = mst_item_bank[seen.items, ],
+                                         x = current.responses,
+                                         method = method)
+      }
+
+      # using current module(s) and number correct or theta estimate, select the
+      # next module until test ends; save the module, items, and responses chosen
+      # by updating the appropriate objects
+      for (m in 2:n_stages) {
+        if (use_nc) {
+          current.module = seen.modules[m - 1]
+          next.module.selected = (findInterval(
+            x = num.correct,
+            vec = nc_list[[m - 1]],
+            rightmost.closed = TRUE
+          ) + 1)
+          selected.module = which(transition_matrix[current.module,]==1)[next.module.selected]
+          next.module.items = modules[,selected.module]
+          seen.items = c(seen.items, which(next.module.items==1))
+          current.responses = mst.responses[, seen.items]
+          num.correct = if (nc_method == "module_sum") {
+            sum(current.responses[(length(current.responses) - sum(next.module.items) + 1):length(current.responses)])
+          } else {
+            sum(current.responses)
+          }
+          seen.modules = c(seen.modules, selected.module)
+        } else {
+          next.module = nextModule(
             itemBank = mst_item_bank,
             modules = modules,
             transMatrix = transition_matrix,
-            model = model,
-            theta = initial_theta
+            current.module = seen.modules[m - 1],
+            out = seen.modules,
+            theta = first.theta.est,
+            criterion = module_select
           )
-          current.responses = mst.responses[, first.module$items]
-          seen.modules = first.module$module
-          seen.items = first.module$items
-          first.theta.est = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = current.responses,
-                                           method = method)
-
-          # using current module(s) and theta estimate, select the next module until test ends
-          # save the module, items, and responses chosen by updating the appropriate objects
-          for (m in 2:n_stages) {
-            next.module = nextModule(
-              itemBank = mst_item_bank,
-              modules = modules,
-              transMatrix = transition_matrix,
-              current.module = seen.modules[m -
-                                              1],
-              out = seen.modules,
-              theta = first.theta.est,
-              criterion = module_select
-            )
-            seen.items = c(seen.items, next.module$items)
-            current.responses = response_matrix[i, seen.items]
-            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = current.responses,
-                                           method = method)
-            seen.modules = c(seen.modules, next.module$module)
-          }
-
-          # compile final information for this individual
-          final.responses[i, ] = as.numeric(mst.responses[, seen.items])
-          final.items.seen[i, ] = seen.items
-          final.modules.seen[i, ] = seen.modules
-          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                          x = final.responses[i, ],
-                                          method = method)
-
-          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
-
-          temp.iter = iterative.theta.estimate(
-            initial_theta = initial_theta,
-            item.params = mst_item_bank[seen.items, ],
-            response.pattern = as.data.frame(matrix(
-              final.responses[i, ], nrow = 1, byrow = T
-            )))
-          final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] =
-            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
-                           x = final.responses[i, ], model = model,
-                           method = method)
-          # end loop for this person; repeat loop for next
+          seen.items = c(seen.items, next.module$items)
+          current.responses = response_matrix[i, seen.items]
+          seen.modules = c(seen.modules, next.module$module)
         }
       }
+
+      # compile final information for this individual
+      final.responses[i, ] = as.numeric(mst.responses[, seen.items])
+      final.items.seen[i, ] = seen.items
+      final.modules.seen[i, ] = seen.modules
+      final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
+                                      x = final.responses[i, ],
+                                      method = method)
+
+      final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
+
+      temp.iter = iterative.theta.estimate(
+        initial_theta = initial_theta,
+        item.params = mst_item_bank[seen.items, ],
+        response.pattern = as.data.frame(matrix(
+          final.responses[i, ], nrow = 1, byrow = T
+        )))
+      final.theta.Baker[i] = temp.iter[1]
+      final.theta.SEM[i] =
+        catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
+                       x = final.responses[i, ], model = model,
+                       method = method)
+      # end loop for this person; repeat loop for next
+    }
 
 
     # create results object
