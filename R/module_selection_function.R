@@ -99,7 +99,8 @@ moduleSelectionCAMST = function(i,
       current.module = seen.modules[m -
                                       1],
       out = seen.modules,
-      theta = theta_est
+      theta = theta_est,
+      criterion = module_select
     )
     seen.items = c(seen.items, rownames(next.module$par))
     current.responses = response_matrix[i, seen.items]
