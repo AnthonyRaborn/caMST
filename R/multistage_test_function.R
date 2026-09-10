@@ -195,7 +195,7 @@ multistage_test <-
             next.module = modules[,selected.module]
             seen.items = c(seen.items, which(next.module==1))
             current.responses = mst.responses[, seen.items]
-            num.correct = sum(current.responses[length(current.responses):(sum(next.module)+1)])
+            num.correct = sum(current.responses[(length(current.responses) - sum(next.module) + 1):length(current.responses)])
             current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
                                            x = as.numeric(current.responses),
                                            method = method)
