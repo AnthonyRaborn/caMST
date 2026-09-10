@@ -71,6 +71,12 @@ test_that("MST class can be constructed and shown, with and without nc.list", {
   object.module_sum = make_mst_object(nc.list = list(method = "module_sum"))
   output.module_sum = capture.output(show(object.module_sum))
   expect_true(any(grepl("Module Summation Scoring", output.module_sum)))
+
+  # nc.list present but method NULL: previously produced character(0) for
+  # this line (NULL != "module_sum" is length 0, and `|` doesn't short-circuit)
+  object.null_method = make_mst_object(nc.list = list(method = NULL))
+  output.null_method = capture.output(show(object.null_method))
+  expect_true(any(grepl("Cumulative Summation Scoring", output.null_method)))
 })
 
 test_that("MAT class can be constructed and shown", {

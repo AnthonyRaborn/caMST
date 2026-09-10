@@ -99,7 +99,7 @@ setMethod('show',
               test = is.null(object@nc.list),
               yes  = c("Test Format: Multistage Adaptive Test"),
               no   = ifelse(
-                test = is.null(object@nc.list$method)|
+                test = is.null(object@nc.list$method)||
                   object@nc.list$method!="module_sum",
                 yes  = c("Test Format: Multistage Adaptive Test with Cumulative Summation Scoring"),
                 no   = c("Test Format: Multistage Adaptive Test with Module Summation Scoring")
