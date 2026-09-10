@@ -23,6 +23,22 @@ that demonstrates the potential paths through a (mixed) multistage test.
 data('example_transition_matrix')
 transition_matrix_plot(example_transition_matrix, n_stages =  3)
 
+# Build the same 1-3-3 transition matrix with generate_transition_matrix()
+# instead of writing it out by hand, then plot it
+built_transition_matrix <- generate_transition_matrix(
+  modules = 7,
+  paths = list(
+    "1" = c(2, 3, 4),
+    "2" = c(5, 6),
+    "3" = c(5, 6, 7),
+    "4" = c(6, 7),
+    "5" = 0,
+    "6" = 0,
+    "7" = 0
+  )
+)
+transition_matrix_plot(built_transition_matrix, n_stages = 3)
+
 \dontrun{
 # Save the plot as a png file.
 png("Example 1-3-3 Transition Matrix Plot.png")
