@@ -2,9 +2,8 @@
 # caMST
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/caMST)](http://cran.r-project.org/package=caMST)
-[![Travis-CI Build
-Status](http://travis-ci.org/AnthonyRaborn/caMST.svg?branch=master)](http://travis-ci.org/AnthonyRaborn/caMST)
-[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/master/graph/badge.svg?token=CCASTIW3TF)](https://codecov.io/gh/AnthonyRaborn/caMST)
+[![R-CMD-check](https://github.com/AnthonyRaborn/caMST/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AnthonyRaborn/caMST/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/main/graph/badge.svg?token=CCASTIW3TF)](https://codecov.io/gh/AnthonyRaborn/caMST)
 [![CRAN Downloads Per
 Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
 [![CRAN Downloads
