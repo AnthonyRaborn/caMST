@@ -20,7 +20,8 @@ mixed_adaptive_test(
   transition_matrix,
   n_stages,
   module_select = "MFI",
-  final_theta_method = NULL
+  final_theta_method = NULL,
+  model = NULL
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ mixed_adaptive_test(
 \item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".}
 
 \item{final_theta_method}{A character value indicating the method used for the single final theta estimate reported in the result. One of "BM", "ML", "WL", "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses \code{catR::eapEst}). Defaults to \code{NULL}, which reuses whatever \code{method} was.}
+
+\item{model}{Either \code{NULL} (default) for dichotomous models or a character value indicating the polytomous model used, applied to both the CAT and MST stages. See the \pkg{catR} package for more details.}
 }
 \value{
 An S4 object of class 'MAT' with the following slots:
@@ -85,15 +88,20 @@ exactly as in \code{\link{multistage_test}}. The first "stage" of
 \code{n_stages} is the CAT routing stage itself, so a design with a CAT
 routing stage followed by two MST modules uses \code{n_stages = 3}.
 
-\code{cat_item_bank} and \code{mst_item_bank} must both be in \pkg{catR}
-item-bank format and contain the same IRT parameter columns, named either
-\code{a, b, c, u} or \code{a, b, c, d} (discrimination, difficulty,
-guessing, and upper asymptote). The two banks are combined internally
-(CAT items first, then MST items, in that column order) to build the item
-bank used for scoring; \code{modules} and \code{transition_matrix} describe
-only the MST portion, in the same format used by
-\code{\link{multistage_test}}, and should reference item positions within
-\code{mst_item_bank}.
+For dichotomous tests (\code{model = NULL}), \code{cat_item_bank} and
+\code{mst_item_bank} must both be in \pkg{catR} item-bank format and
+contain the same IRT parameter columns, named either \code{a, b, c, u} or
+\code{a, b, c, d} (discrimination, difficulty, guessing, and upper
+asymptote). For polytomous tests, both banks must use the \emph{same}
+\code{model} and the same number of response categories, since \pkg{catR}
+gives item banks generated under those conditions identical column
+layouts (see \code{catR::genPolyMatrix}); a mismatch in category count
+between the two banks will fail with a clear error when they're combined.
+Either way, the two banks are combined internally (CAT items first, then
+MST items) to build the item bank used for scoring; \code{modules} and
+\code{transition_matrix} describe only the MST portion, in the same
+format used by \code{\link{multistage_test}}, and should reference item
+positions within \code{mst_item_bank}.
 }
 \examples{
 \donttest{

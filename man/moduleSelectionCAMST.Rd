@@ -16,7 +16,8 @@ moduleSelectionCAMST(
   cat_length,
   n_stage,
   module_select = NULL,
-  final_theta_method = NULL
+  final_theta_method = NULL,
+  model = NULL
 )
 }
 \arguments{
@@ -57,6 +58,10 @@ routing stage (so \code{n_stage - 1} MST modules are selected).}
 for the single final theta estimate returned. One of "BM", "ML", "WL",
 "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses
 \code{catR::eapEst}).}
+
+\item{model}{Either \code{NULL} (default) for dichotomous models or a
+character value naming the polytomous model used. See \pkg{catR} for
+details.}
 }
 \value{
 A list with \code{final.theta.estimate.mstR}, \code{final.theta.SEM},

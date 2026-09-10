@@ -30,6 +30,9 @@
 #'   for the single final theta estimate returned. One of "BM", "ML", "WL",
 #'   "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses
 #'   \code{catR::eapEst}).
+#' @param model Either \code{NULL} (default) for dichotomous models or a
+#'   character value naming the polytomous model used. See \pkg{catR} for
+#'   details.
 #'
 #' @return A list with \code{final.theta.estimate.mstR}, \code{final.theta.SEM},
 #'   \code{final.item.bank}, \code{final.items.seen}, \code{modules.seen}, and
@@ -47,7 +50,8 @@ moduleSelectionCAMST = function(i,
                                 cat_length,
                                 n_stage,
                                 module_select = NULL,
-                                final_theta_method = NULL) {
+                                final_theta_method = NULL,
+                                model = NULL) {
   if (is.null(module_select)|
       !(module_select %in% c("MFI", "MLWMI", "MPWMI", "MKL", "MKLP", "random"))) {
     module_select <- "MFI"
@@ -65,12 +69,14 @@ moduleSelectionCAMST = function(i,
                                       1],
       out = seen.modules,
       theta = theta_est,
-      criterion = module_select
+      criterion = module_select,
+      model = model
     )
     seen.items = c(seen.items, rownames(next.module$par))
     current.responses = response_matrix[i, seen.items]
     current.theta = catR::thetaEst(it = module_item_bank[seen.items,],
                                    x = current.responses,
+                                   model = model,
                                    method = method)
     seen.modules = c(seen.modules, next.module$module)
   }
@@ -80,6 +86,7 @@ moduleSelectionCAMST = function(i,
   final.result = final_theta_estimate(
     item.params = module_item_bank[seen.items, ],
     responses = final.responses,
+    model = model,
     method = final_theta_method
   )
 
