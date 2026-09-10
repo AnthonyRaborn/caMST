@@ -99,7 +99,7 @@ multistage_test <-
     if (is.null(rownames(mst_item_bank))) {
       rownames(mst_item_bank) = paste0("Item", 1:nrow(mst_item_bank))
       colnames(response_matrix) = paste0("Item", 1:nrow(mst_item_bank))
-      cat(message("The mst_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix."))
+      message("The mst_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix.")
     }
 
     # one person at a time,
