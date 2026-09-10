@@ -398,9 +398,9 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
       infos <- NULL
       for (i in 1:length(sel.stage)) {
         infos[i] <- .mstR_MWMI(itemBank, modules, target.mod = sel.stage[i],
-          it.given = out, x = x, lower = parInt[1], upper = parInt[2],
-          nqp = parInt[3], type = criterion, priorDist = priorDist,
-          priorPar = priorPar, D = D)
+          it.given = out, x = x, model = model, lower = parInt[1],
+          upper = parInt[2], nqp = parInt[3], type = criterion,
+          priorDist = priorDist, priorPar = priorPar, D = D)
       }
       maxinfo <- which(infos == max(infos))
       if (length(maxinfo) > 1) maxinfo <- sample(maxinfo, 1)
@@ -424,9 +424,10 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
       infos <- NULL
       for (i in 1:length(sel.stage)) {
         infos[i] <- .mstR_MKL(itemBank, modules, target.mod = sel.stage[i],
-          it.given = out, x = x, theta = theta, lower = parInt[1],
-          upper = parInt[2], nqp = parInt[3], type = criterion,
-          priorDist = priorDist, priorPar = priorPar, D = D)
+          it.given = out, x = x, theta = theta, model = model,
+          lower = parInt[1], upper = parInt[2], nqp = parInt[3],
+          type = criterion, priorDist = priorDist, priorPar = priorPar,
+          D = D)
       }
       maxinfo <- which(infos == max(infos))
       if (length(maxinfo) > 1) maxinfo <- sample(maxinfo, 1)
