@@ -448,7 +448,10 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
                   criterion = criterion, best.module = bm)
     }
     if (criterion == "random") {
-      final.module <- sample(sel.stage, 1)
+      # sample(x, 1) treats a length-1 numeric x as sample(1:x, 1), not as
+      # "pick from this one-element vector" -- guard the single-candidate
+      # case explicitly (same underlying issue as #22).
+      final.module <- if (length(sel.stage) == 1) sel.stage else sample(sel.stage, 1)
       select <- which(modules[, final.module] == 1)
       res <- list(module = final.module, items = select,
                   par = itemBank[select, ], info = NA,
