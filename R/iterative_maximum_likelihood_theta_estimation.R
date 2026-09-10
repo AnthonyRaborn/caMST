@@ -17,21 +17,46 @@ iterative.theta.estimate = function (initial_theta = 0, item.params, response.pa
     person.response.pattern = as.numeric(unlist(response.pattern[i,])) # take their response pattern
     current.theta = initial_theta
     new.theta = 0
+    hit.boundary = FALSE
     probability.correct = item.guessing + (1 - item.guessing)/(1+exp(-1*item.discriminations*(current.theta-item.difficulty)))
     numerator = sum(item.discriminations * (person.response.pattern - probability.correct))
     denominator = sum(item.discriminations^2 * probability.correct * (1-probability.correct))
+
+    if (!is.finite(denominator) || denominator == 0) {
+      hit.boundary = TRUE
+      warning("Observed information was zero or non-finite while estimating theta for response pattern ",
+              i, "; clamping theta to the nearest [-4, 4] boundary.", call. = FALSE)
+      new.theta = if (current.theta >= 0) 4 else -4
+    }
+
     j = 0
-    while (abs(numerator/denominator) > 0.001 && abs(new.theta) < 4 && j < 100) {
+    while (!hit.boundary && abs(numerator/denominator) > 0.001 && abs(new.theta) < 4 && j < 100) {
       j = j+1
       numerator = sum(item.discriminations * (person.response.pattern - probability.correct))
       denominator = sum(item.discriminations^2 * probability.correct * (1-probability.correct))
+
+      if (!is.finite(denominator) || denominator == 0) {
+        hit.boundary = TRUE
+        warning("Observed information was zero or non-finite while estimating theta for response pattern ",
+                i, "; clamping theta to the nearest [-4, 4] boundary.", call. = FALSE)
+        new.theta = if (current.theta >= 0) 4 else -4
+        break
+      }
 
       new.theta = current.theta + (numerator/denominator)
       current.theta = new.theta
       probability.correct = item.guessing + (1 - item.guessing)/(1+exp(-1*item.discriminations*(current.theta-item.difficulty)))
     }
+
+    if (!hit.boundary && abs(new.theta) >= 4) {
+      hit.boundary = TRUE
+      warning("Iterative theta estimation reached the [-4, 4] boundary for response pattern ",
+              i, " before converging; clamping theta.", call. = FALSE)
+      new.theta = if (new.theta >= 0) 4 else -4
+    }
+
     final.theta.estimates[i] = new.theta
-    final.theta.SEM[i] = 1/sqrt(denominator)
+    final.theta.SEM[i] = if (hit.boundary) NA_real_ else 1/sqrt(denominator)
   }
   return(cbind(final.theta.estimates, final.theta.SEM))
 }

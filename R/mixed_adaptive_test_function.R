@@ -83,7 +83,18 @@ mixed_adaptive_test = function(response_matrix,
   start.time = Sys.time()
 
   internal_response_matrix = response_matrix
-  total.item.bank = rbind(cat_item_bank[, 1:4], mst_item_bank[, 1:4])
+
+  param_cols = c("a", "b", "c", "u")
+  if (!all(param_cols %in% colnames(cat_item_bank)) ||
+      !all(param_cols %in% colnames(mst_item_bank))) {
+    param_cols = c("a", "b", "c", "d")
+  }
+  missing_cols = union(setdiff(param_cols, colnames(cat_item_bank)),
+                       setdiff(param_cols, colnames(mst_item_bank)))
+  if (length(missing_cols) > 0) {
+    stop("cat_item_bank and mst_item_bank must both contain the IRT parameter columns 'a', 'b', 'c', and either 'u' or 'd'.")
+  }
+  total.item.bank = rbind(cat_item_bank[, param_cols], mst_item_bank[, param_cols])
 
   if (is.null(rownames(total.item.bank))) {
     rownames(total.item.bank) = paste0("Item", 1:nrow(total.item.bank))
