@@ -1,4 +1,43 @@
-# module_selection() is used for the MST format
+#' Select Two MST Modules After a Fixed Routing Stage
+#'
+#' Selects the next two modules after a CAT routing stage of exactly
+#' \code{cat_length} items, hard-coded to a 3-stage (routing + 2 MST modules)
+#' design. Unlike \code{\link{moduleSelectionCAMST}}, this does not loop over
+#' an arbitrary number of stages and cannot be reused for other designs.
+#'
+#' \strong{Note:} this function does not currently appear to be called
+#' anywhere in the package; \code{\link{mixed_adaptive_test}} uses
+#' \code{\link{moduleSelectionCAMST}} instead.
+#'
+#' @param i The row index of \code{response_matrix} for the person being
+#'   tested.
+#' @param module_item_bank A data frame of MST item parameters, in \pkg{catR}
+#'   item-bank format, for the items referenced by \code{modules}.
+#' @param modules A matrix describing the relationship between items and
+#'   modules; see \code{\link{multistage_test}}.
+#' @param transition_matrix A matrix describing allowed transitions between
+#'   modules; see \code{\link{multistage_test}}.
+#' @param theta_est The theta estimate (from the CAT routing stage) used to
+#'   select the first MST module.
+#' @param method The provisional theta estimation method passed to
+#'   \code{catR::thetaEst}.
+#' @param response_matrix A matrix or data frame of person responses.
+#' @param seen_cat_items Names of the items already administered during the
+#'   CAT routing stage.
+#' @param cat_length The number of items administered in the CAT routing
+#'   stage.
+#' @param module_select The module-selection criterion passed to
+#'   \code{nextModule} as \code{criterion} (e.g. \code{"MFI"}); invalid or
+#'   \code{NULL} values fall back to \code{"MFI"}.
+#' @param initial_theta The initial theta value passed to
+#'   \code{\link{iterative.theta.estimate}}.
+#'
+#' @return A list with \code{final.theta.estimate.mstR}, \code{eap.theta},
+#'   \code{final.theta.iterative}, \code{sem.iterative}, \code{final.item.bank},
+#'   \code{final.items.seen}, \code{modules.seen}, and \code{final.responses}
+#'   for the one person tested.
+#'
+#' @keywords internal
 module_selection = function(i,
                             module_item_bank,
                             modules,
@@ -72,7 +111,43 @@ module_selection = function(i,
   )
 }
 
-# moduleSelectionCAMST() is used for caMST
+#' Select MST Modules for an Arbitrary Number of Stages
+#'
+#' Selects the sequence of MST modules following a CAT routing stage, looping
+#' over \code{n_stage - 1} module-selection steps. This is the function
+#' \code{\link{mixed_adaptive_test}} actually uses to drive its MST portion.
+#'
+#' @param i The row index of \code{response_matrix} for the person being
+#'   tested.
+#' @param module_item_bank A data frame of MST item parameters, in \pkg{catR}
+#'   item-bank format, for the items referenced by \code{modules}.
+#' @param modules A matrix describing the relationship between items and
+#'   modules; see \code{\link{multistage_test}}.
+#' @param transition_matrix A matrix describing allowed transitions between
+#'   modules; see \code{\link{multistage_test}}.
+#' @param theta_est The theta estimate (from the CAT routing stage) used to
+#'   select the first MST module.
+#' @param method The provisional theta estimation method passed to
+#'   \code{catR::thetaEst}.
+#' @param response_matrix A matrix or data frame of person responses.
+#' @param seen_cat_items Names of the items already administered during the
+#'   CAT routing stage.
+#' @param cat_length The number of items administered in the CAT routing
+#'   stage.
+#' @param initial_theta The initial theta value passed to
+#'   \code{\link{iterative.theta.estimate}}.
+#' @param n_stage The total number of stages in the test, including the CAT
+#'   routing stage (so \code{n_stage - 1} MST modules are selected).
+#' @param module_select The module-selection criterion passed to
+#'   \code{nextModule} as \code{criterion} (e.g. \code{"MFI"}); invalid or
+#'   \code{NULL} values fall back to \code{"MFI"}.
+#'
+#' @return A list with \code{final.theta.estimate.mstR}, \code{eap.theta},
+#'   \code{final.theta.iterative}, \code{sem.iterative}, \code{final.item.bank},
+#'   \code{final.items.seen}, \code{modules.seen}, and \code{final.responses}
+#'   for the one person tested.
+#'
+#' @keywords internal
 moduleSelectionCAMST = function(i,
                                 module_item_bank,
                                 modules,

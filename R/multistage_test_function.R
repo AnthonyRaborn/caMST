@@ -22,7 +22,6 @@
 #'
 #' As it is the most common method of number correct scoring, "cumulative_sum" is the default. Any value included in the `method` argument of `nc_list` that does _not_ equal "module_sum" will cause the default "cumulative_sum" to be used. _This is intentional and will not be changed unless I am given a good argument to change it_.
 #'
-#' @return A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
 #' @return An S4 object of class 'MST' with the following slots:
 #' \item{function.call}{The function and arguments called to create this object.}
 #' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
@@ -37,7 +36,7 @@
 #' \item{runtime}{A \code{difftime} object recording how long the function took to complete.}
 #' @export
 #'
-#' @references Baker (2001). http://echo.edres.org:8080/irt/baker/final.pdf
+#' @references Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 #' @seealso [mixed_adaptive_test] for a multistage test with a routing module using item-level adaptation.
 #'
 #' @examples

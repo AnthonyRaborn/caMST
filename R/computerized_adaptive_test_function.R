@@ -15,12 +15,12 @@
 #' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
 #' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
 #' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001)[http://echo.edres.org:8080/irt/baker/final.pdf].}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
 #' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. \code{NA} values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 #' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 #' \item{runtime}{A \code{difftime} object recording how long the function took to complete.}
 #' @export
-#' @references Baker, F. B. (2001). The basics of item response theory. For full text: http://echo.edres.org:8080/irt/baker/final.pdf.
+#' @references Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 #' @seealso [mixed_adaptive_test] for a multistage test with a routing module using item-level adaptation.
 #'
 #' @examples

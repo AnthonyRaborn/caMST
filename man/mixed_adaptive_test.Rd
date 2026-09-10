@@ -54,9 +54,7 @@ mixed_adaptive_test(
 \item{module_select}{A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".}
 }
 \value{
-A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
-
-An S4 object of class 'MST' with the following slots:
+An S4 object of class 'MAT' with the following slots:
 \item{function.call}{The function and arguments called to create this object.}
 \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
 \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
@@ -72,7 +70,28 @@ An S4 object of class 'MST' with the following slots:
 Mixed Computerized Adaptive Multistage Test
 }
 \details{
-To be filled in later.
+A mixed adaptive test runs two stages of adaptation back to back. First,
+every person takes a CAT routing stage: \code{cat_length} items are chosen
+one at a time from \code{cat_item_bank} using item-level adaptation
+(\code{item_method}, e.g. maximum Fisher information), exactly as in
+\code{\link{computerized_adaptive_test}}. The theta estimate produced by
+that routing stage is then used as the starting theta for a standard
+multistage test: \code{n_stages - 1} additional modules are administered
+from \code{mst_item_bank}, chosen at the module level using
+\code{module_select} and the person's location in \code{transition_matrix},
+exactly as in \code{\link{multistage_test}}. The first "stage" of
+\code{n_stages} is the CAT routing stage itself, so a design with a CAT
+routing stage followed by two MST modules uses \code{n_stages = 3}.
+
+\code{cat_item_bank} and \code{mst_item_bank} must both be in \pkg{catR}
+item-bank format and contain the same IRT parameter columns, named either
+\code{a, b, c, u} or \code{a, b, c, d} (discrimination, difficulty,
+guessing, and upper asymptote). The two banks are combined internally
+(CAT items first, then MST items, in that column order) to build the item
+bank used for scoring; \code{modules} and \code{transition_matrix} describe
+only the MST portion, in the same format used by
+\code{\link{multistage_test}}, and should reference item positions within
+\code{mst_item_bank}.
 }
 \examples{
 \donttest{
@@ -103,7 +122,7 @@ results <- mixed_adaptive_test(response_matrix = example_responses[1:2,],
 
 }
 \references{
-Baker (2001). http://echo.edres.org:8080/irt/baker/final.pdf
+Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 }
 \seealso{
 [multistage_test] for a standard multistage test, [computerized_adaptive_test] for a standard computerized adaptive test.

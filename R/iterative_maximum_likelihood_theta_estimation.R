@@ -1,3 +1,35 @@
+#' Iterative Maximum Likelihood Theta Estimation
+#'
+#' Estimates person ability (theta) from a response pattern and a set of item
+#' parameters using Newton-Raphson iteration, following the maximum
+#' likelihood procedure described in chapter 5 of Baker (2001). Used
+#' internally by \code{\link{computerized_adaptive_test}},
+#' \code{\link{multistage_test}}, and \code{\link{mixed_adaptive_test}} to
+#' compute the \code{final.theta.Baker} and \code{final.theta.SEM} slots of
+#' their results.
+#'
+#' @param initial_theta A single numeric value used as the starting theta
+#'   estimate for every response pattern. Default is 0.
+#' @param item.params A data frame or matrix of 3-parameter logistic item
+#'   parameters for the items in \code{response.pattern}, with discrimination,
+#'   difficulty, and guessing in the first three columns respectively (in
+#'   that order).
+#' @param response.pattern A data frame or matrix with one row per person and
+#'   one column per item in \code{item.params}, giving 0/1 (incorrect/correct)
+#'   responses.
+#'
+#' @return A two-column numeric matrix with one row per row of
+#'   \code{response.pattern}: \code{final.theta.estimates}, the converged (or
+#'   boundary-clamped) theta estimate, and \code{final.theta.SEM}, its
+#'   standard error of measurement. If iteration hits the \code{[-4, 4]}
+#'   boundary or encounters a zero/non-finite observed information, theta is
+#'   clamped to the nearest boundary, a warning is issued, and SEM is
+#'   reported as \code{NA} for that row.
+#'
+#' @references Baker, F. B. (2001). The Basics of Item Response Theory (2nd
+#'   ed.), Chapter 5. Full text: https://eric.ed.gov/?id=ED458219
+#'
+#' @keywords internal
 iterative.theta.estimate = function (initial_theta = 0, item.params, response.pattern){
   # This function is used to estimate person thetas based on their response patterns, meaning that
   # novel response patterns can produce a (hopefully unbiased) theta estimate.
@@ -10,7 +42,8 @@ iterative.theta.estimate = function (initial_theta = 0, item.params, response.pa
   ########### To estimate the person parameter based on pre-specified item discriminations, dificulties, a
   ###### given response pattern, and some initial theta value, the following code sets up a WHILE statement
   ###### to continuously update the theta up to the stopping point, defined as changes in theta estimate
-  ###### being less than 0.001. Based on Baker (2001) Chapter 5. http://echo.edres.org:8080/irt/baker/final.pdf
+  ###### being less than 0.001. Based on Baker, F. B. (2001), The Basics of Item Response Theory
+  ###### (2nd ed.), Chapter 5. Full text: https://eric.ed.gov/?id=ED458219
   final.theta.estimates = c() # this is where the point estimates are saved
   final.theta.SEM = c() # this is where the standard error of measurement values are saved
   for (i in 1:nrow(response.pattern)){ # for each individual,

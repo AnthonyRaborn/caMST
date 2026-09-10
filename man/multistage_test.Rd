@@ -45,8 +45,6 @@ multistage_test(
 \item{verbose}{A `TRUE` or `FALSE` (default) switch for printing the current subject being tested in the console.}
 }
 \value{
-A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
-
 An S4 object of class 'MST' with the following slots:
 \item{function.call}{The function and arguments called to create this object.}
 \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
@@ -105,7 +103,7 @@ method = "BM", response_matrix = example_responses, initial_theta = 0,
 model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
 }
 \references{
-Baker (2001). http://echo.edres.org:8080/irt/baker/final.pdf
+Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 }
 \seealso{
 [mixed_adaptive_test] for a multistage test with a routing module using item-level adaptation.
