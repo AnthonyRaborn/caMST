@@ -127,8 +127,8 @@ multistage_test <-
         nc_method = if (nc_list$method == "module_sum") "module_sum" else "cumulative_sum"
         num.correct = sum(current.responses)
       } else {
-        first.theta.est = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                         x = current.responses,
+        current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
+                                       x = current.responses,
                                          method = method)
       }
 
@@ -160,11 +160,14 @@ multistage_test <-
             transMatrix = transition_matrix,
             current.module = seen.modules[m - 1],
             out = seen.modules,
-            theta = first.theta.est,
+            theta = current.theta,
             criterion = module_select
           )
           seen.items = c(seen.items, next.module$items)
           current.responses = response_matrix[i, seen.items]
+          current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
+                                         x = current.responses,
+                                         method = method)
           seen.modules = c(seen.modules, next.module$module)
         }
       }
