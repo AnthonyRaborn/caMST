@@ -234,7 +234,7 @@ multistage_test <-
             model = model,
             theta = initial_theta
           )
-          current.responses = mst.responses[i, first.module$items]
+          current.responses = mst.responses[, first.module$items]
           seen.modules = first.module$module
           seen.items = first.module$items
           first.theta.est = catR::thetaEst(it = mst_item_bank[seen.items, ],
