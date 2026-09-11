@@ -4,21 +4,23 @@
 \alias{generate_transition_matrix}
 \title{Generate a Transition Matrix from Module Paths}
 \usage{
-generate_transition_matrix(modules, paths)
+generate_transition_matrix(n_modules, paths)
 }
 \arguments{
-\item{modules}{A single numeric value giving the total number of modules
-in the design. Must be greater than 1.}
+\item{n_modules}{A single numeric value giving the total number of modules
+in the design. Must be greater than 1. Coerced to an integer.}
 
 \item{paths}{A list with one element per module (so \code{length(paths)}
-must equal \code{modules}), where element \code{i} is a numeric vector
+must equal \code{n_modules}), where element \code{i} is a numeric vector
 naming the module(s) that module \code{i} can transition to, or
-\code{0} if module \code{i} is terminal (routes to no further module).}
+\code{0} if module \code{i} is terminal (routes to no further module).
+While the list can be named (e.g., list("Stage 1" = c(2, 3))), the 
+vector needs to be numeric or the matrix will not be created appropriately.}
 }
 \value{
-A \code{modules} x \code{modules} numeric matrix with a \code{1}
+A \code{n_modules} x \code{n_modules} numeric matrix with a \code{1}
   in row \code{i}, column \code{j} wherever module \code{i} can transition
-  to module \code{j}, and \code{0} elsewhere -- the same format as
+  to module \code{j}, and \code{0} elsewhere; the same format as
   \code{example_transition_matrix}.
 }
 \description{
@@ -38,7 +40,7 @@ The design does not need to be crossed or balanced: any module
 # routes to modules 2-4, and modules 2-4 each route to some subset of the
 # terminal modules 5-7
 transition_matrix <- generate_transition_matrix(
-  modules = 7,
+  n_modules = 7,
   paths = list(
     "1" = c(2, 3, 4),
     "2" = c(5, 6),

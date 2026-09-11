@@ -12,7 +12,7 @@ A data frame with 564 rows (items) and 6 columns (item parameters):
 \item{c}{item guessing}
 \item{u}{item carelessness}
 \item{content_ID}{what content area the item comes from}
-\item{stage}{which stage the item belongs to}
+\item{module}{which module the item belongs to; all items here belong to module 1, the single CAT routing stage}
 }
 }
 \usage{

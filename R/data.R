@@ -11,7 +11,7 @@
 #' \item{c}{item guessing}
 #' \item{u}{item carelessness}
 #' \item{content_ID}{what content area the item comes from}
-#' \item{stage}{which stage the item belongs to}
+#' \item{module}{which module the item belongs to; all items here belong to module 1, the single CAT routing stage}
 #' }
 #'
 "cat_items"
@@ -22,14 +22,14 @@
 #' Represents items to be used in module-level adaptation portions of a
 #' computerized adaptive test.
 #'
-#' @format A data frame with 564 rows (items) and 6 columns (item parameters):
+#' @format A data frame with 36 rows (items) and 6 columns (item parameters):
 #' \describe{
 #' \item{a}{item discrimination}
 #' \item{b}{item difficulty}
 #' \item{c}{item guessing}
 #' \item{u}{item carelessness}
 #' \item{content_ID}{what content area the item comes from}
-#' \item{stage}{which stage the item belongs to}
+#' \item{module}{which module the item belongs to (modules 2-7, the second and third stages of the example \code{mixed_adaptive_test} design)}
 #' }
 #'
 "mst_items"
@@ -63,19 +63,20 @@
 #' of the items in the example item files.
 "example_responses"
 
-#' The matrix of items used in the "multistage_test" example.
+#' The item bank used in the "multistage_test" example.
 #'
 #' A data frame formatted in the style required by \pkg{catR} for item data.
-#' Represents items to be used in an item-level adaptation portion of a
-#' computerized adaptive test.
+#' Represents the full set of items for a standalone 1-3-3 multistage test
+#' (module-level adaptation throughout, with no CAT routing stage).
 #'
-#' @format A data frame with 564 rows (items) and 6 columns (item parameters):
+#' @format A data frame with 42 rows (items) and 6 columns (item parameters):
 #' \describe{
 #' \item{a}{item discrimination}
 #' \item{b}{item difficulty}
 #' \item{c}{item guessing}
 #' \item{u}{item carelessness}
 #' \item{content_ID}{what content area the item comes from}
+#' \item{module}{which module the item belongs to (modules 1-7)}
 #' }
 "mst_only_items"
 
