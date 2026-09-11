@@ -1,0 +1,157 @@
+---
+title: "Introduction to caMST"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to caMST}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The **caMST** package provides functions for simulating and administering
+computerized adaptive tests (CAT), multistage tests (MST), and mixed
+computerized adaptive multistage tests (Mca-MST). This vignette introduces the
+package's bundled data sets and the helper functions used to build and visualize
+test designs.
+
+## Included data
+
+The package ships with several data sets used throughout the examples.
+
+```{r data-overview}
+library(caMST)
+
+data(example_thetas)
+example_thetas
+```
+
+`example_thetas` contains five simulated ability values on the theta scale. The
+corresponding item responses are stored in `example_responses`, a data frame
+with 5 rows (one per examinee) and 600 columns (one per item across all item
+banks).
+
+```{r responses}
+data(example_responses)
+dim(example_responses)
+example_responses[, 1:6]
+```
+
+### Item banks
+
+Three item banks are provided, each formatted for the **catR** package:
+
+- `cat_items`: 564 items for the CAT routing stage (all assigned to module 1).
+- `mst_items`: 36 items for the MST stages (modules 2--7), used alongside
+  `cat_items` in `mixed_adaptive_test()`.
+- `mst_only_items`: 42 items spanning modules 1--7, used for a standalone MST
+  with `multistage_test()`.
+
+```{r item-banks}
+data(cat_items)
+data(mst_items)
+data(mst_only_items)
+
+dim(cat_items)
+head(cat_items)
+
+dim(mst_items)
+head(mst_items)
+
+dim(mst_only_items)
+head(mst_only_items)
+```
+
+### Transition and module matrices
+
+The test design is described by two matrices:
+
+- A **transition matrix** (`example_transition_matrix`) that specifies which
+  modules can follow which. A `1` in row *i*, column *j* means an examinee who
+  just completed module *i* may be routed to module *j*.
+- A **module matrix** (`example_module_items`) that maps items to modules. A `1`
+  in row *i*, column *j* means item *i* belongs to module *j*.
+
+```{r design-matrices}
+data(example_transition_matrix)
+example_transition_matrix
+
+data(example_module_items)
+head(example_module_items, 10)
+```
+
+## Building design matrices with helper functions
+
+Writing these matrices by hand is tedious and error-prone for larger designs.
+The `generate_transition_matrix()` and `generate_modules()` functions build them
+from simpler inputs.
+
+### generate_transition_matrix()
+
+Specify the total number of modules and a list describing, for each module,
+which modules it can route to. Terminal modules (those with no further stage) use
+`0`.
+
+```{r generate-transition}
+tm <- generate_transition_matrix(
+  n_modules = 7,
+  paths = list(
+    "1" = c(2, 3, 4),
+    "2" = c(5, 6),
+    "3" = c(5, 6, 7),
+    "4" = c(6, 7),
+    "5" = 0,
+    "6" = 0,
+    "7" = 0
+  )
+)
+tm
+```
+
+This reproduces `example_transition_matrix`:
+
+```{r verify-transition}
+identical(unname(tm), unname(example_transition_matrix))
+```
+
+### generate_modules()
+
+When the item bank contains a `module` column, `generate_modules()` converts it
+to the items-by-modules matrix that `multistage_test()` expects.
+
+```{r generate-modules}
+module_items <- generate_modules(mst_only_items, n_modules = 7)
+head(module_items, 10)
+
+identical(unname(module_items), unname(as.matrix(example_module_items)))
+```
+
+## Visualizing the test design
+
+`transition_matrix_plot()` draws the routing structure so you can verify the
+design at a glance.
+
+```{r plot-transition, fig.width = 6, fig.height = 4}
+transition_matrix_plot(example_transition_matrix, n_stages = 3)
+```
+
+The function also accepts the `MST` or `MAT` result objects directly, pulling
+the transition matrix and stage count from the fitted object (see the MST and
+Mca-MST vignettes for examples).
+
+## Next steps
+
+With the data and design matrices in hand, you can run any of the three test
+types provided by **caMST**:
+
+- `computerized_adaptive_test()` — pure item-level adaptation (see
+  `vignette("computerized-adaptive-testing")`).
+- `multistage_test()` — module-level adaptation, optionally with number-correct
+  scoring (see `vignette("multistage-testing")`).
+- `mixed_adaptive_test()` — a CAT routing stage followed by MST modules (see
+  `vignette("mixed-adaptive-testing")`).

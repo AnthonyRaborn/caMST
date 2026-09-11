@@ -1,0 +1,154 @@
+---
+title: "Mixed Adaptive Testing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mixed Adaptive Testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+A mixed computerized adaptive multistage test (Mca-MST) combines the best of
+both approaches: the first stage uses item-level adaptation (like a CAT) to
+quickly estimate each examinee's ability, then subsequent stages use module-level
+adaptation (like a traditional MST). This can produce more precise routing
+decisions while retaining the content-control advantages of pre-assembled
+modules.
+
+## How it works
+
+1. **CAT routing stage**: Items are selected one at a time from `cat_item_bank`
+   using item-level adaptation (e.g., Maximum Fisher Information). The number of
+   items is controlled by `cat_length`.
+2. **MST stages**: The theta estimate from the routing stage seeds a standard
+   multistage test. Modules from `mst_item_bank` are selected at the module
+   level using `module_select` and the routing rules in `transition_matrix`.
+
+The first of `n_stages` is the CAT routing stage, so a design with a CAT routing
+stage followed by two MST stages uses `n_stages = 3`.
+
+## Setting up the data
+
+The Mca-MST needs two separate item banks — one for the CAT routing stage and
+one for the MST stages — plus the standard design matrices.
+
+```{r load-data}
+library(caMST)
+
+data(example_thetas)
+data(example_responses)
+data(example_transition_matrix)
+data(cat_items)
+data(mst_items)
+data(example_module_items)
+```
+
+`cat_items` contains 564 items for the routing stage (all assigned to module 1),
+while `mst_items` contains 36 items across modules 2--7:
+
+```{r inspect-banks}
+dim(cat_items)
+head(cat_items)
+
+dim(mst_items)
+head(mst_items)
+```
+
+The module matrix and transition matrix describe only the MST portion of the
+design:
+
+```{r inspect-design}
+example_transition_matrix
+head(example_module_items, 10)
+```
+
+## Running a mixed adaptive test
+
+```{r mat}
+results <- mixed_adaptive_test(
+  response_matrix = example_responses,
+  cat_item_bank = cat_items,
+  initial_theta = 0,
+  method = "EAP",
+  item_method = "MFI",
+  cat_length = 6,
+  cbControl = NULL,
+  cbGroup = NULL,
+  randomesque = 1,
+  mst_item_bank = mst_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  n_stages = 3
+)
+results
+```
+
+## Examining the results
+
+The `MAT` object contains the same slots as `MST`, plus the items selected
+during the CAT routing stage:
+
+```{r mat-theta}
+results@final.theta.estimate
+results@final.theta.SEM
+```
+
+### Accuracy with a 95% confidence interval
+
+```{r mat-ci}
+data.frame(
+  True.Theta = example_thetas,
+  Estimated.Theta = results@final.theta.estimate,
+  CI95.Lower = results@final.theta.estimate - 1.96 * results@final.theta.SEM,
+  CI95.Upper = results@final.theta.estimate + 1.96 * results@final.theta.SEM
+)
+```
+
+For all five examinees, the 95% confidence interval contains the true ability
+value.
+
+### Items administered
+
+The `final.items.seen` slot shows which items each examinee received. The first
+`cat_length` columns come from the CAT routing stage; the remaining columns come
+from the MST modules:
+
+```{r items-seen}
+results@final.items.seen
+```
+
+### Module routing paths
+
+The `modules.seen` slot records which modules each examinee was routed through:
+
+```{r modules-seen}
+results@modules.seen
+```
+
+## Visualizing the design
+
+`transition_matrix_plot()` works directly with `MAT` objects:
+
+```{r mat-plot, fig.width = 6, fig.height = 4}
+transition_matrix_plot(results)
+```
+
+## Key parameters
+
+| Parameter | Purpose |
+|---|---|
+| `cat_length` | Number of items in the CAT routing stage |
+| `item_method` | Item selection criterion for the routing stage (e.g., `"MFI"`) |
+| `randomesque` | Pool size for randomized item selection in the routing stage |
+| `module_select` | Module selection criterion for MST stages |
+| `n_stages` | Total number of stages (CAT routing stage counts as stage 1) |
+| `method` | Provisional theta estimation method for both stages |
+| `final_theta_method` | Theta method for the final reported estimate |
+
+See `?mixed_adaptive_test` for full documentation.

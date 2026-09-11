@@ -1,0 +1,187 @@
+---
+title: "Multistage Testing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multistage Testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+A multistage test (MST) administers pre-assembled modules of items, routing
+examinees to the next module based on their performance. This is a practical
+middle ground between a fixed-form test and a fully adaptive CAT: test
+developers retain control over module content while still adapting to examinee
+ability.
+
+## Setting up the data
+
+An MST requires four inputs:
+
+1. An **item bank** with IRT parameters for every item.
+2. A **module matrix** mapping items to modules.
+3. A **transition matrix** describing the routing structure.
+4. A **response matrix** with examinee responses.
+
+```{r load-data}
+library(caMST)
+
+data(example_thetas)
+data(example_responses)
+data(example_transition_matrix)
+data(mst_only_items)
+data(example_module_items)
+```
+
+The example uses a 1-3-3 design: one routing module in the first stage, three
+modules each in the second and third stages, for a total of 7 modules and 18
+items per examinee.
+
+```{r show-design}
+example_transition_matrix
+```
+
+## Running a multistage test with MFI module selection
+
+By default, `multistage_test()` uses Maximum Fisher Information (MFI) to choose
+the most informative module at each transition.
+
+```{r mst-mfi}
+resultsMFI <- multistage_test(
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  method = "BM",
+  response_matrix = example_responses,
+  initial_theta = 0,
+  model = NULL,
+  n_stages = 3,
+  test_length = 18
+)
+resultsMFI
+```
+
+### Examining the results
+
+```{r mfi-results}
+data.frame(
+  True.Theta = example_thetas,
+  Estimated.Theta = resultsMFI@final.theta.estimate,
+  CI95.Lower = resultsMFI@final.theta.estimate -
+    1.96 * resultsMFI@final.theta.SEM,
+  CI95.Upper = resultsMFI@final.theta.estimate +
+    1.96 * resultsMFI@final.theta.SEM
+)
+```
+
+All five true ability values fall within their 95% confidence intervals.
+
+## Alternative module selection: MLWMI
+
+You can change the module selection criterion with the `module_select` argument.
+Here we use the Maximum Likelihood Weighted Module Information (MLWMI) method:
+
+```{r mst-mlwmi}
+resultsMLWMI <- multistage_test(
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  method = "BM",
+  response_matrix = example_responses,
+  initial_theta = 0,
+  model = NULL,
+  n_stages = 3,
+  module_select = "MLWMI",
+  test_length = 18
+)
+
+data.frame(
+  True.Theta = example_thetas,
+  MFI.Theta = resultsMFI@final.theta.estimate,
+  MLWMI.Theta = resultsMLWMI@final.theta.estimate
+)
+```
+
+The two methods produce different routing paths and theta estimates, though both
+recover the true abilities reasonably well with this small sample.
+
+## Number-correct (NC) scoring
+
+In applied testing settings, module routing sometimes uses raw number-correct
+scores rather than IRT-based information. The `nc_list` argument supports this.
+
+Each element of the list corresponds to a module that routes to other modules.
+The values are the *maximum* cumulative number correct needed to be routed to
+each downstream module. Terminal modules do not need entries.
+
+For a 1-3-3 design where each stage has 6 items (18 total):
+
+```{r nc-list}
+nc_list <- list(
+  module1 = c(4, 5, 7),
+  module2 = c(8, 14, Inf),
+  module3 = c(8, 14, 18),
+  module4 = c(-Inf, 14, 18),
+  method = "cumulative_sum"
+)
+```
+
+`Inf` and `-Inf` prevent routing to unreachable modules in non-crossed designs
+(e.g., an examinee routed to the easy second-stage module cannot reach the hard
+third-stage module).
+
+```{r mst-nc}
+ncResults <- multistage_test(
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  method = "BM",
+  response_matrix = example_responses,
+  initial_theta = 0,
+  model = NULL,
+  n_stages = 3,
+  test_length = 18,
+  nc_list = nc_list
+)
+ncResults
+```
+
+Notice that the printed summary now identifies the NC scoring method used.
+
+```{r nc-results}
+data.frame(
+  True.Theta = example_thetas,
+  NC.Theta = ncResults@final.theta.estimate,
+  MFI.Theta = resultsMFI@final.theta.estimate
+)
+```
+
+With this example data, NC scoring produces comparable theta estimates.
+
+## Visualizing the test design
+
+`transition_matrix_plot()` accepts either a transition matrix or a fitted `MST`
+object:
+
+```{r mst-plot, fig.width = 6, fig.height = 4}
+transition_matrix_plot(resultsMFI)
+```
+
+## Key parameters
+
+| Parameter | Purpose |
+|---|---|
+| `n_stages` | Number of stages in the design |
+| `test_length` | Total number of items each examinee answers |
+| `module_select` | Module selection criterion: `"MFI"`, `"MLWMI"`, `"MPWMI"`, `"MKL"`, `"MKLP"`, or `"random"` |
+| `nc_list` | Optional list for number-correct routing (see Details in `?multistage_test`) |
+| `method` | Provisional theta estimation method |
+| `final_theta_method` | Theta method for the final reported estimate |
+
+See `?multistage_test` for full documentation.
