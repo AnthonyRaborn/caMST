@@ -166,3 +166,58 @@ setMethod('show',
 
             cat(paste0(c(line0, line1, line2, line3, line4, line5, line6), collapse = "\n"))
           })
+
+#' An S4 class for hybrid adaptive tests.
+#'
+#' @slot function.call The original function call.
+#' @slot final.theta.estimate Numeric vector of final theta estimates, computed using `final.theta.method`.
+#' @slot final.theta.method Character; the estimation method used to compute `final.theta.estimate` and `final.theta.SEM` (see the `final_theta_method` argument).
+#' @slot final.theta.SEM Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.
+#' @slot final.items.seen Character matrix of the final items seen by each individual.
+#' @slot modules.seen Numeric matrix of the MST modules seen by each individual.
+#' @slot final.responses Numeric matrix of the response patterns observed.
+#' @slot transition.matrix Numeric matrix; the transition matrix entered into the function.
+#' @slot n.stages Numeric; the number of stages specified.
+#' @slot runtime A `difftime` object of the total run time of the function.
+#'
+#' @importFrom methods new
+#'
+#' @return An S4 object of class `HAT`.
+#' @export
+#'
+setClass('HAT',
+         slots =
+           list(
+             function.call = 'call',
+             final.theta.estimate = 'numeric',
+             final.theta.method = 'character',
+             final.theta.SEM = 'numeric',
+             final.items.seen = 'matrix',
+             modules.seen = 'matrix',
+             final.responses = 'matrix',
+             transition.matrix = 'matrix',
+             n.stages = 'numeric',
+             runtime = 'ANY'
+           )
+)
+
+setMethod('show',
+          signature = 'HAT',
+          definition = function(object) {
+            Original.Call = object@function.call
+            Total.Time = object@runtime
+            Average.Theta = mean(object@final.theta.estimate)
+            Average.SEM = mean(object@final.theta.SEM, na.rm = T)
+            Path.Taken = apply(object@modules.seen, 1, FUN = function(object) paste0(object, collapse = '-'))
+            Most.Path = table(Path.Taken)[which(table(Path.Taken)==max(table(Path.Taken)))]
+
+            line0 = c("Test Format: Hybrid Adaptive Test")
+            line1 = Original.Call
+            line2 = paste0("Total Run Time: ", round(Total.Time[[1]], 3), " ", attr(Total.Time, "units"))
+            line3 = paste0("Final Theta Method: ", object@final.theta.method)
+            line4 = paste0("Average Theta Estimate: ", round(Average.Theta, 3))
+            line5 = paste0("Average SEM: ", round(Average.SEM, 3))
+            line6 = paste0("Most Common Path(s) Taken: ", attr(Most.Path, 'names'), " taken by ", Most.Path, " subjects")
+
+            cat(paste0(c(line0, line1, line2, line3, line4, line5, line6), collapse = "\n"))
+          })
