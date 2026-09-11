@@ -2,6 +2,7 @@
 % Please edit documentation in R/caMST.R
 \docType{package}
 \name{caMST}
+\alias{caMST-package}
 \alias{caMST}
 \title{\code{caMST} package}
 \description{
@@ -9,4 +10,13 @@ Computer Adaptive Mutistage Test Analysis
 }
 \details{
 See the README on \href{https://github.com/AnthonyRaborn/caMST#readme}{GitHub} for more information.
+}
+\author{
+\strong{Maintainer}: Anthony Raborn \email{anthony.w.raborn@gmail.com}
+
+Authors:
+\itemize{
+  \item Anthony Raborn \email{anthony.w.raborn@gmail.com}
+}
+
 }

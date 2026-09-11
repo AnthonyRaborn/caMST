@@ -3,23 +3,24 @@
 \docType{data}
 \name{mst_only_items}
 \alias{mst_only_items}
-\title{The matrix of items used in the "multistage_test" example.}
+\title{The item bank used in the "multistage_test" example.}
 \format{
-A data frame with 564 rows (items) and 6 columns (item parameters):
+A data frame with 42 rows (items) and 6 columns (item parameters):
 \describe{
 \item{a}{item discrimination}
 \item{b}{item difficulty}
 \item{c}{item guessing}
 \item{u}{item carelessness}
 \item{content_ID}{what content area the item comes from}
+\item{module}{which module the item belongs to (modules 1-7)}
 }
 }
 \usage{
 mst_only_items
 }
 \description{
-A data frame formatted in the style required by \pkg{mstR} for item data.
-Represents items to be used in an item-level adaptation portion of a
-computerized adaptive test.
+A data frame formatted in the style required by \pkg{catR} for item data.
+Represents the full set of items for a standalone 1-3-3 multistage test
+(module-level adaptation throughout, with no CAT routing stage).
 }
 \keyword{datasets}

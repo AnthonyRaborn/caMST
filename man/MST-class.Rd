@@ -15,13 +15,11 @@ An S4 method for multistage adaptive tests.
 \describe{
 \item{\code{function.call}}{The original function call.}
 
-\item{\code{final.theta.estimate}}{Numeric vector of theta estimates calculated by the provided `method`.}
+\item{\code{final.theta.estimate}}{Numeric vector of final theta estimates, computed using `final.theta.method`.}
 
-\item{\code{eap.theta}}{Numeric vector of theta estimates calculated by `catR::eapEst`.}
+\item{\code{final.theta.method}}{Character; the estimation method used to compute `final.theta.estimate` and `final.theta.SEM` (see the `final_theta_method` argument).}
 
-\item{\code{final.theta.Baker}}{Numeric vector of theta estimates calculated by the internal `iterative.theta.estimate` function.}
-
-\item{\code{final.theta.SEM}}{Numeric vector of SEM estimates calculated by the internal `iterative.theta.estimate` function.}
+\item{\code{final.theta.SEM}}{Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.}
 
 \item{\code{final.items.seen}}{Character matrix of the final items seen by each individual.}
 
@@ -34,6 +32,14 @@ An S4 method for multistage adaptive tests.
 \item{\code{n.stages}}{Numeric; the number of stages specified.}
 
 \item{\code{nc.list}}{A list of the number correct scoring logic and method, if applicable. Defaults to `NULL`.}
+
+\item{\code{item.bank}}{The item bank supplied to the test function, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{modules}}{The item-to-module mapping matrix supplied to the test function, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{method}}{Character; the provisional estimation method used during administration (distinct from `final.theta.method`).}
+
+\item{\code{model}}{The IRT model specification used during administration (`NULL` for dichotomous).}
 
 \item{\code{runtime}}{A `difftime` object of the total run time of the function.}
 }}

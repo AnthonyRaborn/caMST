@@ -12,10 +12,11 @@ computerized_adaptive_test(
   randomesque = 1,
   maxItems = 50,
   method = "BM",
-  nextItemControl = list(criterion = "MFI", method = method, priorDist = "norm",
-    priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType =
-    "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, SETH = NULL, AP = 1,
-    nAvailable = NULL, cbControl = NULL, cbGroup = NULL),
+  final_theta_method = NULL,
+  nextItemControl = list(criterion = "MFI", method = method, priorDist = "norm", priorPar
+    = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher",
+    random.seed = NULL, rule = "precision", thr = 0.3, SETH = NULL, AP = 1, nAvailable =
+    NULL, cbControl = NULL, cbGroup = NULL),
   ...
 )
 }
@@ -26,13 +27,15 @@ computerized_adaptive_test(
 
 \item{initial_theta}{The initial theta estimate for all individuals. Default is 0.}
 
-\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{mstR} package for more details.}
+\item{model}{Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{catR} package for more details.}
 
 \item{randomesque}{An integer value that indicates the number of items from which the selection rule should choose from randomly for administration. See the help documentation for \code{catR::nextItem} for more details.}
 
 \item{maxItems}{An integer value indicating the maximum number of items to administer, regardless of other stopping rules.}
 
 \item{method}{A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.}
+
+\item{final_theta_method}{A character value indicating the method used for the single final theta estimate reported in the result. One of "BM", "ML", "WL", "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses \code{catR::eapEst}). Defaults to \code{NULL}, which reuses whatever \code{method} was.}
 
 \item{nextItemControl}{A list of control values passed to \code{catR::nextItem}. See that function for more details.}
 
@@ -41,10 +44,9 @@ computerized_adaptive_test(
 \value{
 An S4 object of class 'CAT' with the following slots:
 \item{function.call}{The function and arguments called to create this object.}
-\item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
-\item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
-\item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-\item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001)[http://echo.edres.org:8080/irt/baker/final.pdf].}
+\item{final.theta.estimate}{A numeric vector of the final theta estimates, computed using \code{final_theta_method}.}
+\item{final.theta.method}{The \code{final_theta_method} used to compute \code{final.theta.estimate} and \code{final.theta.SEM}.}
+\item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates, from \code{catR::semTheta}.}
 \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. \code{NA} values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 \item{runtime}{A \code{difftime} object recording how long the function took to complete.}
@@ -65,7 +67,7 @@ rule = "precision", thr = .3, nAvailable = NULL,
 cbControl = NULL, cbGroup = NULL))
 }
 \references{
-Baker, F. B. (2001). The basics of item response theory. For full text: http://echo.edres.org:8080/irt/baker/final.pdf.
+Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 }
 \seealso{
 [mixed_adaptive_test] for a multistage test with a routing module using item-level adaptation.

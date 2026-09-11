@@ -395,7 +395,7 @@ camst_matrix_1_3_3_30_item_1_3 <-
     )
   )
 
-camst_matrix_1_3_3_18_item_2_3 <-
+camst_matrix_1_3_3_30_item_2_3 <-
   rbind(
     matrix(
       nrow = 10,

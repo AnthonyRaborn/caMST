@@ -1,0 +1,154 @@
+---
+title: "Computerized Adaptive Testing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Computerized Adaptive Testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+A computerized adaptive test (CAT) selects items one at a time based on the
+examinee's running ability estimate. This is the most flexible — and most
+complex — testing framework, and it generally provides the most precise ability
+estimates for a given test length.
+
+## Running a CAT
+
+The `computerized_adaptive_test()` function requires an item bank (in **catR**
+format) and a response matrix.
+
+```{r basic-cat}
+library(caMST)
+
+data(example_thetas)
+data(example_responses)
+data(cat_items)
+```
+
+Here we administer a short 3-item CAT using Maximum Fisher Information (MFI) for
+item selection:
+
+```{r short-cat}
+catResults <- computerized_adaptive_test(
+  cat_item_bank = cat_items,
+  response_matrix = example_responses,
+  randomesque = 1,
+  maxItems = 3,
+  nextItemControl = list(
+    criterion = "MFI",
+    priorDist = "norm",
+    priorPar = c(0, 1),
+    D = 1,
+    range = c(-4, 4),
+    parInt = c(-4, 4, 33),
+    infoType = "Fisher",
+    randomesque = 1,
+    random.seed = NULL,
+    rule = "precision",
+    thr = .3,
+    nAvailable = NULL,
+    cbControl = NULL,
+    cbGroup = NULL
+  )
+)
+catResults
+```
+
+The result is an S4 object of class `CAT`. The `show` method prints a summary
+including the average theta estimate, average SEM, and the average number of
+items administered.
+
+## Examining the results
+
+The key slots of the `CAT` object are:
+
+- `final.theta.estimate` — the final ability estimates for each examinee.
+- `final.theta.SEM` — the corresponding standard errors of measurement.
+- `final.items.seen` — which items each examinee was administered.
+- `final.responses` — the responses to those items.
+
+```{r cat-slots}
+catResults@final.theta.estimate
+catResults@final.theta.SEM
+catResults@final.items.seen
+```
+
+## Comparing estimates to true abilities
+
+```{r cat-comparison}
+data.frame(
+  True.Theta = example_thetas,
+  Estimated.Theta = catResults@final.theta.estimate,
+  SEM = catResults@final.theta.SEM
+)
+```
+
+With only 3 items, the estimates are rough. A longer test generally improves
+precision.
+
+## A longer CAT with precision-based stopping
+
+A more realistic CAT uses a longer maximum test length and may stop early if the
+SEM falls below a threshold (here, 0.3). The `randomesque` parameter introduces
+variability in item selection by choosing randomly from the top *k* most
+informative items.
+
+```{r longer-cat}
+set.seed(12345)
+catLong <- computerized_adaptive_test(
+  cat_item_bank = cat_items,
+  response_matrix = example_responses,
+  randomesque = 5,
+  maxItems = 18,
+  nextItemControl = list(
+    criterion = "MFI",
+    priorDist = "norm",
+    priorPar = c(0, 1),
+    D = 1,
+    range = c(-4, 4),
+    parInt = c(-4, 4, 33),
+    infoType = "Fisher",
+    random.seed = NULL,
+    rule = "precision",
+    thr = .3,
+    nAvailable = NULL,
+    cbControl = NULL,
+    cbGroup = NULL
+  )
+)
+catLong
+```
+
+### Accuracy with a 95% confidence interval
+
+```{r cat-ci}
+data.frame(
+  True.Theta = example_thetas,
+  Estimated.Theta = catLong@final.theta.estimate,
+  CI95.Lower = catLong@final.theta.estimate - 1.96 * catLong@final.theta.SEM,
+  CI95.Upper = catLong@final.theta.estimate + 1.96 * catLong@final.theta.SEM
+)
+```
+
+With up to 18 items and the precision stopping rule, each examinee's 95%
+confidence interval contains the true theta.
+
+## Key parameters
+
+| Parameter | Purpose |
+|---|---|
+| `maxItems` | Maximum number of items to administer |
+| `randomesque` | Size of the pool from which the next item is randomly drawn |
+| `method` | Provisional theta estimation method (e.g., `"BM"`, `"EAP"`) |
+| `final_theta_method` | Theta method for the final reported estimate (defaults to `method`) |
+| `nextItemControl` | A list passed to `catR::nextItem` controlling item selection, stopping rules, and content balancing |
+
+See `?computerized_adaptive_test` and the **catR** package documentation for
+full details on each parameter.

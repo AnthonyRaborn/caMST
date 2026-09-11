@@ -1,16 +1,17 @@
 #' Computer Adaptive Multistage Test
 #'
-#' @param mst_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{mstR} package format for item banks.
+#' @param mst_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.
 #' @param modules A matrix describing the relationship between the items and the modules they belong to. See \strong{Details}.
 #' @param transition_matrix A matrix describing how individuals can transition from one stage to the next.
-#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{mstR} package for more details.
+#' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.
 #' @param response_matrix A matrix of the person responses, with individuals as rows and items as columns.
 #' @param initial_theta The initial theta estimate for all individuals. Default is 0.
-#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the\pkg{mstR} package for more details.
+#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{catR} package for more details.
 #' @param n_stages A numeric value indicating the number of stages in the test.
 #' @param test_length A numeric value indicating the total number of items each individual answers.
-#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random". See the \pkg{mstR} for more details.
+#' @param module_select A character value indicating the information method used to select modules at transition stages. One of "MFI" (default), "MLWMI", "MPWMI", "MKL", "MKLP", "random".
 #' @param nc_list This parameter controls whether or not to use number correct ("NC") scoring to select modules. Defaults to `NULL`, using module information. Otherwise, this should be a list where the elements of the list correspond to each module which routes to other modules by number correct. If no `method` argument is provided in this list, or if an invalid entry is given, the method will default to `'cumulative_sum'`, meaning the values provided are a running tally of the number of items correctly answered on the test. If `method` is set to `module_sum`, then the sum of the number correct within the current module will be used to select the next module. See 'details' for more information.
+#' @param final_theta_method A character value indicating the method used for the single final theta estimate reported in the result. One of "BM", "ML", "WL", "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses \code{catR::eapEst}). Defaults to \code{NULL}, which reuses whatever \code{method} was.
 #' @param verbose A `TRUE` or `FALSE` (default) switch for printing the current subject being tested in the console.
 #'
 #' @details When using (cumulative) number correct module selection, the input list should contain one element for each module that needs to route to other modules. For example, in a 1-3-3 design the first module can route to any module in the second stage, so the first element of `nc_list` would be a numeric vector with three values indicating the *maximum* number of correct items needed in order to be routed to the second, third, or fourth module respectively. When the design is not crossed (e.g., a person routed to the easy module in the second stage **cannot** be routed to the hard module in the third stage), `-Inf` and `Inf` need to be used within `nc_list` to indicate this. Continuing the example, let's assume the 1-3-3 design is not crossed and will be balanced so that each stage has the same number of items (10 each) for a total of 30 items administered. The `nc_list` object could be specified like so:
@@ -22,13 +23,11 @@
 #'
 #' As it is the most common method of number correct scoring, "cumulative_sum" is the default. Any value included in the `method` argument of `nc_list` that does _not_ equal "module_sum" will cause the default "cumulative_sum" to be used. _This is intentional and will not be changed unless I am given a good argument to change it_.
 #'
-#' @return A list of all individuals with the following elements: the vector of final theta estimates based on "method", the vector of final theta estimates based on EAP, the vector of final theta estimates based on the iterative estimate from Baker 2004, a matrix of the final items taken, a matrix of the modules seen, and a matrix of the final responses.
 #' @return An S4 object of class 'MST' with the following slots:
 #' \item{function.call}{The function and arguments called to create this object.}
-#' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
-#' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
-#' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using the \code{catR::semTheta} function.}
+#' \item{final.theta.estimate}{A numeric vector of the final theta estimates, computed using \code{final_theta_method}.}
+#' \item{final.theta.method}{The \code{final_theta_method} used to compute \code{final.theta.estimate} and \code{final.theta.SEM}.}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates, from \code{catR::semTheta}.}
 #' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. `NA` values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 #' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 #' \item{transition.matrix}{The \code{transition_matrix} originally supplied to the function.}
@@ -37,7 +36,7 @@
 #' \item{runtime}{A \code{difftime} object recording how long the function took to complete.}
 #' @export
 #'
-#' @references Baker (2001). http://echo.edres.org:8080/irt/baker/final.pdf
+#' @references Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 #' @seealso [mixed_adaptive_test] for a multistage test with a routing module using item-level adaptation.
 #'
 #' @examples
@@ -85,13 +84,16 @@ multistage_test <-
            test_length = 18,
            module_select = "MFI",
            nc_list = NULL,
+           final_theta_method = NULL,
            verbose = FALSE) {
 
     # initialize start time to keep track of replication length
     start.time = Sys.time()
 
+    if (is.null(final_theta_method)) final_theta_method = method
+
     # create empty vectors and matrices for final output
-    final.theta = final.theta.eap = final.theta.Baker = final.theta.SEM = c()
+    final.theta = final.theta.SEM = c()
     final.items.seen = matrix(nrow = nrow(response_matrix), ncol = test_length)
     final.modules.seen = matrix(nrow = nrow(response_matrix), ncol = n_stages)
     final.responses = matrix(nrow = nrow(response_matrix), ncol = test_length)
@@ -99,193 +101,97 @@ multistage_test <-
     if (is.null(rownames(mst_item_bank))) {
       rownames(mst_item_bank) = paste0("Item", 1:nrow(mst_item_bank))
       colnames(response_matrix) = paste0("Item", 1:nrow(mst_item_bank))
-      cat(message("The mst_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix."))
+      message("The mst_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix.")
+    }
+
+    use_nc = is.list(nc_list)
+    if (use_nc && is.null(nc_list$method)) {
+      nc_list$method = "cumulative_sum"
     }
 
     # one person at a time,
     for (i in 1:nrow(response_matrix)) {
       if (verbose) cat(paste0("\rSubject ", i, " of ", nrow(response_matrix), ".      "))
-      if (is.list(nc_list)) {
-        if (is.null(nc_list$method)) {
-          nc_list$method = "cumulative_sum"
-        }
-        if (nc_list$method!="module_sum"|nc_list$method=="cumulative_sum") {
-          # pull the responses specific to the items chosen for the test and administer first module
-          mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = mstR::startModule(
-            itemBank = mst_item_bank,
-            modules = modules,
-            transMatrix = transition_matrix,
-            model = model,
-            theta = initial_theta
-          )
-          current.responses = mst.responses[, first.module$items]
-          seen.modules = first.module$module
-          seen.items = first.module$items
-          num.correct = sum(current.responses)
 
-          # using current module(s) and number correct, select the next module until test ends
-          # save the module, items, and responses chosen by updating the appropriate objects
-          for (m in 2:n_stages) {
-            current.module = seen.modules[m - 1]
-            next.module.selected = (findInterval(
-              x = num.correct,
-              vec = nc_list[[m - 1]],
-              rightmost.closed = TRUE
-            ) + 1)
-            selected.module = which(transition_matrix[current.module,]==1)[next.module.selected]
-            next.module = modules[,selected.module]
-            seen.items = c(seen.items, which(next.module==1))
-            current.responses = mst.responses[, seen.items]
-            num.correct = sum(current.responses)
-            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = as.numeric(current.responses),
-                                           method = method)
-            seen.modules = c(seen.modules, selected.module)
-          }
+      # pull the responses specific to the items chosen for the test and administer first module
+      mst.responses = response_matrix[i, rownames(mst_item_bank)]
+      first.module = startModule(
+        itemBank = mst_item_bank,
+        modules = modules,
+        transMatrix = transition_matrix,
+        model = model,
+        theta = initial_theta
+      )
+      current.responses = mst.responses[, first.module$items]
+      seen.modules = first.module$module
+      seen.items = first.module$items
 
-          final.responses[i, ] = as.numeric(mst.responses[, seen.items])
-          final.items.seen[i, ] = seen.items
-          final.modules.seen[i,] = seen.modules
-          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                          x = final.responses[i, ],
-                                          method = method)
-
-          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
-
-          temp.iter = iterative.theta.estimate(
-            initial_theta = initial_theta,
-            item.params = mst_item_bank[seen.items, ],
-            response.pattern = as.data.frame(matrix(
-              final.responses[i, ], nrow = 1, byrow = T
-            )))
-          final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] =
-            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
-                           x = final.responses[i, ], model = model,
-                           method = method)
-
-          # end loop for this person; repeat loop for next
-
-        } else if (nc_list$method=="module_sum") {
-          # pull the responses specific to the items chosen for the test and administer first module
-          mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = mstR::startModule(
-            itemBank = mst_item_bank,
-            modules = modules,
-            transMatrix = transition_matrix,
-            model = model,
-            theta = initial_theta
-          )
-          current.responses = mst.responses[, first.module$items]
-          seen.modules = first.module$module
-          seen.items = first.module$items
-          num.correct = sum(current.responses)
-
-          # using current module(s) and number correct, select the next module until test ends
-          # save the module, items, and responses chosen by updating the appropriate objects
-          for (m in 2:n_stages) {
-            current.module = seen.modules[m - 1]
-            next.module.selected = (findInterval(
-              x = num.correct,
-              vec = nc_list[[m - 1]],
-              rightmost.closed = TRUE
-            ) + 1)
-            selected.module = which(transition_matrix[current.module,]==1)[next.module.selected]
-            next.module = modules[,selected.module]
-            seen.items = c(seen.items, which(next.module==1))
-            current.responses = mst.responses[, seen.items]
-            num.correct = sum(current.responses[length(current.responses):(sum(next.module)+1)])
-            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = as.numeric(current.responses),
-                                           method = method)
-            seen.modules = c(seen.modules, selected.module)
-          }
-
-          final.responses[i, ] = as.numeric(mst.responses[, seen.items])
-          final.items.seen[i, ] = seen.items
-          final.modules.seen[i,] = seen.modules
-          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                          x = final.responses[i, ],
-                                          method = method)
-
-          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
-
-          temp.iter = iterative.theta.estimate(
-            initial_theta = initial_theta,
-            item.params = mst_item_bank[seen.items, ],
-            response.pattern = as.data.frame(matrix(
-              final.responses[i, ], nrow = 1, byrow = T
-            )))
-          final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] =
-            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
-                           x = final.responses[i, ], model = model,
-                           method = method)
-          # end loop for this person; repeat loop for next
-        }
+      if (use_nc) {
+        nc_method = if (nc_list$method == "module_sum") "module_sum" else "cumulative_sum"
+        num.correct = sum(current.responses)
       } else {
-          # pull the responses specific to the items chosen for the test and administer first module
-          mst.responses = response_matrix[i, rownames(mst_item_bank)]
-          first.module = mstR::startModule(
+        current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
+                                       x = current.responses,
+                                       model = model,
+                                       method = method)
+      }
+
+      # using current module(s) and number correct or theta estimate, select the
+      # next module until test ends; save the module, items, and responses chosen
+      # by updating the appropriate objects
+      for (m in 2:n_stages) {
+        if (use_nc) {
+          current.module = seen.modules[m - 1]
+          next.module.selected = (findInterval(
+            x = num.correct,
+            vec = nc_list[[m - 1]],
+            rightmost.closed = TRUE
+          ) + 1)
+          selected.module = which(transition_matrix[current.module,]==1)[next.module.selected]
+          next.module.items = modules[,selected.module]
+          seen.items = c(seen.items, which(next.module.items==1))
+          current.responses = mst.responses[, seen.items]
+          num.correct = if (nc_method == "module_sum") {
+            sum(current.responses[(length(current.responses) - sum(next.module.items) + 1):length(current.responses)])
+          } else {
+            sum(current.responses)
+          }
+          seen.modules = c(seen.modules, selected.module)
+        } else {
+          next.module = nextModule(
             itemBank = mst_item_bank,
             modules = modules,
             transMatrix = transition_matrix,
-            model = model,
-            theta = initial_theta
+            current.module = seen.modules[m - 1],
+            out = seen.modules,
+            theta = current.theta,
+            criterion = module_select
           )
-          current.responses = mst.responses[i, first.module$items]
-          seen.modules = first.module$module
-          seen.items = first.module$items
-          first.theta.est = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = current.responses,
-                                           method = method)
-
-          # using current module(s) and theta estimate, select the next module until test ends
-          # save the module, items, and responses chosen by updating the appropriate objects
-          for (m in 2:n_stages) {
-            next.module = mstR::nextModule(
-              itemBank = mst_item_bank,
-              modules = modules,
-              transMatrix = transition_matrix,
-              current.module = seen.modules[m -
-                                              1],
-              out = seen.modules,
-              theta = first.theta.est,
-              criterion = module_select
-            )
-            seen.items = c(seen.items, next.module$items)
-            current.responses = response_matrix[i, seen.items]
-            current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                           x = current.responses,
-                                           method = method)
-            seen.modules = c(seen.modules, next.module$module)
-          }
-
-          # compile final information for this individual
-          final.responses[i, ] = as.numeric(mst.responses[, seen.items])
-          final.items.seen[i, ] = seen.items
-          final.modules.seen[i, ] = seen.modules
-          final.theta[i] = catR::thetaEst(it = mst_item_bank[seen.items, ],
-                                          x = final.responses[i, ],
-                                          method = method)
-
-          final.theta.eap[i] = catR::eapEst(it = mst_item_bank[seen.items, ], x = final.responses[i, ])
-
-          temp.iter = iterative.theta.estimate(
-            initial_theta = initial_theta,
-            item.params = mst_item_bank[seen.items, ],
-            response.pattern = as.data.frame(matrix(
-              final.responses[i, ], nrow = 1, byrow = T
-            )))
-          final.theta.Baker[i] = temp.iter[1]
-          final.theta.SEM[i] =
-            catR::semTheta(thEst = final.theta[i], it = mst_item_bank[seen.items, ],
-                           x = final.responses[i, ], model = model,
-                           method = method)
-          # end loop for this person; repeat loop for next
+          seen.items = c(seen.items, next.module$items)
+          current.responses = response_matrix[i, seen.items]
+          current.theta = catR::thetaEst(it = mst_item_bank[seen.items, ],
+                                         x = current.responses,
+                                         model = model,
+                                         method = method)
+          seen.modules = c(seen.modules, next.module$module)
         }
       }
+
+      # compile final information for this individual
+      final.responses[i, ] = as.numeric(mst.responses[, seen.items])
+      final.items.seen[i, ] = seen.items
+      final.modules.seen[i, ] = seen.modules
+
+      final.result = final_theta_estimate(
+        item.params = mst_item_bank[seen.items, ],
+        responses = final.responses[i, ],
+        model = model,
+        method = final_theta_method
+      )
+      final.theta[i] = final.result$theta
+      final.theta.SEM[i] = final.result$sem
+      # end loop for this person; repeat loop for next
+    }
 
 
     # create results object
@@ -294,8 +200,7 @@ multistage_test <-
         'MST',
         function.call = match.call(),
         final.theta.estimate = final.theta,
-        eap.theta = final.theta.eap,
-        final.theta.Baker = final.theta.Baker,
+        final.theta.method = final_theta_method,
         final.theta.SEM = final.theta.SEM,
         final.items.seen = final.items.seen,
         modules.seen = final.modules.seen,
@@ -303,6 +208,10 @@ multistage_test <-
         transition.matrix = transition_matrix,
         n.stages = n_stages,
         nc.list = nc_list,
+        item.bank = mst_item_bank,
+        modules = modules,
+        method = method,
+        model = model,
         runtime = Sys.time() - start.time
       )
 

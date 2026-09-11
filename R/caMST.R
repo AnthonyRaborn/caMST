@@ -33,7 +33,7 @@ caMSTStartup <- function() {
   cat_penguin <- c("\t\\   /\\ \n\t ) ( ')\t >^)\n\t( /  ) \t /\\\\ \n\t\\(__)|\t_\\_V")
   message <- c(caMST, version, cat_penguin)
 
-  cat(message, sep = "\n")
+  paste(message, collapse = "\n")
 }
 
 #' Package Attach Hook Function
@@ -49,9 +49,11 @@ caMSTStartup <- function() {
 #' caMST:::.onAttach(.libPaths()[1], "caMST")
 
 .onAttach <- function(lib, pkg) {
-  msg <- caMSTStartup()
-  if (!interactive())
-    msg[1] <- paste("Package 'caMST' version", packageVersion("caMST"))
+  msg <- if (interactive()) {
+    caMSTStartup()
+  } else {
+    paste("Package 'caMST' version", packageVersion("caMST"))
+  }
   packageStartupMessage(msg)
   invisible()
 }

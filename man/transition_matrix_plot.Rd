@@ -7,7 +7,7 @@
 transition_matrix_plot(object = NULL, n_stages = NULL)
 }
 \arguments{
-\item{object}{Either an S4 object of class `"MST"` or class `"MAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.}
+\item{object}{Either an S4 object of class `"MST"`, `"MAT"`, or `"HAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.}
 
 \item{n_stages}{A numeric value indicating how many stages are used in the (mixed) multistage test. If an S4 object is provided, this value is taken from the object and the input value is ignored.}
 }
@@ -22,6 +22,22 @@ that demonstrates the potential paths through a (mixed) multistage test.
 # Create a plot for a multistage test with a 1-3-3 design
 data('example_transition_matrix')
 transition_matrix_plot(example_transition_matrix, n_stages =  3)
+
+# Build the same 1-3-3 transition matrix with generate_transition_matrix()
+# instead of writing it out by hand, then plot it
+built_transition_matrix <- generate_transition_matrix(
+  n_modules = 7,
+  paths = list(
+    "1" = c(2, 3, 4),
+    "2" = c(5, 6),
+    "3" = c(5, 6, 7),
+    "4" = c(6, 7),
+    "5" = 0,
+    "6" = 0,
+    "7" = 0
+  )
+)
+transition_matrix_plot(built_transition_matrix, n_stages = 3)
 
 \dontrun{
 # Save the plot as a png file.

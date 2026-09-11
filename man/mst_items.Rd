@@ -5,21 +5,21 @@
 \alias{mst_items}
 \title{Example items for the MST stages of an example adaptive test.}
 \format{
-A data frame with 564 rows (items) and 6 columns (item parameters):
+A data frame with 36 rows (items) and 6 columns (item parameters):
 \describe{
 \item{a}{item discrimination}
 \item{b}{item difficulty}
 \item{c}{item guessing}
 \item{u}{item carelessness}
 \item{content_ID}{what content area the item comes from}
-\item{stage}{which stage the item belongs to}
+\item{module}{which module the item belongs to (modules 2-7, the second and third stages of the example \code{mixed_adaptive_test} design)}
 }
 }
 \usage{
 mst_items
 }
 \description{
-A data frame formatted in the style required by \pkg{mstR} for item data.
+A data frame formatted in the style required by \pkg{catR} for item data.
 Represents items to be used in module-level adaptation portions of a
 computerized adaptive test.
 }

@@ -3,24 +3,24 @@
 #' @param cat_item_bank A data frame with the items on the rows and their item parameters on the columns. These should be in the \pkg{catR} package format for item banks.
 #' @param response_matrix A matrix of the person responses, with individuals as rows and items as columns.
 #' @param initial_theta The initial theta estimate for all individuals. Default is 0.
-#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{mstR} package for more details.
+#' @param model Either NULL (default) for dichotomous models or a character value indicating the polytomous model used. See the \pkg{catR} package for more details.
 #' @param randomesque An integer value that indicates the number of items from which the selection rule should choose from randomly for administration. See the help documentation for \code{catR::nextItem} for more details.
 #' @param maxItems An integer value indicating the maximum number of items to administer, regardless of other stopping rules.
 #' @param method A character value indicating method for the provisional theta estimate. Defaults to "BM" (Bayes Modal). See the \pkg{catR} package for more details.
+#' @param final_theta_method A character value indicating the method used for the single final theta estimate reported in the result. One of "BM", "ML", "WL", "ROB" (passed to \code{catR::thetaEst}) or "EAP" (uses \code{catR::eapEst}). Defaults to \code{NULL}, which reuses whatever \code{method} was.
 #' @param nextItemControl A list of control values passed to \code{catR::nextItem}. See that function for more details.
 #' @param ... Further arguments to be passed to internal functions. Currently unimplemented.
 #'
 #' @return An S4 object of class 'CAT' with the following slots:
 #' \item{function.call}{The function and arguments called to create this object.}
-#' \item{final.theta.estimate}{A numeric vector of the final theta estimates using the \code{method} provided in \code{function.call}.}
-#' \item{eap.theta}{A numeric vector of the final theta estimates using the expected a posteriori (EAP) theta estimate from \code{catR::eapEst}.}
-#' \item{final.theta.Baker}{A numeric vector of the final theta estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001).}
-#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates using an iterative maximum likelihood estimation procedure as described in chapter 5 of Baker (2001)[http://echo.edres.org:8080/irt/baker/final.pdf].}
+#' \item{final.theta.estimate}{A numeric vector of the final theta estimates, computed using \code{final_theta_method}.}
+#' \item{final.theta.method}{The \code{final_theta_method} used to compute \code{final.theta.estimate} and \code{final.theta.SEM}.}
+#' \item{final.theta.SEM}{A numeric vector of the final standard error of measurement (SEM) estimates, from \code{catR::semTheta}.}
 #' \item{final.items.seen}{A matrix of the final items seen by each individual using the supplied item names. \code{NA} values indicate that an individual wasn't given any items to answer after the last specified item in their row.}
 #' \item{final.responses}{A matrix of the responses to the items seen in \code{final.items.seen}. \code{NA} values indicate that the individual didn't answer the question in the supplied response file or wasn't given any more items to answer.}
 #' \item{runtime}{A \code{difftime} object recording how long the function took to complete.}
 #' @export
-#' @references Baker, F. B. (2001). The basics of item response theory. For full text: http://echo.edres.org:8080/irt/baker/final.pdf.
+#' @references Baker, F. B. (2001). The Basics of Item Response Theory (2nd ed.). ERIC Clearinghouse on Assessment and Evaluation. Full text: https://eric.ed.gov/?id=ED458219
 #' @seealso [mixed_adaptive_test] for a multistage test with a routing module using item-level adaptation.
 #'
 #' @examples
@@ -43,6 +43,7 @@ computerized_adaptive_test <-
            randomesque = 1,
            maxItems = 50,
            method = "BM",
+           final_theta_method = NULL,
            nextItemControl = list(
              criterion = "MFI",
              method = method,
@@ -64,9 +65,10 @@ computerized_adaptive_test <-
     # initialize start time to keep track of replication length
     start.time = Sys.time()
 
+    if (is.null(final_theta_method)) final_theta_method = method
+
     # create empty vectors and matrices for final output
-    final.theta = final.theta.eap = final.theta.Baker =
-      final.theta.SEM = final.theta.Baker.SEM = c()
+    final.theta = final.theta.SEM = c()
     final.items.seen = matrix(nrow = nrow(response_matrix), ncol = maxItems)
     final.responses = matrix(nrow = nrow(response_matrix), ncol = maxItems)
 
@@ -74,7 +76,7 @@ computerized_adaptive_test <-
     if (is.null(rownames(cat_item_bank))) {
       rownames(cat_item_bank) = paste0("Item", 1:nrow(cat_item_bank))
       colnames(response_matrix) = paste0("Item", 1:nrow(cat_item_bank))
-      cat(message("The cat_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix."))
+      message("The cat_item_bank did not have row names indicating which items were which, so the item names were filled in automatically for both the item bank and the response matrix.")
     }
 
 
@@ -153,22 +155,15 @@ computerized_adaptive_test <-
       }
       final.responses[i, ] = final.individual.responses
       final.items.seen[i, ] = final.individual.items
-      final.theta[i] = catR::thetaEst(it = cat_item_bank[seen.items, ],
-                                      x = current.responses,
-                                      method = method)
-      final.theta.SEM[i] = theta.sem
 
-      final.theta.eap[i] = catR::eapEst(it = cat_item_bank[seen.items, ], x = current.responses)
-
-      temp.iter = iterative.theta.estimate(
-        initial_theta = initial_theta,
+      final.result = final_theta_estimate(
         item.params = cat_item_bank[seen.items, ],
-        response.pattern = as.data.frame(matrix(
-          current.responses, nrow = 1, byrow = T
-        ))
+        responses = current.responses,
+        model = model,
+        method = final_theta_method
       )
-      final.theta.Baker[i] = temp.iter[1]
-      final.theta.Baker.SEM[i] = temp.iter[2]
+      final.theta[i] = final.result$theta
+      final.theta.SEM[i] = final.result$sem
 
       # end loop for this person; repeat loop for next
     }
@@ -179,11 +174,13 @@ computerized_adaptive_test <-
         'CAT',
         function.call = match.call(),
         final.theta.estimate = final.theta,
-        eap.theta = final.theta.eap,
-        final.theta.Baker = final.theta.Baker,
+        final.theta.method = final_theta_method,
         final.theta.SEM = final.theta.SEM,
         final.items.seen = final.items.seen,
         final.responses = final.responses,
+        item.bank = cat_item_bank,
+        method = method,
+        model = model,
         runtime = Sys.time() - start.time
       )
 

@@ -1,0 +1,229 @@
+---
+title: "Theta Trajectory Plots"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Theta Trajectory Plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5
+)
+```
+
+After administering a test, it is often useful to visualize how the provisional
+ability estimate evolved over the course of the test. The
+`theta_trajectory_plot()` function reconstructs the theta estimate at each
+decision point and produces a **ggplot2** plot. An animated version is available
+via `theta_trajectory_animate()`.
+
+Both functions work with all four test types: `CAT`, `MST`, `MAT`, and `HAT`.
+
+## Setup
+
+```{r load}
+library(caMST)
+library(ggplot2)
+
+data(example_thetas)
+data(example_responses)
+data(cat_items)
+data(mst_only_items)
+data(mst_items)
+data(example_module_items)
+data(example_transition_matrix)
+```
+
+## CAT trajectory
+
+In a computerized adaptive test, the theta estimate updates after every item.
+`theta_trajectory_plot()` connects these per-item estimates with a line.
+
+```{r cat-run}
+catResult <- computerized_adaptive_test(
+  cat_item_bank = cat_items,
+  response_matrix = example_responses,
+  randomesque = 1,
+  maxItems = 18,
+  nextItemControl = list(
+    criterion = "MFI",
+    priorDist = "norm",
+    priorPar = c(0, 1),
+    D = 1,
+    range = c(-4, 4),
+    parInt = c(-4, 4, 33),
+    infoType = "Fisher",
+    random.seed = NULL,
+    rule = "precision",
+    thr = .3,
+    nAvailable = NULL,
+    cbControl = NULL,
+    cbGroup = NULL
+  )
+)
+```
+
+```{r cat-plot}
+theta_trajectory_plot(catResult, person = 1)
+```
+
+Each point shows the theta estimate and its standard error after incorporating
+one more item. The error bars shrink as more items are administered and the
+estimate becomes more precise.
+
+### Wider confidence intervals
+
+Use `ci_multiplier = 1.96` for approximate 95% intervals:
+
+```{r cat-ci}
+theta_trajectory_plot(catResult, person = 1, ci_multiplier = 1.96)
+```
+
+## MST trajectory
+
+In a multistage test, the theta estimate updates once per module rather than
+after every item. `theta_trajectory_plot()` uses `geom_step()` for MST segments
+to reflect this: the estimate holds flat across items within a module and then
+jumps when the next module is scored.
+
+```{r mst-run}
+mstResult <- multistage_test(
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  method = "BM",
+  response_matrix = example_responses,
+  initial_theta = 0,
+  model = NULL,
+  n_stages = 3,
+  test_length = 18
+)
+```
+
+```{r mst-plot}
+theta_trajectory_plot(mstResult, person = 1)
+```
+
+The stage and module labels at the bottom of the plot show which module the
+examinee was routed to at each stage.
+
+## Mixed adaptive test (MAT) trajectory
+
+A mixed adaptive test begins with a CAT routing stage (item-level adaptation),
+then transitions to MST modules. The trajectory plot reflects both regimes:
+per-item updates during the CAT stage, and per-module step functions during the
+MST stages.
+
+```{r mat-run}
+matResult <- mixed_adaptive_test(
+  response_matrix = example_responses[1:2, ],
+  cat_item_bank = cat_items,
+  initial_theta = 0,
+  method = "EAP",
+  item_method = "MFI",
+  cat_length = 6,
+  cbControl = NULL,
+  cbGroup = NULL,
+  randomesque = 1,
+  mst_item_bank = mst_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  n_stages = 3
+)
+```
+
+```{r mat-plot}
+theta_trajectory_plot(matResult, person = 1)
+```
+
+The first portion of the trajectory (labeled "CAT") updates after every item.
+The remaining stages switch to module-level adaptation with step functions.
+
+## Hybrid adaptive test (HAT) trajectory
+
+A hybrid adaptive test reverses the MAT order: MST modules come first, followed
+by a CAT stage. The trajectory plot shows the MST step functions first, then
+per-item CAT updates.
+
+```{r hat-run}
+cat_bank <- cat_items[!rownames(cat_items) %in% rownames(mst_only_items), ]
+
+hatResult <- hybrid_adaptive_test(
+  response_matrix = example_responses[1:2, ],
+  cat_item_bank = cat_bank,
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  n_stages = 4,
+  cat_length = 6,
+  initial_theta = 0,
+  method = "EAP",
+  item_method = "MFI",
+  cbControl = NULL,
+  cbGroup = NULL,
+  randomesque = 1
+)
+```
+
+```{r hat-plot}
+theta_trajectory_plot(hatResult, person = 1)
+```
+
+## Comparing multiple respondents
+
+### Overlaid on one panel
+
+Pass a vector of person indices to overlay their trajectories. Each person is
+distinguished by color.
+
+```{r multi-overlay}
+theta_trajectory_plot(catResult, person = c(1, 2, 3))
+```
+
+### Faceted into separate panels
+
+Set `facet_person = TRUE` to give each person their own panel:
+
+```{r multi-facet}
+theta_trajectory_plot(catResult, person = c(1, 2, 3), facet_person = TRUE)
+```
+
+## Animated trajectories
+
+`theta_trajectory_animate()` creates an animation that reveals the trajectory
+one update at a time, using **gganimate**. This requires the **gganimate** and
+**gifski** packages.
+
+```{r animate, eval = FALSE}
+# Preview in the RStudio viewer
+theta_trajectory_animate(catResult, person = 1)
+
+# Save to a GIF file
+theta_trajectory_animate(catResult, person = 1, file = "cat_trajectory.gif")
+
+# Adjust animation timing
+theta_trajectory_animate(catResult, person = 1,
+  transition_length = 1, state_length = 2, fps = 5)
+```
+
+The animation builds up the same plot shown by `theta_trajectory_plot()`,
+adding one theta update per frame so the viewer can follow how the estimate
+converges.
+
+## Customizing the plot
+
+Both functions return **ggplot2** objects, so you can add layers or modify the
+theme as usual:
+
+```{r customize}
+theta_trajectory_plot(catResult, person = 1) +
+  ggplot2::geom_hline(yintercept = example_thetas[1], linetype = "dashed",
+                       color = "red") +
+  ggplot2::labs(subtitle = "Dashed line = true theta") +
+  ggplot2::theme_bw()
+```
