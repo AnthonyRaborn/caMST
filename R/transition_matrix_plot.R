@@ -17,7 +17,7 @@
 #' # Build the same 1-3-3 transition matrix with generate_transition_matrix()
 #' # instead of writing it out by hand, then plot it
 #' built_transition_matrix <- generate_transition_matrix(
-#'   modules = 7,
+#'   n_modules = 7,
 #'   paths = list(
 #'     "1" = c(2, 3, 4),
 #'     "2" = c(5, 6),
