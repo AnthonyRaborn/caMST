@@ -2,9 +2,8 @@
 # caMST
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/caMST)](http://cran.r-project.org/package=caMST)
-[![Travis-CI Build
-Status](http://travis-ci.org/AnthonyRaborn/caMST.svg?branch=master)](http://travis-ci.org/AnthonyRaborn/caMST)
-[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/master/graph/badge.svg?token=CCASTIW3TF)](https://codecov.io/gh/AnthonyRaborn/caMST)
+[![R-CMD-check](https://github.com/AnthonyRaborn/caMST/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AnthonyRaborn/caMST/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/main/graph/badge.svg?token=CCASTIW3TF)](https://codecov.io/gh/AnthonyRaborn/caMST)
 [![CRAN Downloads Per
 Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
 [![CRAN Downloads
@@ -41,11 +40,11 @@ data(mst_only_matrix)  # the matrix specifying how the item data frame relates t
 resultsMFI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Time difference of 0.3415821 secs
+## Time difference of 0.3954751 secs
 resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 0.342 secs
+## Total Run Time: 0.395 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: -0.046
 ## Average SEM: 0.36
@@ -55,11 +54,11 @@ resultsMFI  # print a summary of the results
 resultsMLWMI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, module_select = "MLWMI", test_length = 18)
-## Time difference of 0.567935 secs
+## Time difference of 0.6149919 secs
 resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 0.342 secs
+## Total Run Time: 0.395 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: -0.046
 ## Average SEM: 0.36
@@ -172,12 +171,12 @@ results <- mixed_adaptive_test(response_matrix = example_responses, cat_item_ban
     initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL,
     cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items,
     transition_matrix = example_transition_matrix, n_stages = 3)
-## Time difference of 3.682851 secs
+## Time difference of 3.823812 secs
 
 results  # prints a summary of the results
 ## Test Format: Mixed Adaptive Test
 ## mixed_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_items, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 3)
-## Total Run Time: 3.683 secs
+## Total Run Time: 3.824 secs
 ## Final Theta Method: EAP
 ## Average Theta Estimate: 0.023
 ## Average SEM: 0.335
@@ -223,13 +222,13 @@ nc_list = list(module1 = c(4, 5, 7), module2 = c(8, 14, Inf), module3 = c(8, 14,
 nc.results <- multistage_test(mst_item_bank = mst_only_items, modules = example_module_items,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Time difference of 0.005400181 secs
+## Time difference of 0.007404089 secs
 
 # printing a MST using NC scoring also shows the NC scoring method used
 nc.results
 ## Test Format: Multistage Adaptive Test with Cumulative Summation Scoring
 ## multistage_test(mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Total Run Time: 0.005 secs
+## Total Run Time: 0.007 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: 0.036
 ## Average SEM: 0.362
@@ -273,26 +272,26 @@ catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_mat
         priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher",
         random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL,
         cbGroup = NULL))
-## Time difference of 1.369768 secs
+## Time difference of 1.543549 secs
 
 catResults
 ## Test Format: Computerized Adaptive Test
 ## computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Total Run Time: 1.37 secs
+## Total Run Time: 1.544 secs
 ## Final Theta Method: BM
-## Average Theta Estimate: -0.047
-## Average SEM: 0.306
-## Average Number of Items Seen: 17.6
+## Average Theta Estimate: 0.019
+## Average SEM: 0.307
+## Average Number of Items Seen: 18
 
 data.frame(`True Theta` = example_thetas, `Estimated Theta` = catResults@final.theta.estimate,
     `CI95 Lower Bound` = catResults@final.theta.estimate - 1.96 * catResults@final.theta.SEM,
     `CI95 Upper Bound` = catResults@final.theta.estimate + 1.96 * catResults@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-## 1 -0.82791686     -0.89295272       -1.5232869       -0.2626185
-## 2  0.61463323      0.83293842        0.2102786        1.4555983
-## 3  0.03785365      0.18182460       -0.4042842        0.7679334
-## 4 -0.51095175     -0.43801593       -1.0153099        0.1392781
-## 5 -0.08529469      0.08009336       -0.5065044        0.6666911
+## 1 -0.82791686     -0.76242982       -1.3980466      -0.12681304
+## 2  0.61463323      1.10458899        0.4707619       1.73841604
+## 3  0.03785365      0.18102222       -0.3957446       0.75778907
+## 4 -0.51095175     -0.52322299       -1.1087274       0.06228142
+## 5 -0.08529469      0.09437147       -0.4824527       0.67119560
 ```
 
 The CAT method, using the precision rule with a value of .3 (i.e.,
