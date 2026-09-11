@@ -178,6 +178,9 @@ computerized_adaptive_test <-
         final.theta.SEM = final.theta.SEM,
         final.items.seen = final.items.seen,
         final.responses = final.responses,
+        item.bank = cat_item_bank,
+        method = method,
+        model = model,
         runtime = Sys.time() - start.time
       )
 

@@ -31,6 +31,16 @@ An S4 method for mixed adaptive tests.
 
 \item{\code{n.stages}}{Numeric; the number of stages specified.}
 
+\item{\code{cat.item.bank}}{The CAT-stage item bank as supplied, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{mst.item.bank}}{The MST-stage item bank as supplied, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{mst.modules}}{The item-to-module mapping matrix for the MST portion, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{method}}{Character; the provisional estimation method used during administration (distinct from `final.theta.method`).}
+
+\item{\code{model}}{The IRT model specification used during administration (`NULL` for dichotomous).}
+
 \item{\code{runtime}}{A `difftime` object of the total run time of the function.}
 }}
 

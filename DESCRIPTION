@@ -19,6 +19,9 @@ Imports: catR,
   methods
 Suggests: testthat,
   knitr,
-  rmarkdown
+  rmarkdown,
+  ggplot2,
+  gganimate,
+  gifski
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

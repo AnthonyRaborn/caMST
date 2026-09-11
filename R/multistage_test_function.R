@@ -208,6 +208,10 @@ multistage_test <-
         transition.matrix = transition_matrix,
         n.stages = n_stages,
         nc.list = nc_list,
+        item.bank = mst_item_bank,
+        modules = modules,
+        method = method,
+        model = model,
         runtime = Sys.time() - start.time
       )
 

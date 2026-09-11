@@ -33,6 +33,14 @@ An S4 method for multistage adaptive tests.
 
 \item{\code{nc.list}}{A list of the number correct scoring logic and method, if applicable. Defaults to `NULL`.}
 
+\item{\code{item.bank}}{The item bank supplied to the test function, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{modules}}{The item-to-module mapping matrix supplied to the test function, stored for post-hoc trajectory reconstruction.}
+
+\item{\code{method}}{Character; the provisional estimation method used during administration (distinct from `final.theta.method`).}
+
+\item{\code{model}}{The IRT model specification used during administration (`NULL` for dichotomous).}
+
 \item{\code{runtime}}{A `difftime` object of the total run time of the function.}
 }}
 

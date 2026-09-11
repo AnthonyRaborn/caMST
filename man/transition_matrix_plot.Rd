@@ -7,7 +7,7 @@
 transition_matrix_plot(object = NULL, n_stages = NULL)
 }
 \arguments{
-\item{object}{Either an S4 object of class `"MST"` or class `"MAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.}
+\item{object}{Either an S4 object of class `"MST"`, `"MAT"`, or `"HAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.}
 
 \item{n_stages}{A numeric value indicating how many stages are used in the (mixed) multistage test. If an S4 object is provided, this value is taken from the object and the input value is ignored.}
 }

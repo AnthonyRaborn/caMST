@@ -6,6 +6,9 @@
 #' @slot final.theta.SEM Numeric vector of SEM estimates for `final.theta.estimate`, computed via `catR::semTheta`.
 #' @slot final.items.seen Character matrix of the final items seen by each individual.
 #' @slot final.responses Numeric matrix of the response patterns observed.
+#' @slot item.bank The item bank supplied to the test function, stored for post-hoc trajectory reconstruction.
+#' @slot method Character; the provisional estimation method used during administration (distinct from `final.theta.method`).
+#' @slot model The IRT model specification used during administration (`NULL` for dichotomous).
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
 #' @importFrom methods new
@@ -22,6 +25,9 @@ setClass('CAT',
              final.theta.SEM = 'numeric',
              final.items.seen = 'matrix',
              final.responses = 'matrix',
+             item.bank = 'ANY',
+             method = 'character',
+             model = 'ANY',
              runtime = 'ANY'
            )
          )
@@ -58,6 +64,10 @@ setMethod('show',
 #' @slot transition.matrix Numeric matrix; the transition matrix entered into the function.
 #' @slot n.stages Numeric; the number of stages specified.
 #' @slot nc.list A list of the number correct scoring logic and method, if applicable. Defaults to `NULL`.
+#' @slot item.bank The item bank supplied to the test function, stored for post-hoc trajectory reconstruction.
+#' @slot modules The item-to-module mapping matrix supplied to the test function, stored for post-hoc trajectory reconstruction.
+#' @slot method Character; the provisional estimation method used during administration (distinct from `final.theta.method`).
+#' @slot model The IRT model specification used during administration (`NULL` for dichotomous).
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
 #' @importFrom methods new
@@ -78,6 +88,10 @@ setClass('MST',
              transition.matrix = 'matrix',
              n.stages = 'numeric',
              nc.list = 'ANY',
+             item.bank = 'ANY',
+             modules = 'ANY',
+             method = 'character',
+             model = 'ANY',
              runtime = 'ANY'
            )
 )
@@ -123,6 +137,11 @@ setMethod('show',
 #' @slot final.responses Numeric matrix of the response patterns observed.
 #' @slot transition.matrix Numeric matrix; the transition matrix entered into the function.
 #' @slot n.stages Numeric; the number of stages specified.
+#' @slot cat.item.bank The CAT-stage item bank as supplied, stored for post-hoc trajectory reconstruction.
+#' @slot mst.item.bank The MST-stage item bank as supplied, stored for post-hoc trajectory reconstruction.
+#' @slot mst.modules The item-to-module mapping matrix for the MST portion, stored for post-hoc trajectory reconstruction.
+#' @slot method Character; the provisional estimation method used during administration (distinct from `final.theta.method`).
+#' @slot model The IRT model specification used during administration (`NULL` for dichotomous).
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
 #' @importFrom methods new
@@ -142,6 +161,11 @@ setClass('MAT',
              final.responses = 'matrix',
              transition.matrix = 'matrix',
              n.stages = 'numeric',
+             cat.item.bank = 'ANY',
+             mst.item.bank = 'ANY',
+             mst.modules = 'ANY',
+             method = 'character',
+             model = 'ANY',
              runtime = 'ANY'
            )
 )
@@ -178,6 +202,11 @@ setMethod('show',
 #' @slot final.responses Numeric matrix of the response patterns observed.
 #' @slot transition.matrix Numeric matrix; the transition matrix entered into the function.
 #' @slot n.stages Numeric; the number of stages specified.
+#' @slot cat.item.bank The CAT-stage item bank as supplied, stored for post-hoc trajectory reconstruction.
+#' @slot mst.item.bank The MST-stage item bank as supplied, stored for post-hoc trajectory reconstruction.
+#' @slot mst.modules The item-to-module mapping matrix for the MST portion, stored for post-hoc trajectory reconstruction.
+#' @slot method Character; the provisional estimation method used during administration (distinct from `final.theta.method`).
+#' @slot model The IRT model specification used during administration (`NULL` for dichotomous).
 #' @slot runtime A `difftime` object of the total run time of the function.
 #'
 #' @importFrom methods new
@@ -197,6 +226,11 @@ setClass('HAT',
              final.responses = 'matrix',
              transition.matrix = 'matrix',
              n.stages = 'numeric',
+             cat.item.bank = 'ANY',
+             mst.item.bank = 'ANY',
+             mst.modules = 'ANY',
+             method = 'character',
+             model = 'ANY',
              runtime = 'ANY'
            )
 )

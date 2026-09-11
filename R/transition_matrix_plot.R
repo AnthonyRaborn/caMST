@@ -3,7 +3,7 @@
 #' Given a transition matrix and the number of modules at each stage, produces a plot
 #' that demonstrates the potential paths through a (mixed) multistage test.
 #'
-#' @param object Either an S4 object of class `"MST"` or class `"MAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.
+#' @param object Either an S4 object of class `"MST"`, `"MAT"`, or `"HAT"`, or a matrix describing how individuals can transition from one stage to the next. If an S4 object is provided, the `transition.matrix` slot is used to create the plot.
 #' @param n_stages A numeric value indicating how many stages are used in the (mixed) multistage test. If an S4 object is provided, this value is taken from the object and the input value is ignored.
 #'
 #' @return A plot using the current graphic device.
@@ -49,7 +49,7 @@
 
 transition_matrix_plot = function(object = NULL, n_stages = NULL) {
 
-  if (!is.null(object) & (is(object, "MST")|is(object, "MAT"))) {
+  if (!is.null(object) & (is(object, "MST")|is(object, "MAT")|is(object, "HAT"))) {
     transition_matrix = object@transition.matrix
     n_stages = object@n.stages
   } else {

@@ -300,6 +300,11 @@ hybrid_adaptive_test = function(response_matrix,
       final.responses = final.responses.matrix,
       transition.matrix = transition_matrix,
       n.stages = n_stages,
+      cat.item.bank = cat_item_bank,
+      mst.item.bank = mst_item_bank,
+      mst.modules = modules,
+      method = method,
+      model = model,
       runtime = Sys.time() - start.time
     )
 

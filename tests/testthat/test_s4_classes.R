@@ -9,6 +9,9 @@ make_cat_object = function() {
     final.theta.SEM = c(0.3, 0.35),
     final.items.seen = matrix(c("Item1", "Item2", "Item3", "Item4"), nrow = 2),
     final.responses = matrix(c(1, 0, 0, 1), nrow = 2),
+    item.bank = data.frame(a = c(1, 1.2), b = c(-0.5, 0.5), c = c(0.2, 0.2), d = c(1, 1)),
+    method = "BM",
+    model = NULL,
     runtime = as.difftime(1.234, units = "secs")
   )
 }
@@ -26,6 +29,10 @@ make_mst_object = function(nc.list = NULL) {
     transition.matrix = matrix(c(0, 1, 0, 0), nrow = 2),
     n.stages = 2,
     nc.list = nc.list,
+    item.bank = data.frame(a = c(1, 1.2), b = c(-0.5, 0.5), c = c(0.2, 0.2), d = c(1, 1)),
+    modules = matrix(c(1, 0, 0, 1), nrow = 2),
+    method = "BM",
+    model = NULL,
     runtime = as.difftime(2.345, units = "secs")
   )
 }
@@ -42,7 +49,33 @@ make_mat_object = function() {
     final.responses = matrix(c(1, 0, 0, 1), nrow = 2),
     transition.matrix = matrix(c(0, 1, 0, 0), nrow = 2),
     n.stages = 2,
+    cat.item.bank = data.frame(a = c(1), b = c(0), c = c(0.2), d = c(1)),
+    mst.item.bank = data.frame(a = c(1.2), b = c(0.5), c = c(0.2), d = c(1)),
+    mst.modules = matrix(c(1, 0, 0, 1), nrow = 2),
+    method = "BM",
+    model = NULL,
     runtime = as.difftime(3.456, units = "secs")
+  )
+}
+
+make_hat_object = function() {
+  new(
+    'HAT',
+    function.call = quote(hybrid_adaptive_test(cat_item_bank = x, mst_item_bank = y)),
+    final.theta.estimate = c(0.5, -0.3),
+    final.theta.method = "BM",
+    final.theta.SEM = c(0.3, 0.35),
+    final.items.seen = matrix(c("Item1", "Item2", "Item3", "Item4"), nrow = 2),
+    modules.seen = matrix(c(1, 1, 2, 3), nrow = 2),
+    final.responses = matrix(c(1, 0, 0, 1), nrow = 2),
+    transition.matrix = matrix(c(0, 1, 0, 0), nrow = 2),
+    n.stages = 2,
+    cat.item.bank = data.frame(a = c(1), b = c(0), c = c(0.2), d = c(1)),
+    mst.item.bank = data.frame(a = c(1.2), b = c(0.5), c = c(0.2), d = c(1)),
+    mst.modules = matrix(c(1, 0, 0, 1), nrow = 2),
+    method = "BM",
+    model = NULL,
+    runtime = as.difftime(4.567, units = "secs")
   )
 }
 
@@ -81,5 +114,13 @@ test_that("MAT class can be constructed and shown", {
   expect_s4_class(object, "MAT")
   output = capture.output(show(object))
   expect_true(any(grepl("Mixed Adaptive Test", output)))
+  expect_true(any(grepl("Most Common Path", output)))
+})
+
+test_that("HAT class can be constructed and shown", {
+  object = make_hat_object()
+  expect_s4_class(object, "HAT")
+  output = capture.output(show(object))
+  expect_true(any(grepl("Hybrid Adaptive Test", output)))
   expect_true(any(grepl("Most Common Path", output)))
 })
