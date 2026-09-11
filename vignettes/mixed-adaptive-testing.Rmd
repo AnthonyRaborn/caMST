@@ -133,10 +133,11 @@ results@modules.seen
 
 ## Visualizing the design
 
-`transition_matrix_plot()` works directly with `MAT` objects:
+`transition_matrix_plot()` can display the routing structure. Pass the
+transition matrix and number of stages directly:
 
 ```{r mat-plot, fig.width = 6, fig.height = 4}
-transition_matrix_plot(results)
+transition_matrix_plot(example_transition_matrix, n_stages = 3)
 ```
 
 ## Key parameters

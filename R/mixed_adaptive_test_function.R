@@ -195,6 +195,8 @@ mixed_adaptive_test = function(response_matrix,
       final.items.seen = sapply(list.of.mst.results, FUN = function(x) x$final.items.seen),
       modules.seen = t(sapply(list.of.mst.results, FUN = function(x) x$modules.seen)),
       final.responses = t(sapply(list.of.mst.results, FUN = function(x) x$final.responses)),
+      transition.matrix = transition_matrix,
+      n.stages = n_stages,
       runtime = Sys.time() - start.time
     )
 
