@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^\.claude$
 LICENSE
 README.md
 README.Rmd

@@ -35,6 +35,7 @@ Here are some examples demonstrating how to use this package for various adaptiv
 ```{r loading functions, echo = FALSE, eval = FALSE}
 source("R/mixed_adaptive_test_function.R")
 source("R/multistage_test_function.R")
+source("R/hybrid_adaptive_test_function.R")
 source("R/module_selection_function.R")
 source("R/routing_item_selection.R")
 source("R/computerized_adaptive_test_function.R")
@@ -177,13 +178,57 @@ nc.results
 data.frame("True Theta" = example_thetas,
            "Estimated Theta" = nc.results@final.theta.estimate,
            "CI95 Lower Bound" = nc.results@final.theta.estimate -
-             1.96*results@final.theta.SEM,
+             1.96*nc.results@final.theta.SEM,
            "CI95 Upper Bound" = nc.results@final.theta.estimate +
-             1.96*results@final.theta.SEM)
+             1.96*nc.results@final.theta.SEM)
 
 ```
 
 With this example data, the NC scoring does about as well as the previous methods in recovering the ability levels of these individuals.
+
+### Hybrid Computerized Adaptive Multistage Testing (HcaMST)
+
+This method runs the same two stages as Mca-MST, but in the opposite order: one or more MST stages come first, using module-level adaptation to produce a provisional ability estimate, followed by a final CAT stage that re-estimates theta after each item using every response seen so far (MST and CAT combined). This can be a useful alternative when a broad, module-level pass is more practical for routing than an item-level one, with a final item-level stage sharpening the estimate before scoring.
+
+Here is an example with a 1-3-3 MST design (18 items) followed by a 4-item CAT stage.
+
+```{r HcaMST example}
+# reuse the 1-3-3 MST item bank and design from the CMT example
+data(mst_only_items)
+data(example_module_items)
+data(example_transition_matrix)
+data(cat_items)
+
+# use CAT items not already in the MST bank, to avoid administering the
+# same item twice to one person
+cat_bank <- cat_items[!rownames(cat_items) %in% rownames(mst_only_items), ]
+
+# run the HcaMST model: 3 MST stages (1-3-3) followed by a 4-item CAT stage
+hybrid.results <- hybrid_adaptive_test(
+  response_matrix = example_responses,
+  cat_item_bank = cat_bank,
+  mst_item_bank = mst_only_items,
+  modules = example_module_items,
+  transition_matrix = example_transition_matrix,
+  n_stages = 4,
+  cat_length = 4,
+  initial_theta = 0,
+  method = "EAP",
+  item_method = "MFI"
+)
+
+hybrid.results # prints a summary of the results
+
+# How good was our estimate of the individual's abilities?
+data.frame("True Theta" = example_thetas,
+           "Estimated Theta" = hybrid.results@final.theta.estimate,
+           "CI95 Lower Bound" = hybrid.results@final.theta.estimate -
+             1.96*hybrid.results@final.theta.SEM,
+           "CI95 Upper Bound" = hybrid.results@final.theta.estimate +
+             1.96*hybrid.results@final.theta.SEM)
+```
+
+As with Mca-MST, the additional item-level CAT stage sharpens the estimates from the MST-only portion, with all five individuals' true ability levels falling within the reported 95% confidence intervals.
 
 ### Computer Adaptive Testing (CAT)
 
