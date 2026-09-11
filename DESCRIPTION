@@ -2,19 +2,19 @@ Package: caMST
 Type: Package
 Title: Mixed Computerized Adaptive Multistage Testing
 Version: 0.1.6
-Date: 2022-06-24
-Authors@R: person("Anthony", "Raborn", email = "anthony.w.raborn@gmail.com", role = c("aut","cre"))
+Authors@R: person("Anthony", "Raborn", email = "anthony.w.raborn@gmail.com", role = c("aut","cre", "cph"))
 Description: Provides functions to more easily analyze computerized adaptive tests. Currently, functions for computerized
   adaptive tests (CAT), computer adaptive multistage tests (CMT), mixed computer adaptive multistage tests (McaMST)
   utilizing CAT item-level adaptation for the initial stage and traditional MST module-level adaptation for the subsequent
   stages, and hybrid computer adaptive multistage tests (HcaMST) utilizing MST module-level adaptation for the initial
   stages and CAT item-level adaptation for the final stage have been created. For an in-depth look at
   CAT and MST, see Weiss & Kingsbury (1984) <doi:10.1111/j.1745-3984.1984.tb01040.x> and Luecht & Nungester
-  (2000) <doi:10.1007/0-306-47531-6_6> respectively.
+  (2000) <doi:10.1007/0-306-47531-6_6> respectively. The McaMST method is described in Raborn & Sarı (2021)
+  <doi:10.21031/epod.871014>.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 Imports: catR,
   diagram,
   methods
