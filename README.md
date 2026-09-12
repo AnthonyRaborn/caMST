@@ -1,9 +1,9 @@
 
 # caMST
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/caMST)](http://cran.r-project.org/package=caMST)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/caMST)](https://cran.r-project.org/package=caMST)
 [![R-CMD-check](https://github.com/AnthonyRaborn/caMST/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AnthonyRaborn/caMST/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/main/graph/badge.svg?token=CCASTIW3TF)](https://codecov.io/gh/AnthonyRaborn/caMST)
+[![codecov](https://codecov.io/gh/AnthonyRaborn/caMST/branch/main/graph/badge.svg?token=CCASTIW3TF)](https://app.codecov.io/gh/AnthonyRaborn/caMST)
 [![CRAN Downloads Per
 Month](https://cranlogs.r-pkg.org/badges/caMST)](https://cran.r-project.org/package=caMST)
 [![CRAN Downloads
@@ -28,6 +28,7 @@ adaptive test frameworks.
 ``` r
 # load the package
 library(caMST)
+## Package 'caMST' version 1.0.0
 
 # using simulated test data
 data(example_thetas)  # 5 simulated abilities
@@ -40,11 +41,11 @@ data(mst_only_matrix)  # the matrix specifying how the item data frame relates t
 resultsMFI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Time difference of 0.395267 secs
+## Time difference of 0.2935219 secs
 resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 0.395 secs
+## Total Run Time: 0.294 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: -0.046
 ## Average SEM: 0.36
@@ -54,11 +55,11 @@ resultsMFI  # print a summary of the results
 resultsMLWMI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, module_select = "MLWMI", test_length = 18)
-## Time difference of 0.558847 secs
+## Time difference of 0.5228629 secs
 resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 0.395 secs
+## Total Run Time: 0.294 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: -0.046
 ## Average SEM: 0.36
@@ -171,12 +172,12 @@ results <- mixed_adaptive_test(response_matrix = example_responses, cat_item_ban
     initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL,
     cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items,
     transition_matrix = example_transition_matrix, n_stages = 3)
-## Time difference of 3.653719 secs
+## Time difference of 3.473242 secs
 
 results  # prints a summary of the results
 ## Test Format: Mixed Adaptive Test
 ## mixed_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_items, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 3)
-## Total Run Time: 3.654 secs
+## Total Run Time: 3.473 secs
 ## Final Theta Method: EAP
 ## Average Theta Estimate: 0.023
 ## Average SEM: 0.335
@@ -222,13 +223,13 @@ nc_list = list(module1 = c(4, 5, 7), module2 = c(8, 14, Inf), module3 = c(8, 14,
 nc.results <- multistage_test(mst_item_bank = mst_only_items, modules = example_module_items,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Time difference of 0.006259918 secs
+## Time difference of 0.009912014 secs
 
 # printing a MST using NC scoring also shows the NC scoring method used
 nc.results
 ## Test Format: Multistage Adaptive Test with Cumulative Summation Scoring
 ## multistage_test(mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Total Run Time: 0.006 secs
+## Total Run Time: 0.01 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: 0.036
 ## Average SEM: 0.362
@@ -279,12 +280,12 @@ cat_bank <- cat_items[!rownames(cat_items) %in% rownames(mst_only_items), ]
 hybrid.results <- hybrid_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_bank,
     mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix,
     n_stages = 4, cat_length = 4, initial_theta = 0, method = "EAP", item_method = "MFI")
-## Time difference of 5.453717 secs
+## Time difference of 5.328711 secs
 
 hybrid.results  # prints a summary of the results
 ## Test Format: Hybrid Adaptive Test
 ## hybrid_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_bank, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 4, mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 4)
-## Total Run Time: 5.454 secs
+## Total Run Time: 5.329 secs
 ## Final Theta Method: EAP
 ## Average Theta Estimate: -0.092
 ## Average SEM: 0.317
@@ -327,26 +328,26 @@ catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_mat
         priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher",
         random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL,
         cbGroup = NULL))
-## Time difference of 1.344136 secs
+## Time difference of 1.320788 secs
 
 catResults
 ## Test Format: Computerized Adaptive Test
 ## computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Total Run Time: 1.344 secs
+## Total Run Time: 1.321 secs
 ## Final Theta Method: BM
-## Average Theta Estimate: -0.097
-## Average SEM: 0.306
+## Average Theta Estimate: -0.021
+## Average SEM: 0.301
 ## Average Number of Items Seen: 17.8
 
 data.frame(`True Theta` = example_thetas, `Estimated Theta` = catResults@final.theta.estimate,
     `CI95 Lower Bound` = catResults@final.theta.estimate - 1.96 * catResults@final.theta.SEM,
     `CI95 Upper Bound` = catResults@final.theta.estimate + 1.96 * catResults@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-## 1 -0.82791686     -0.96595348       -1.6077797      -0.32412722
-## 2  0.61463323      0.70832070        0.1023759       1.31426549
-## 3  0.03785365      0.25837247       -0.3238560       0.84060092
-## 4 -0.51095175     -0.51747216       -1.1020774       0.06713306
-## 5 -0.08529469      0.03028724       -0.5566344       0.61720887
+## 1 -0.82791686     -0.73025043       -1.3318247       -0.1286762
+## 2  0.61463323      0.78454322        0.1802190        1.3888675
+## 3  0.03785365      0.21079933       -0.3711256        0.7927242
+## 4 -0.51095175     -0.38701208       -0.9644164        0.1903922
+## 5 -0.08529469      0.01752777       -0.5700714        0.6051270
 ```
 
 The CAT method, using the precision rule with a value of .3 (i.e.,
