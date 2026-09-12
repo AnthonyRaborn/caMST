@@ -1,4 +1,4 @@
-# Package v0.2.0
+# Package v1.0.0
 
 This release removes the dependency on the archived `mstR` package (the
 reason caMST was archived from CRAN), relicenses the package to resolve
