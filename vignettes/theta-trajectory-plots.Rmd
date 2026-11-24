@@ -204,7 +204,7 @@ one update at a time, using **gganimate**. This requires the **gganimate** and
 theta_trajectory_animate(catResult, person = 1)
 
 # Save to a GIF file
-theta_trajectory_animate(catResult, person = 1, file = "cat_trajectory.gif")
+theta_trajectory_animate(catResult, person = 1, file = file.path(tempdir(), "cat_trajectory.gif"))
 
 # Adjust animation timing
 theta_trajectory_animate(catResult, person = 1,

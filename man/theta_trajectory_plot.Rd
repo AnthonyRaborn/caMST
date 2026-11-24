@@ -38,7 +38,7 @@ Theta is reconstructed from the stored item bank and responses using the
 same provisional estimation method that was used during administration.
 }
 \examples{
-\dontrun{
+\donttest{
 library(caMST)
 data(example_thetas)
 data(example_responses)

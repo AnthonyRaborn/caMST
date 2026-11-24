@@ -41,11 +41,10 @@ data(mst_only_matrix)  # the matrix specifying how the item data frame relates t
 resultsMFI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Time difference of 0.2935219 secs
 resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 0.294 secs
+## Total Run Time: 0.205 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: -0.046
 ## Average SEM: 0.36
@@ -55,11 +54,10 @@ resultsMFI  # print a summary of the results
 resultsMLWMI <- multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, module_select = "MLWMI", test_length = 18)
-## Time difference of 0.5228629 secs
 resultsMFI  # print a summary of the results
 ## Test Format: Multistage Adaptive Test
 ## multistage_test(mst_item_bank = mst_only_items, modules = mst_only_matrix, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18)
-## Total Run Time: 0.294 secs
+## Total Run Time: 0.205 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: -0.046
 ## Average SEM: 0.36
@@ -172,12 +170,11 @@ results <- mixed_adaptive_test(response_matrix = example_responses, cat_item_ban
     initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL,
     cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items,
     transition_matrix = example_transition_matrix, n_stages = 3)
-## Time difference of 3.473242 secs
 
 results  # prints a summary of the results
 ## Test Format: Mixed Adaptive Test
 ## mixed_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_items, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 6, cbControl = NULL, cbGroup = NULL, randomesque = 1, mst_item_bank = mst_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 3)
-## Total Run Time: 3.473 secs
+## Total Run Time: 2.169 secs
 ## Final Theta Method: EAP
 ## Average Theta Estimate: 0.023
 ## Average SEM: 0.335
@@ -223,13 +220,12 @@ nc_list = list(module1 = c(4, 5, 7), module2 = c(8, 14, Inf), module3 = c(8, 14,
 nc.results <- multistage_test(mst_item_bank = mst_only_items, modules = example_module_items,
     transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses,
     initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Time difference of 0.009912014 secs
 
 # printing a MST using NC scoring also shows the NC scoring method used
 nc.results
 ## Test Format: Multistage Adaptive Test with Cumulative Summation Scoring
 ## multistage_test(mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, method = "BM", response_matrix = example_responses, initial_theta = 0, model = NULL, n_stages = 3, test_length = 18, nc_list = nc_list)
-## Total Run Time: 0.01 secs
+## Total Run Time: 0.005 secs
 ## Final Theta Method: BM
 ## Average Theta Estimate: 0.036
 ## Average SEM: 0.362
@@ -280,12 +276,11 @@ cat_bank <- cat_items[!rownames(cat_items) %in% rownames(mst_only_items), ]
 hybrid.results <- hybrid_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_bank,
     mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix,
     n_stages = 4, cat_length = 4, initial_theta = 0, method = "EAP", item_method = "MFI")
-## Time difference of 5.328711 secs
 
 hybrid.results  # prints a summary of the results
 ## Test Format: Hybrid Adaptive Test
 ## hybrid_adaptive_test(response_matrix = example_responses, cat_item_bank = cat_bank, initial_theta = 0, method = "EAP", item_method = "MFI", cat_length = 4, mst_item_bank = mst_only_items, modules = example_module_items, transition_matrix = example_transition_matrix, n_stages = 4)
-## Total Run Time: 5.329 secs
+## Total Run Time: 3.525 secs
 ## Final Theta Method: EAP
 ## Average Theta Estimate: -0.092
 ## Average SEM: 0.317
@@ -328,26 +323,25 @@ catResults <- computerized_adaptive_test(cat_item_bank = cat_items, response_mat
         priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher",
         random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL,
         cbGroup = NULL))
-## Time difference of 1.320788 secs
 
 catResults
 ## Test Format: Computerized Adaptive Test
 ## computerized_adaptive_test(cat_item_bank = cat_items, response_matrix = example_responses, randomesque = 5, maxItems = 18, nextItemControl = list(criterion = "MFI", priorDist = "norm", priorPar = c(0, 1), D = 1, range = c(-4, 4), parInt = c(-4, 4, 33), infoType = "Fisher", random.seed = NULL, rule = "precision", thr = 0.3, nAvailable = NULL, cbControl = NULL, cbGroup = NULL))
-## Total Run Time: 1.321 secs
+## Total Run Time: 1.023 secs
 ## Final Theta Method: BM
-## Average Theta Estimate: -0.021
-## Average SEM: 0.301
+## Average Theta Estimate: 0.027
+## Average SEM: 0.304
 ## Average Number of Items Seen: 17.8
 
 data.frame(`True Theta` = example_thetas, `Estimated Theta` = catResults@final.theta.estimate,
     `CI95 Lower Bound` = catResults@final.theta.estimate - 1.96 * catResults@final.theta.SEM,
     `CI95 Upper Bound` = catResults@final.theta.estimate + 1.96 * catResults@final.theta.SEM)
 ##    True.Theta Estimated.Theta CI95.Lower.Bound CI95.Upper.Bound
-## 1 -0.82791686     -0.73025043       -1.3318247       -0.1286762
-## 2  0.61463323      0.78454322        0.1802190        1.3888675
-## 3  0.03785365      0.21079933       -0.3711256        0.7927242
-## 4 -0.51095175     -0.38701208       -0.9644164        0.1903922
-## 5 -0.08529469      0.01752777       -0.5700714        0.6051270
+## 1 -0.82791686      -0.7834592       -1.3968385       -0.1700798
+## 2  0.61463323       0.8479796        0.2283595        1.4675997
+## 3  0.03785365       0.2088031       -0.3716275        0.7892338
+## 4 -0.51095175      -0.3174246       -0.8946148        0.2597656
+## 5 -0.08529469       0.1786347       -0.4079579        0.7652273
 ```
 
 The CAT method, using the precision rule with a value of .3 (i.e.,

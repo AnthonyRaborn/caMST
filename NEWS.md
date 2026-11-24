@@ -58,10 +58,22 @@ plotting.
   - Fixed `mixed_adaptive_test()` not storing its `transition.matrix`/
     `n.stages` slots.
   - Fixed double console output and a garbled package startup message.
+  - Removed the unconditional `print()` of the runtime from the four test
+    functions (it remains available in the result's `runtime` slot).
+  - Seeded module selection no longer calls `set.seed(NULL)`; the user's
+    global random number generator state is now saved and restored.
   - Fixed a `logical(0)` bug in `MST`'s `show()` method when
     `nc.list$method` was `NULL`.
   - Fixed silent item-bank column truncation in `mixed_adaptive_test()`;
     item bank columns are now selected by name rather than position.
+
+## CRAN feedback
+  - Removed `:::` from the examples of internal functions, replaced
+    `\dontrun{}` with `\donttest{}`, and changed examples and the vignette
+    to write files only to `tempdir()`.
+  - Guarded the `theta_trajectory_animate()` viewer examples with
+    `if (interactive())` so running examples never opens an external viewer.
+  - Declared `stats` and `utils` in `Imports`.
 
 ## Removed
   - Removed the dependency on the archived `mstR` package; the small set

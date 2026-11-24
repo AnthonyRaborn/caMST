@@ -184,7 +184,6 @@ computerized_adaptive_test <-
         runtime = Sys.time() - start.time
       )
 
-    print(results@runtime)
 
     return(
       results

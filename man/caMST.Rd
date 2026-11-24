@@ -11,12 +11,27 @@ Computer Adaptive Mutistage Test Analysis
 \details{
 See the README on \href{https://github.com/AnthonyRaborn/caMST#readme}{GitHub} for more information.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/AnthonyRaborn/caMST}
+  \item Report bugs at \url{https://github.com/AnthonyRaborn/caMST/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Anthony Raborn \email{anthony.w.raborn@gmail.com} [copyright holder]
 
 Authors:
 \itemize{
   \item Anthony Raborn \email{anthony.w.raborn@gmail.com} [copyright holder]
+}
+
+Other contributors:
+\itemize{
+  \item David Magis (Author of the mstR code vendored in R/mstR_vendored.R) [contributor, copyright holder]
+  \item Duanli Yan (Author of the mstR code vendored in R/mstR_vendored.R) [contributor, copyright holder]
+  \item Alina von Davier (Author of the mstR code vendored in R/mstR_vendored.R) [contributor, copyright holder]
 }
 
 }

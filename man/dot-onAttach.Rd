@@ -18,6 +18,4 @@ Hook triggered when package attached.
 \details{
 Idea taken from https://github.com/ntguardian/MCHT/blob/master/R/StartupMessage.R
 }
-\examples{
-caMST:::.onAttach(.libPaths()[1], "caMST")
-}
+\keyword{internal}

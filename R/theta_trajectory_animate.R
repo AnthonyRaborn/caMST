@@ -4,7 +4,7 @@
 #' \code{gganimate::transition_states}.
 #'
 #' @inheritParams theta_trajectory_plot
-#' @param file Character path to save the animation (e.g. \code{"trajectory.gif"}).
+#' @param file Character path to save the animation (e.g. \code{file.path(tempdir(), "trajectory.gif")}). No file is written unless this is supplied.
 #'   Default \code{NULL} returns the \code{gganim} object without saving.
 #' @param transition_length Numeric; relative time spent interpolating between
 #'   consecutive item states. Default \code{2}.
@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(caMST)
 #' data(example_thetas)
 #' data(example_responses)
@@ -35,15 +35,20 @@
 #'     nAvailable = NULL, cbControl = NULL, cbGroup = NULL)
 #' )
 #'
-#' # Preview in the viewer
-#' theta_trajectory_animate(catResult, person = 1)
+#' # Preview in the viewer (opens an external viewer, so interactive use only)
+#' if (interactive()) {
+#'   theta_trajectory_animate(catResult, person = 1)
+#' }
 #'
 #' # Save to file
-#' theta_trajectory_animate(catResult, person = 1, file = "trajectory.gif")
+#' theta_trajectory_animate(catResult, person = 1,
+#'   file = file.path(tempdir(), "trajectory.gif"))
 #'
 #' # Adjust animation speed
-#' theta_trajectory_animate(catResult, person = 1,
-#'   transition_length = 1, state_length = 2, fps = 5)
+#' if (interactive()) {
+#'   theta_trajectory_animate(catResult, person = 1,
+#'     transition_length = 1, state_length = 2, fps = 5)
+#' }
 #' }
 
 theta_trajectory_animate = function(object, person = NULL, facet_person = FALSE,

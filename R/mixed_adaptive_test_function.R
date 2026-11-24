@@ -205,7 +205,6 @@ mixed_adaptive_test = function(response_matrix,
       runtime = Sys.time() - start.time
     )
 
-  print(results@runtime)
 
   return(
     results

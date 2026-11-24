@@ -12,6 +12,4 @@ Makes package startup message.
 \details{
 Idea taken from https://github.com/ntguardian/MCHT/blob/master/R/StartupMessage.R
 }
-\examples{
-caMST:::caMSTStartup()
-}
+\keyword{internal}

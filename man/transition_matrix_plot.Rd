@@ -39,18 +39,19 @@ built_transition_matrix <- generate_transition_matrix(
 )
 transition_matrix_plot(built_transition_matrix, n_stages = 3)
 
-\dontrun{
-# Save the plot as a png file.
-png("Example 1-3-3 Transition Matrix Plot.png")
+\donttest{
+# Save the plot as a png file in a temporary directory.
+png(file.path(tempdir(), "Example 1-3-3 Transition Matrix Plot.png"))
 transition_matrix_plot(example_transition_matrix, n_stages = 3)
 title("Transition Matrix for a 1-3-3 Design MST")
 dev.off()
 
-# Use the `results` object from the `mixed_adaptive_test()` example to create
-# a transition matrix plot and save as a .pdf file.
-pdf("MAT Transition Matrix.pdf")
-transition_matrix_plot(results)
-title("Transition Matrix from the mixed_adaptive_test Example")
+# Save as a .pdf file; a `MST`, `MAT`, or `HAT` result object can also be
+# passed directly (e.g., the `results` object from the `mixed_adaptive_test()`
+# example).
+pdf(file.path(tempdir(), "MST Transition Matrix.pdf"))
+transition_matrix_plot(built_transition_matrix, n_stages = 3)
+title("Transition Matrix for a 1-3-3 Design MST")
 dev.off()
 }
 

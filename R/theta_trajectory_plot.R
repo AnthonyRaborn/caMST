@@ -22,7 +22,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(caMST)
 #' data(example_thetas)
 #' data(example_responses)

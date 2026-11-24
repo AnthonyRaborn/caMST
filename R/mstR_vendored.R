@@ -276,8 +276,36 @@
 # Module selection functions used by caMST (not exported)
 # ---------------------------------------------------------------------------
 
+# RNG helpers: seeding inside a function must not leave the user's global RNG
+# state modified, so the state is captured before the first set.seed() call and
+# restored on exit.
+.rng_state <- function() {
+  if (exists(".Random.seed", envir = globalenv(), inherits = FALSE))
+    get(".Random.seed", envir = globalenv(), inherits = FALSE)
+  else NULL
+}
+
+.seed_rng <- function(seed, rng) {
+  if (is.null(rng)) rng <- list(state = .rng_state())
+  set.seed(seed)
+  rng
+}
+
+.restore_rng <- function(rng) {
+  if (is.null(rng)) return(invisible())
+  if (is.null(rng$state)) {
+    if (exists(".Random.seed", envir = globalenv(), inherits = FALSE))
+      rm(".Random.seed", envir = globalenv())
+  } else {
+    assign(".Random.seed", rng$state, envir = globalenv())
+  }
+  invisible()
+}
+
 startModule <- function(itemBank, modules, transMatrix, model = NULL,
                         fixModule = NULL, seed = NULL, theta = 0, D = 1) {
+  rng <- NULL
+  on.exit(.restore_rng(rng))
   if (!is.null(fixModule)) {
     if (sum(transMatrix[, fixModule]) > 0)
       stop("Selected module is not from stage 1!", call. = FALSE)
@@ -288,13 +316,12 @@ startModule <- function(itemBank, modules, transMatrix, model = NULL,
                 thStart = thStart)
   } else {
     if (!is.null(seed)) {
-      if (!is.na(seed)) set.seed(seed)
+      if (!is.na(seed)) rng <- .seed_rng(seed, rng)
       mod <- sample(which(colSums(transMatrix) == 0), 1)
       items <- which(modules[, mod] == 1)
       par <- itemBank[items, ]
       thStart <- NA
       module <- mod
-      set.seed(NULL)
     } else {
       mods <- which(colSums(transMatrix) == 0)
       info <- NULL
@@ -321,6 +348,8 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
                        priorPar = c(0, 1), D = 1, range = c(-4, 4),
                        parInt = c(-4, 4, 33), randomesque = 1,
                        random.seed = NULL) {
+  rng <- NULL
+  on.exit(.restore_rng(rng))
   crit <- switch(criterion, MFI = "MFI", MLWMI = "MLWMI", MPWMI = "MPWMI",
                  MKL = "MKL", MKLP = "MKLP", random = "random")
   if (is.null(cutoff) & is.null(crit))
@@ -357,7 +386,7 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
       probs <- rep((1 - randomesque) / (length(sel.stage) - 1),
                    length(sel.stage))
       probs[ind] <- randomesque
-      if (!is.null(random.seed)) set.seed(random.seed)
+      if (!is.null(random.seed)) rng <- .seed_rng(random.seed, rng)
       ind.pr <- which(c(rmultinom(1, 1, probs)) == 1)
     } else {
       ind.pr <- ind
@@ -382,7 +411,7 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
         probs <- rep((1 - randomesque) / (length(sel.stage) - 1),
                      length(sel.stage))
         probs[maxinfo] <- randomesque
-        if (!is.null(random.seed)) set.seed(random.seed)
+        if (!is.null(random.seed)) rng <- .seed_rng(random.seed, rng)
         maxinfo.pr <- which(c(rmultinom(1, 1, probs)) == 1)
       } else {
         maxinfo.pr <- maxinfo
@@ -408,7 +437,7 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
         probs <- rep((1 - randomesque) / (length(sel.stage) - 1),
                      length(sel.stage))
         probs[maxinfo] <- randomesque
-        if (!is.null(random.seed)) set.seed(random.seed)
+        if (!is.null(random.seed)) rng <- .seed_rng(random.seed, rng)
         maxinfo.pr <- which(c(rmultinom(1, 1, probs)) == 1)
       } else {
         maxinfo.pr <- maxinfo
@@ -435,7 +464,7 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
         probs <- rep((1 - randomesque) / (length(sel.stage) - 1),
                      length(sel.stage))
         probs[maxinfo] <- randomesque
-        if (!is.null(random.seed)) set.seed(random.seed)
+        if (!is.null(random.seed)) rng <- .seed_rng(random.seed, rng)
         maxinfo.pr <- which(c(rmultinom(1, 1, probs)) == 1)
       } else {
         maxinfo.pr <- maxinfo
@@ -458,6 +487,5 @@ nextModule <- function(itemBank, modules, transMatrix, model = NULL,
                   criterion = "random", best.module = TRUE)
     }
   }
-  set.seed(NULL)
   return(res)
 }

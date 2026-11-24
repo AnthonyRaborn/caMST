@@ -17,8 +17,7 @@ NULL
 #' Idea taken from https://github.com/ntguardian/MCHT/blob/master/R/StartupMessage.R
 #'
 #' @import utils
-#' @examples
-#' caMST:::caMSTStartup()
+#' @keywords internal
 
 caMSTStartup <- function() {
   caMST <- c("
@@ -45,8 +44,7 @@ caMSTStartup <- function() {
 #' @param lib a character string giving the library directory where the package
 #'            defining the namespace was found
 #' @param pkg a character string giving the name of the package
-#' @examples
-#' caMST:::.onAttach(.libPaths()[1], "caMST")
+#' @keywords internal
 
 .onAttach <- function(lib, pkg) {
   msg <- if (interactive()) {
